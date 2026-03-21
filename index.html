@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Préstamos</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Simulador de Préstamos</h1>
+
+<div class="cards">
+  <div class="card">
+    <h3>Saldo pendiente</h3>
+    <p id="saldoPendiente">$0</p>
+  </div>
+  <div class="card">
+    <h3>Total pagado</h3>
+    <p id="totalPagado">$0</p>
+  </div>
+  <div class="card">
+    <h3>Progreso</h3>
+    <p id="progresoPrestamo">0%</p>
+  </div>
+</div>
+
+<div class="barra-container">
+  <div id="barraProgreso"></div>
+</div>
+
+<div class="formulario">
+  <input type="number" id="monto" placeholder="Monto" value="2500000">
+  <input type="number" id="interes" placeholder="Interés anual (%)" value="18">
+  <input type="number" id="cuotas" placeholder="Número de cuotas" value="12">
+  <input type="number" id="diaPago" placeholder="Día de pago" min="1" max="31" value="15">
+</div>
+
+<div class="abono">
+  <input type="number" id="abonoCapital" placeholder="Abono a capital">
+  <button onclick="abonarCapital()">Abonar Capital</button>
+</div>
+
+<div class="botones">
+  <button onclick="calcular()">Calcular</button>
+  <button onclick="reiniciar()">Reiniciar</button>
+  <button onclick="generarPDF()">Descargar PDF</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Cuota</th>
+      <th>Fecha pago</th>
+      <th>Pago</th>
+      <th>Interés</th>
+      <th>Capital</th>
+      <th>Saldo</th>
+      <th>Estado</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody id="tabla"></tbody>
+</table>
+
+<canvas id="grafica"></canvas>
+
+</div>
+
+<script src="simulador.js"></script>
+</body>
+</html>

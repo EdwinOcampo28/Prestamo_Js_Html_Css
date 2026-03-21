@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Panel Financiero</h1>
+
+<div class="cards">
+
+<div class="card">
+<h3>Usuario</h3>
+<p id="nombreUsuario"></p>
+</div>
+
+<div class="card">
+<h3>Préstamos realizados</h3>
+<p id="totalPrestamos"></p>
+</div>
+
+</div>
+
+<div class="botones">
+
+<button onclick="irSimulador()">Nuevo préstamo</button>
+
+<button onclick="verHistorial()">Historial</button>
+
+<button onclick="logout()">Cerrar sesión</button>
+
+</div>
+
+<div id="historial"></div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

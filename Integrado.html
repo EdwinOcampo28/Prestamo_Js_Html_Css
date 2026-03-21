@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Préstamos</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ====== CSS ====== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{background:linear-gradient(135deg,#0f172a,#1e293b);color:white;padding:30px;}
+.container{max-width:1000px;margin:auto;background:#020617;padding:30px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,0.4);}
+h1{text-align:center;margin-bottom:25px;}
+.formulario{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px;}
+input{padding:10px;border:none;border-radius:6px;background:#1e293b;color:white;font-size:14px;}
+input::placeholder{color:#94a3b8;}
+button{padding:10px 15px;background:#3a86ff;border:none;color:white;border-radius:6px;cursor:pointer;font-weight:bold;transition:0.3s;}
+button:hover{background:#2563eb;transform:scale(1.03);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:25px;}
+.card{background:#1e293b;padding:20px;border-radius:10px;text-align:center;transition:0.3s;}
+.card:hover{transform:translateY(-5px);}
+.card p{font-size:22px;color:#3a86ff;margin-top:10px;}
+.barra-container{width:100%;height:20px;background:#1e293b;border-radius:10px;margin-bottom:20px;overflow:hidden;}
+#barraProgreso{height:100%;width:0%;background:#3a86ff;border-radius:10px;transition:0.3s;}
+table{width:100%;border-collapse:collapse;margin-top:20px;}
+th, td{border:1px solid #334155;padding:10px;text-align:center;}
+th{background:#3a86ff;}
+tr:nth-child(even){background:#020617;}
+canvas{margin-top:30px;background:white;border-radius:10px;padding:10px;}
+.abono{display:flex;gap:10px;margin-bottom:20px;}
+.abono input{flex:1;}
+.pagada button{background:#10b981 !important;color:white;cursor:default;}
+@media(max-width:600px){.container{padding:20px;}button{width:100%;margin-bottom:10px;}}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Simulador de Préstamos</h1>
+
+<div class="cards">
+<div class="card"><h3>Saldo pendiente</h3><p id="saldoPendiente">$0</p></div>
+<div class="card"><h3>Total pagado</h3><p id="totalPagado">$0</p></div>
+<div class="card"><h3>Progreso</h3><p id="progresoPrestamo">0%</p></div>
+</div>
+
+<div class="barra-container"><div id="barraProgreso"></div></div>
+
+<div class="formulario">
+<input type="number" id="monto" placeholder="Monto" value="2500000">
+<input type="number" id="interes" placeholder="Interés anual (%)" value="18">
+<input type="number" id="cuotas" placeholder="Número de cuotas" value="12">
+<input type="number" id="diaPago" placeholder="Día de pago" min="1" max="31" value="15">
+</div>
+
+<div class="abono">
+<input type="number" id="abonoCapital" placeholder="Abono a capital">
+<button onclick="abonarCapital()">Abonar Capital</button>
+</div>
+
+<div class="botones">
+<button onclick="simularPrestamo()">Calcular</button>
+<button onclick="reiniciar()">Reiniciar</button>
+<button onclick="generarPDF()">Descargar PDF</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Cuota</th><th>Fecha pago</th><th>Pago</th><th>Interés</th><th>Capital</th><th>Saldo</th><th>Estado</th><th>Acción</th>
+</tr>
+</thead>
+<tbody id="tabla"></tbody>
+</table>
+
+<canvas id="grafica"></canvas>
+</div>
+
+<script>
+// ====== JS ======
+let chart;
+let totalPrestamo=0, pagado=0, cuotasTotales=0, cuotasPagadas=0;
+let capitalCuotas=[], interesCuotas=[];
+
+function dinero(v){ return v.toLocaleString("es-CO"); }
+
+function crearGrafica(labels, capital, interes){
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById("grafica"),{
+    type:"bar",
+    data:{ labels:labels,
+      datasets:[
+        {label:"Capital", data:capital, backgroundColor:"#06d6a0"},
+        {label:"Interés", data:interes, backgroundColor:"#ef4444"}
+      ]
+    }
+  });
+}
+
+function simularPrestamo(){
+  let monto=parseFloat(document.getElementById("monto").value);
+  let interesAnual=parseFloat(document.getElementById("interes").value)/100;
+  let cuotas=parseInt(document.getElementById("cuotas").value);
+  let dia=parseInt(document.getElementById("diaPago").value);
+
+  totalPrestamo=monto; cuotasTotales=cuotas; pagado=0; cuotasPagadas=0;
+  capitalCuotas=[]; interesCuotas=[];
+
+  let interesMensual=interesAnual/12;
+  let cuota=monto*(interesMensual*Math.pow(1+interesMensual,cuotas)) / (Math.pow(1+interesMensual,cuotas)-1);
+  let saldo=monto;
+
+  let tabla=document.getElementById("tabla"); tabla.innerHTML="";
+  let labels=[], capitalData=[], interesData=[];
+
+  for(let i=1;i<=cuotas;i++){
+    let interesMes=saldo*interesMensual;
+    let capital=cuota-interesMes;
+    saldo-=capital;
+
+    capitalCuotas.push(capital);
+    interesCuotas.push(interesMes);
+
+    let fecha=new Date();
+    fecha.setMonth(fecha.getMonth()+i); fecha.setDate(dia);
+
+    tabla.innerHTML+=`
+    <tr id="fila${i}">
+      <td>${i}</td>
+      <td>${fecha.toLocaleDateString()}</td>
+      <td>$${cuota.toFixed(0)}</td>
+      <td>$${interesMes.toFixed(0)}</td>
+      <td>$${capital.toFixed(0)}</td>
+      <td>$${saldo.toFixed(0)}</td>
+      <td>Pendiente</td>
+      <td><button onclick="pagarCuota(${i},this)">Pagar</button></td>
+    </tr>`;
+
+    labels.push("Cuota "+i);
+    capitalData.push(capital.toFixed(0));
+    interesData.push(interesMes.toFixed(0));
+  }
+
+  crearGrafica(labels, capitalData, interesData);
+  document.getElementById("saldoPendiente").innerText="$"+dinero(totalPrestamo);
+  document.getElementById("totalPagado").innerText="$0";
+  document.getElementById("progresoPrestamo").innerText="0%";
+  document.getElementById("barraProgreso").style.width="0%";
+}
+
+function pagarCuota(numero, btn){
+  let fila=document.getElementById("fila"+numero);
+  if(fila.classList.contains("pagada")) return;
+
+  fila.classList.add("pagada");
+  btn.disabled=true;
+
+  pagado+=parseFloat(capitalCuotas[numero-1])+parseFloat(interesCuotas[numero-1]);
+  cuotasPagadas++;
+
+  let saldo=totalPrestamo-pagado; if(saldo<0) saldo=0;
+  let progreso=(cuotasPagadas/cuotasTotales)*100;
+
+  document.getElementById("saldoPendiente").innerText="$"+dinero(saldo);
+  document.getElementById("totalPagado").innerText="$"+dinero(pagado);
+  document.getElementById("progresoPrestamo").innerText=progreso.toFixed(0)+"%";
+  document.getElementById("barraProgreso").style.width=progreso+"%";
+}
+
+function abonarCapital(){
+  let abono=parseFloat(document.getElementById("abonoCapital").value);
+  if(!abono || abono<=0){ alert("Ingresa un valor válido"); return; }
+  pagado+=abono;
+  let saldo=totalPrestamo-pagado; if(saldo<0) saldo=0;
+  document.getElementById("saldoPendiente").innerText="$"+dinero(saldo);
+  document.getElementById("totalPagado").innerText="$"+dinero(pagado);
+  alert("Abono realizado correctamente");
+}
+
+function reiniciar(){ location.reload(); }
+
+function generarPDF(){
+  const { jsPDF }=window.jspdf;
+  let doc=new jsPDF();
+  doc.text("Simulación de préstamo",20,20);
+  doc.text("Total pagado: "+document.getElementById("totalPagado").innerText,20,40);
+  doc.text("Saldo pendiente: "+document.getElementById("saldoPendiente").innerText,20,50);
+  doc.save("prestamo.pdf");
+}
+</script>
+
+</body>
+</html>
