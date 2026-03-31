@@ -1,3 +1,5 @@
+"use strict";
+
 let totalPrestamo = 0;
 let pagado = 0;
 let cuotasTotales = 0;
@@ -7,29 +9,41 @@ let capitalCuotas = [];
 let interesCuotas = [];
 
 function dinero(v) {
-  return v.toLocaleString("es-CO");
+  return Number(v).toLocaleString("es-CO");
 }
 
 // Calcular préstamo con interés mensual y cuotas
 function calcular() {
+
   let monto = parseFloat(document.getElementById("monto").value);
   let interesAnual = parseFloat(document.getElementById("interes").value) / 100;
   let cuotas = parseInt(document.getElementById("cuotas").value);
   let diaPago = parseInt(document.getElementById("diaPago").value);
 
+  // Validación
+  if (!monto || !interesAnual || !cuotas || !diaPago) {
+    alert("Completa todos los campos correctamente");
+    return;
+  }
+
   totalPrestamo = monto;
   cuotasTotales = cuotas;
   pagado = 0;
   cuotasPagadas = 0;
+
   capitalCuotas = [];
   interesCuotas = [];
 
   let interesMensual = interesAnual / 12;
-  // Calculamos la cuota fija
-  let cuota = monto * (interesMensual * Math.pow(1 + interesMensual, cuotas)) /
-              (Math.pow(1 + interesMensual, cuotas) - 1);
-  
+
+  // fórmula de cuota fija
+  let cuota =
+    monto *
+    (interesMensual * Math.pow(1 + interesMensual, cuotas)) /
+    (Math.pow(1 + interesMensual, cuotas) - 1);
+
   let saldo = monto;
+
   let tabla = document.getElementById("tabla");
   tabla.innerHTML = "";
 
@@ -37,8 +51,10 @@ function calcular() {
   let saldos = [];
 
   for (let i = 1; i <= cuotas; i++) {
+
     let interesMes = saldo * interesMensual;
     let capital = cuota - interesMes;
+
     saldo -= capital;
 
     capitalCuotas.push(capital);
@@ -53,6 +69,7 @@ function calcular() {
 
     let estado = "Pendiente";
     let clase = "";
+
     if (hoy > fecha) {
       estado = "Vencida";
       clase = "vencida";
@@ -77,13 +94,22 @@ function calcular() {
     `;
   }
 
+  // gráfica
   if (chart) chart.destroy();
+
   chart = new Chart(document.getElementById("grafica"), {
     type: "line",
-    data: { labels: labels, datasets: [{ label: "Saldo restante", data: saldos }] }
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Saldo restante",
+          data: saldos
+        }
+      ]
+    }
   });
 
-  // Reiniciar saldos y progreso
   document.getElementById("saldoPendiente").innerText = "$" + dinero(totalPrestamo);
   document.getElementById("totalPagado").innerText = "$0";
   document.getElementById("progresoPrestamo").innerText = "0%";
@@ -92,62 +118,107 @@ function calcular() {
 
 // Pagar cuota
 function pagarCuota(numero, btn) {
+
   let fila = document.getElementById("fila" + numero);
+
   if (fila.classList.contains("pagada")) return;
 
   fila.classList.remove("vencida");
   fila.classList.add("pagada");
 
   btn.disabled = true;
-  btn.style.backgroundColor = "#10b981"; // verde al pagar
+  btn.style.backgroundColor = "#10b981";
   btn.style.cursor = "default";
 
   document.getElementById("estado" + numero).innerText = "Pagada";
 
-  pagado += capitalCuotas[numero - 1] + interesCuotas[numero - 1];
+  let capital = capitalCuotas[numero - 1];
+  let interes = interesCuotas[numero - 1];
+
+  pagado += capital + interes;
   cuotasPagadas++;
 
-  let saldo = totalPrestamo - pagado;
-  if (saldo < 0) saldo = 0;
+  // El saldo solo baja por capital
+  totalPrestamo -= capital;
 
-  let progreso = (pagado / totalPrestamo) * 100;
-  if (progreso > 100) progreso = 100;
+  if (totalPrestamo < 0) totalPrestamo = 0;
 
-  document.getElementById("saldoPendiente").innerText = "$" + dinero(saldo);
-  document.getElementById("totalPagado").innerText = "$" + dinero(pagado);
-  document.getElementById("progresoPrestamo").innerText = progreso.toFixed(0) + "%";
-  document.getElementById("barraProgreso").style.width = progreso + "%";
+  let progreso = (cuotasPagadas / cuotasTotales) * 100;
+
+  document.getElementById("saldoPendiente").innerText =
+    "$" + dinero(totalPrestamo);
+
+  document.getElementById("totalPagado").innerText =
+    "$" + dinero(pagado);
+
+  document.getElementById("progresoPrestamo").innerText =
+    progreso.toFixed(0) + "%";
+
+  document.getElementById("barraProgreso").style.width =
+    progreso + "%";
 }
 
 // Abonar a capital
 function abonarCapital() {
+
   let abono = parseFloat(document.getElementById("abonoCapital").value);
-  if (!abono || abono <= 0) { alert("Ingresa un valor válido"); return; }
+
+  if (!abono || abono <= 0) {
+    alert("Ingresa un valor válido");
+    return;
+  }
 
   pagado += abono;
-  let saldo = totalPrestamo - pagado;
-  if (saldo < 0) saldo = 0;
+  totalPrestamo -= abono;
 
-  let progreso = (pagado / totalPrestamo) * 100;
-  if (progreso > 100) progreso = 100;
+  if (totalPrestamo < 0) totalPrestamo = 0;
 
-  document.getElementById("saldoPendiente").innerText = "$" + dinero(saldo);
-  document.getElementById("totalPagado").innerText = "$" + dinero(pagado);
-  document.getElementById("progresoPrestamo").innerText = progreso.toFixed(0) + "%";
-  document.getElementById("barraProgreso").style.width = progreso + "%";
+  let progreso = (pagado / (pagado + totalPrestamo)) * 100;
+
+  document.getElementById("saldoPendiente").innerText =
+    "$" + dinero(totalPrestamo);
+
+  document.getElementById("totalPagado").innerText =
+    "$" + dinero(pagado);
+
+  document.getElementById("progresoPrestamo").innerText =
+    progreso.toFixed(0) + "%";
+
+  document.getElementById("barraProgreso").style.width =
+    progreso + "%";
+
+  document.getElementById("abonoCapital").value = "";
 
   alert("Abono realizado correctamente");
 }
 
-// Reiniciar
-function reiniciar() { location.reload(); }
+// Reiniciar simulador
+function reiniciar() {
+  location.reload();
+}
 
 // Generar PDF
 function generarPDF() {
+
   const { jsPDF } = window.jspdf;
+
   let doc = new jsPDF();
+
   doc.text("Simulación de préstamo", 20, 20);
-  doc.text("Total pagado: " + document.getElementById("totalPagado").innerText, 20, 40);
-  doc.text("Saldo pendiente: " + document.getElementById("saldoPendiente").innerText, 20, 50);
+
+  doc.text(
+    "Total pagado: " +
+      document.getElementById("totalPagado").innerText,
+    20,
+    40
+  );
+
+  doc.text(
+    "Saldo pendiente: " +
+      document.getElementById("saldoPendiente").innerText,
+    20,
+    50
+  );
+
   doc.save("prestamo.pdf");
 }
