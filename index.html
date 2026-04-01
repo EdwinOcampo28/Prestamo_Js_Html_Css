@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -46,27 +47,28 @@
 <div id="barraProgreso"></div>
 </div>
 
+<!-- FORMULARIO -->
 <div class="formulario">
 
 <input
 type="number"
 id="monto"
 placeholder="Monto"
-value="2500000"
+value="2200000"
 />
 
 <input
 type="number"
 id="interes"
 placeholder="Interés anual (%)"
-value="18"
+value="24"
 />
 
 <input
 type="number"
 id="cuotas"
 placeholder="Número de cuotas"
-value="12"
+value="29"
 />
 
 <input
@@ -80,6 +82,7 @@ value="15"
 
 </div>
 
+<!-- ABONO -->
 <div class="abono">
 
 <input
@@ -88,12 +91,25 @@ id="abonoCapital"
 placeholder="Abono a capital"
 />
 
+<select id="tipoAbono">
+
+<option value="cuota">
+Reducir cuota
+</option>
+
+<option value="plazo">
+Reducir plazo
+</option>
+
+</select>
+
 <button onclick="abonarCapital()">
 Abonar Capital
 </button>
 
 </div>
 
+<!-- BOTONES -->
 <div class="botones">
 
 <button onclick="calcular()">
@@ -110,6 +126,7 @@ Descargar PDF
 
 </div>
 
+<!-- TABLA -->
 <table>
 
 <thead>
@@ -129,6 +146,7 @@ Descargar PDF
 
 </table>
 
+<!-- GRÁFICA -->
 <div class="grafica-container">
 
 <canvas id="grafica"></canvas>
@@ -137,8 +155,10 @@ Descargar PDF
 
 </div>
 
-<!-- SCRIPT PRINCIPAL -->
+<!-- SCRIPTS -->
 <script src="simulador.js"></script>
+<script src="Calculadora.js"></script>
+<script src="Pdf.js"></script>
 
 </body>
 </html>

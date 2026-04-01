@@ -1,4 +1,4 @@
-/* Reset */
+/* RESET */
 *{
 margin:0;
 padding:0;
@@ -6,14 +6,15 @@ box-sizing:border-box;
 font-family:Arial, Helvetica, sans-serif;
 }
 
-/* Body */
+/* BODY */
 body{
 background:linear-gradient(135deg,#0f172a,#1e293b);
 color:white;
 padding:30px;
+min-height:100vh;
 }
 
-/* Contenedor */
+/* CONTENEDOR */
 .container{
 max-width:1000px;
 margin:auto;
@@ -23,13 +24,13 @@ border-radius:12px;
 box-shadow:0 10px 25px rgba(0,0,0,0.4);
 }
 
-/* Título */
+/* TITULO */
 h1{
 text-align:center;
 margin-bottom:25px;
 }
 
-/* Tarjetas resumen */
+/* TARJETAS */
 .cards{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
@@ -53,15 +54,16 @@ transform:translateY(-5px);
 font-size:22px;
 color:#3a86ff;
 margin-top:10px;
+font-weight:bold;
 }
 
-/* Barra progreso */
+/* BARRA PROGRESO */
 .barra-container{
 width:100%;
 height:20px;
 background:#1e293b;
 border-radius:10px;
-margin-bottom:20px;
+margin-bottom:25px;
 overflow:hidden;
 }
 
@@ -72,7 +74,7 @@ background:linear-gradient(90deg,#3a86ff,#06d6a0);
 transition:0.4s;
 }
 
-/* Formulario */
+/* FORMULARIO */
 .formulario{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
@@ -88,6 +90,7 @@ background:#0f172a;
 color:white;
 font-size:15px;
 transition:0.3s;
+width:100%;
 }
 
 input:focus{
@@ -100,7 +103,7 @@ input::placeholder{
 color:#94a3b8;
 }
 
-/* Abono */
+/* ABONO */
 .abono{
 display:flex;
 gap:10px;
@@ -108,7 +111,11 @@ margin-bottom:20px;
 flex-wrap:wrap;
 }
 
-/* Botones */
+.abono input{
+flex:1;
+}
+
+/* BOTONES */
 .botones{
 display:flex;
 gap:10px;
@@ -123,7 +130,7 @@ border:none;
 font-weight:bold;
 font-size:14px;
 cursor:pointer;
-transition:0.3s;
+transition:0.25s;
 background:linear-gradient(135deg,#3a86ff,#8338ec);
 color:white;
 }
@@ -133,11 +140,20 @@ transform:translateY(-2px);
 box-shadow:0 6px 15px rgba(0,0,0,0.3);
 }
 
-/* Tabla */
+/* BOTON DESACTIVADO (CUOTA PAGADA) */
+button:disabled{
+background:#10b981;
+cursor:default;
+box-shadow:none;
+transform:none;
+}
+
+/* TABLA */
 table{
 width:100%;
 border-collapse:collapse;
 margin-top:20px;
+font-size:14px;
 }
 
 th, td{
@@ -154,19 +170,21 @@ tr:nth-child(even){
 background:#020617;
 }
 
-/* Estado cuotas */
+/* ESTADOS CUOTAS */
 
 .pagada{
 background:#064e3b !important;
 color:#10b981;
+font-weight:bold;
 }
 
 .vencida{
 background:#450a0a !important;
 color:#f87171;
+font-weight:bold;
 }
 
-/* Gráfica */
+/* GRAFICA */
 
 .grafica-container{
 margin-top:30px;
@@ -178,7 +196,7 @@ border-radius:10px;
 padding:10px;
 }
 
-/* Responsive */
+/* RESPONSIVE */
 
 @media(max-width:700px){
 
@@ -196,6 +214,14 @@ width:100%;
 
 .abono{
 flex-direction:column;
+}
+
+table{
+font-size:12px;
+}
+
+th,td{
+padding:8px;
 }
 
 }

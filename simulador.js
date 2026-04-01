@@ -1,10 +1,14 @@
 "use strict";
 
 let totalPrestamo = 0;
+let totalDeuda = 0; // capital + interes total
 let pagado = 0;
+
 let cuotasTotales = 0;
 let cuotasPagadas = 0;
+
 let chart;
+
 let capitalCuotas = [];
 let interesCuotas = [];
 
@@ -12,111 +16,9 @@ function dinero(v) {
   return Number(v).toLocaleString("es-CO");
 }
 
-// Calcular préstamo con interés mensual y cuotas
-function calcular() {
-
-  let monto = parseFloat(document.getElementById("monto").value);
-  let interesAnual = parseFloat(document.getElementById("interes").value) / 100;
-  let cuotas = parseInt(document.getElementById("cuotas").value);
-  let diaPago = parseInt(document.getElementById("diaPago").value);
-
-  // Validación
-  if (!monto || !interesAnual || !cuotas || !diaPago) {
-    alert("Completa todos los campos correctamente");
-    return;
-  }
-
-  totalPrestamo = monto;
-  cuotasTotales = cuotas;
-  pagado = 0;
-  cuotasPagadas = 0;
-
-  capitalCuotas = [];
-  interesCuotas = [];
-
-  let interesMensual = interesAnual / 12;
-
-  // fórmula de cuota fija
-  let cuota =
-    monto *
-    (interesMensual * Math.pow(1 + interesMensual, cuotas)) /
-    (Math.pow(1 + interesMensual, cuotas) - 1);
-
-  let saldo = monto;
-
-  let tabla = document.getElementById("tabla");
-  tabla.innerHTML = "";
-
-  let labels = [];
-  let saldos = [];
-
-  for (let i = 1; i <= cuotas; i++) {
-
-    let interesMes = saldo * interesMensual;
-    let capital = cuota - interesMes;
-
-    saldo -= capital;
-
-    capitalCuotas.push(capital);
-    interesCuotas.push(interesMes);
-
-    let fecha = new Date();
-    fecha.setMonth(fecha.getMonth() + i);
-    fecha.setDate(diaPago);
-
-    let fechaTexto = fecha.toLocaleDateString("es-CO");
-    let hoy = new Date();
-
-    let estado = "Pendiente";
-    let clase = "";
-
-    if (hoy > fecha) {
-      estado = "Vencida";
-      clase = "vencida";
-    }
-
-    labels.push("Cuota " + i);
-    saldos.push(saldo);
-
-    tabla.innerHTML += `
-      <tr id="fila${i}" class="${clase}">
-        <td>${i}</td>
-        <td>${fechaTexto}</td>
-        <td>$${dinero(cuota.toFixed(0))}</td>
-        <td>$${dinero(interesMes.toFixed(0))}</td>
-        <td>$${dinero(capital.toFixed(0))}</td>
-        <td>$${dinero(saldo.toFixed(0))}</td>
-        <td id="estado${i}">${estado}</td>
-        <td>
-          <button onclick="pagarCuota(${i}, this)">Pagar</button>
-        </td>
-      </tr>
-    `;
-  }
-
-  // gráfica
-  if (chart) chart.destroy();
-
-  chart = new Chart(document.getElementById("grafica"), {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Saldo restante",
-          data: saldos
-        }
-      ]
-    }
-  });
-
-  document.getElementById("saldoPendiente").innerText = "$" + dinero(totalPrestamo);
-  document.getElementById("totalPagado").innerText = "$0";
-  document.getElementById("progresoPrestamo").innerText = "0%";
-  document.getElementById("barraProgreso").style.width = "0%";
-}
-
-// Pagar cuota
+// ----------------------------
+// PAGAR CUOTA
+// ----------------------------
 function pagarCuota(numero, btn) {
 
   let fila = document.getElementById("fila" + numero);
@@ -135,45 +37,138 @@ function pagarCuota(numero, btn) {
   let capital = capitalCuotas[numero - 1];
   let interes = interesCuotas[numero - 1];
 
-  pagado += capital + interes;
+  let pago = capital + interes;
+
+  // evitar pagar más del total
+  if (pagado + pago > totalDeuda) {
+    pago = totalDeuda - pagado;
+  }
+
+  pagado += pago;
   cuotasPagadas++;
 
-  // El saldo solo baja por capital
+  // solo el capital reduce el préstamo
   totalPrestamo -= capital;
 
   if (totalPrestamo < 0) totalPrestamo = 0;
 
-  let progreso = (cuotasPagadas / cuotasTotales) * 100;
-
-  document.getElementById("saldoPendiente").innerText =
-    "$" + dinero(totalPrestamo);
-
-  document.getElementById("totalPagado").innerText =
-    "$" + dinero(pagado);
-
-  document.getElementById("progresoPrestamo").innerText =
-    progreso.toFixed(0) + "%";
-
-  document.getElementById("barraProgreso").style.width =
-    progreso + "%";
+  actualizarEstado();
 }
 
-// Abonar a capital
+// ----------------------------
+// ABONAR A CAPITAL
+// ----------------------------
 function abonarCapital() {
 
-  let abono = parseFloat(document.getElementById("abonoCapital").value);
+let abono = parseFloat(document.getElementById("abonoCapital").value);
+let tipo = document.getElementById("tipoAbono").value;
 
-  if (!abono || abono <= 0) {
-    alert("Ingresa un valor válido");
-    return;
-  }
+if (!abono || abono <= 0) {
+alert("Ingresa un valor válido");
+return;
+}
 
-  pagado += abono;
-  totalPrestamo -= abono;
+if (pagado + abono > totalDeuda) {
+abono = totalDeuda - pagado;
+}
 
-  if (totalPrestamo < 0) totalPrestamo = 0;
+pagado += abono;
+totalPrestamo -= abono;
 
-  let progreso = (pagado / (pagado + totalPrestamo)) * 100;
+if (totalPrestamo < 0) totalPrestamo = 0;
+
+let interesAnual = parseFloat(document.getElementById("interes").value) / 100;
+let interesMensual = interesAnual / 12;
+
+let cuotasRestantes = cuotasTotales - cuotasPagadas;
+
+if (cuotasRestantes <= 0) return;
+
+let saldo = totalPrestamo;
+
+if (tipo === "cuota") {
+
+// recalcular cuota
+let nuevaCuota =
+saldo *
+(interesMensual * Math.pow(1 + interesMensual, cuotasRestantes)) /
+(Math.pow(1 + interesMensual, cuotasRestantes) - 1);
+
+for (let i = cuotasPagadas; i < cuotasTotales; i++) {
+
+let interesMes = saldo * interesMensual;
+let capital = nuevaCuota - interesMes;
+
+saldo -= capital;
+
+if (saldo < 0) saldo = 0;
+
+capitalCuotas[i] = capital;
+interesCuotas[i] = interesMes;
+
+let fila = document.getElementById("fila" + (i + 1));
+let celdas = fila.getElementsByTagName("td");
+
+celdas[2].innerText = "$" + dinero(nuevaCuota.toFixed(0));
+celdas[3].innerText = "$" + dinero(interesMes.toFixed(0));
+celdas[4].innerText = "$" + dinero(capital.toFixed(0));
+celdas[5].innerText = "$" + dinero(saldo.toFixed(0));
+}
+
+}
+
+if (tipo === "plazo") {
+
+// mantener cuota original
+let cuotaOriginal =
+capitalCuotas[cuotasPagadas] + interesCuotas[cuotasPagadas];
+
+let i = cuotasPagadas;
+let nuevaTabla = "";
+
+while (saldo > 0 && i < cuotasTotales) {
+
+let interesMes = saldo * interesMensual;
+let capital = cuotaOriginal - interesMes;
+
+saldo -= capital;
+
+if (saldo < 0) saldo = 0;
+
+capitalCuotas[i] = capital;
+interesCuotas[i] = interesMes;
+
+let fila = document.getElementById("fila" + (i + 1));
+let celdas = fila.getElementsByTagName("td");
+
+celdas[2].innerText = "$" + dinero(cuotaOriginal.toFixed(0));
+celdas[3].innerText = "$" + dinero(interesMes.toFixed(0));
+celdas[4].innerText = "$" + dinero(capital.toFixed(0));
+celdas[5].innerText = "$" + dinero(saldo.toFixed(0));
+
+i++;
+}
+
+cuotasTotales = i;
+
+}
+
+actualizarEstado();
+
+document.getElementById("abonoCapital").value = "";
+
+alert("Abono aplicado correctamente");
+
+}
+
+// ----------------------------
+// ACTUALIZAR ESTADO GENERAL
+// ----------------------------
+function actualizarEstado() {
+
+  let progreso = (pagado / totalDeuda) * 100;
+
+  if (progreso > 100) progreso = 100;
 
   document.getElementById("saldoPendiente").innerText =
     "$" + dinero(totalPrestamo);
@@ -186,67 +181,11 @@ function abonarCapital() {
 
   document.getElementById("barraProgreso").style.width =
     progreso + "%";
-
-  document.getElementById("abonoCapital").value = "";
-
-  alert("Abono realizado correctamente");
 }
 
-// Reiniciar simulador
+// ----------------------------
+// REINICIAR SIMULADOR
+// ----------------------------
 function reiniciar() {
   location.reload();
 }
-
-// Generar PDF
-function generarPDF(){
-
-const { jsPDF } = window.jspdf;
-
-let doc = new jsPDF();
-
-doc.setFontSize(18);
-doc.text("Simulación de préstamo",20,20);
-
-doc.setFontSize(12);
-
-doc.text("Total pagado: "+document.getElementById("totalPagado").innerText,20,40);
-doc.text("Saldo pendiente: "+document.getElementById("saldoPendiente").innerText,20,50);
-
-let filas = document.querySelectorAll("#tabla tr");
-
-let y=70;
-
-doc.text("Tabla de amortización",20,60);
-
-filas.forEach((fila)=>{
-
-let columnas = fila.querySelectorAll("td");
-
-let texto="";
-
-columnas.forEach((col)=>{
-texto+=col.innerText+"   ";
-});
-
-doc.text(texto,20,y);
-
-y+=8;
-
-if(y>280){
-doc.addPage();
-y=20;
-}
-
-});
-
-doc.save("prestamo_completo.pdf");
-
-}
-  doc.text(
-    "Saldo pendiente: " +
-      document.getElementById("saldoPendiente").innerText,
-    20,
-    50
-  );
-
-  doc.save("prestamo.pdf");
