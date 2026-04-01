@@ -150,6 +150,32 @@ i++;
 }
 
 cuotasTotales = i;
+// Ocultar cuotas que ya no existen
+for (let j = i + 1; j <= capitalCuotas.length; j++) {
+
+  let fila = document.getElementById("fila" + j);
+
+  if (fila) {
+    fila.style.display = "none";
+  }
+
+}
+
+// 🔧 ajustar última cuota
+let ultima = cuotasTotales - 1;
+
+let filaUltima = document.getElementById("fila" + (ultima + 1));
+
+if (filaUltima) {
+
+let pagoFinal = capitalCuotas[ultima] + interesCuotas[ultima];
+
+filaUltima.children[2].innerText = "$" + dinero(pagoFinal.toFixed(0));
+filaUltima.children[3].innerText = "$" + dinero(interesCuotas[ultima].toFixed(0));
+filaUltima.children[4].innerText = "$" + dinero(capitalCuotas[ultima].toFixed(0));
+filaUltima.children[5].innerText = "$0";
+
+}
 
 }
 
