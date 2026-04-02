@@ -11,6 +11,7 @@ let cuotasPagadas = 0;
 
 let capitalPagado = 0;
 let interesPagado = 0;
+let interesTotalOriginal = 0;
 
 let capitalCuotas = [];
 let interesCuotas = [];
@@ -57,12 +58,31 @@ function calcularProgreso() {
 function actualizarEstado() {
   const progreso = calcularProgreso();
 
+  // Actualizar los valores principales
   actualizarTexto("saldoPendiente", "$" + dinero(totalPrestamo));
   actualizarTexto("capitalPagado", "$" + dinero(capitalPagado));
   actualizarTexto("interesPagado", "$" + dinero(interesPagado));
   actualizarTexto("totalPagado", "$" + dinero(pagado));
   actualizarTexto("progresoPrestamo", progreso.toFixed(0) + "%");
 
+  // Actualizar barra de progreso
   const barra = document.getElementById("barraProgreso");
   if (barra) barra.style.width = progreso + "%";
+
+  // 🔹 Calcular intereses ahorrados por abonos
+  // Se calcula como la diferencia entre los intereses originalmente proyectados y los que se han pagado efectivamente
+  let totalInteresesOriginales = interesCuotas.reduce((sum, val) => sum + val, 0) + interesPagado;
+  let interesesAhorrados = totalInteresesOriginales - interesPagado;
+
+  // Evitar negativos
+  interesesAhorrados = Math.max(0, Math.round(interesesAhorrados));
+
+  // Actualizar tarjeta de intereses ahorrados
+  actualizarTexto("interesAhorrado", "$" + dinero(interesesAhorrados));
+}
+
+// Helper para actualizar texto
+function actualizarTexto(id, texto) {
+  const elemento = document.getElementById(id);
+  if (elemento) elemento.innerText = texto;
 }
