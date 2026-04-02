@@ -10,19 +10,11 @@
 
 <link rel="stylesheet" href="styles.css">
 
-<!-- Chart -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js -->
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<style>
-
-.oculta{
-display:none;
-}
-
-</style>
+<!-- jsPDF -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 
@@ -32,11 +24,22 @@ display:none;
 
 <h1>Simulador de Préstamos</h1>
 
+<!-- TARJETAS -->
 <div class="cards">
 
 <div class="card">
 <h3>Saldo pendiente</h3>
 <p id="saldoPendiente">$0</p>
+</div>
+
+<div class="card">
+<h3>Capital pagado</h3>
+<p id="capitalPagado">$0</p>
+</div>
+
+<div class="card">
+<h3>Intereses pagados</h3>
+<p id="interesPagado">$0</p>
 </div>
 
 <div class="card">
@@ -51,6 +54,7 @@ display:none;
 
 </div>
 
+<!-- BARRA PROGRESO -->
 <div class="barra-container">
 <div id="barraProgreso"></div>
 </div>
@@ -61,8 +65,9 @@ display:none;
 <input
 type="number"
 id="monto"
-placeholder="Monto"
+placeholder="Monto del préstamo"
 value="2200000"
+min="1"
 />
 
 <input
@@ -70,6 +75,7 @@ type="number"
 id="interes"
 placeholder="Interés anual (%)"
 value="24"
+min="0"
 />
 
 <input
@@ -77,6 +83,7 @@ type="number"
 id="cuotas"
 placeholder="Número de cuotas"
 value="29"
+min="1"
 />
 
 <input
@@ -96,7 +103,8 @@ value="15"
 <input
 type="number"
 id="abonoCapital"
-placeholder="Abono a capital"
+placeholder="Valor a abonar al capital"
+min="1"
 />
 
 <select id="tipoAbono">
@@ -111,8 +119,8 @@ Reducir plazo
 
 </select>
 
-<button onclick="abonarCapital()">
-Abonar Capital
+<button type="button" id="btnAbono">
+Aplicar abono
 </button>
 
 </div>
@@ -120,15 +128,15 @@ Abonar Capital
 <!-- BOTONES -->
 <div class="botones">
 
-<button onclick="calcular()">
+<button type="button" id="btnCalcular">
 Calcular préstamo
 </button>
 
-<button onclick="reiniciar()">
+<button type="button" id="btnReiniciar">
 Reiniciar
 </button>
 
-<button onclick="generarPDF()">
+<button type="button" id="btnPDF">
 Descargar PDF
 </button>
 
@@ -150,23 +158,39 @@ Descargar PDF
 </tr>
 </thead>
 
-<tbody id="tabla"></tbody>
+<tbody id="tabla">
+</tbody>
 
 </table>
 
 <!-- GRÁFICA -->
 <div class="grafica-container">
-
 <canvas id="grafica"></canvas>
-
 </div>
 
 </div>
 
 <!-- SCRIPTS -->
-<script src="simulador.js"></script>
-<script src="Calculadora.js"></script>
-<script src="Pdf.js"></script>
+<script defer src="Calculadora.js"></script>
+<script defer src="Pdf.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+const btnCalcular = document.getElementById("btnCalcular");
+const btnReiniciar = document.getElementById("btnReiniciar");
+const btnPDF = document.getElementById("btnPDF");
+const btnAbono = document.getElementById("btnAbono");
+
+if(btnCalcular) btnCalcular.addEventListener("click", calcular);
+if(btnReiniciar) btnReiniciar.addEventListener("click", reiniciar);
+if(btnPDF) btnPDF.addEventListener("click", generarPDF);
+if(btnAbono) btnAbono.addEventListener("click", pagarSeparado);
+
+});
+
+</script>
 
 </body>
 </html>
