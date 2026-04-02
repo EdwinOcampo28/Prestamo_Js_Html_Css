@@ -1,127 +1,116 @@
-function pagarSeparado(){
+"use strict";
 
-let abono = parseFloat(document.getElementById("abonoCapital").value);
+function pagarSeparado() {
+  // 📌 Obtener abono y tipo
+  const abono = parseFloat(document.getElementById("abonoCapital").value);
+  const tipo = document.getElementById("tipoAbono").value;
 
-if(!abono || abono<=0){
-alert("Ingresa un valor de abono");
-return;
-}
+  // 🚨 Validación
+  if (!abono || abono <= 0) {
+    alert("Ingresa un valor de abono");
+    return;
+  }
 
-let tipo = document.getElementById("tipoAbono").value;
+  const cuotasRestantes = cuotasTotales - cuotasPagadas;
+  if (cuotasRestantes <= 0) {
+    alert("El préstamo ya está pagado");
+    return;
+  }
 
-capitalPagado += abono;
+  // 🔹 Actualizar montos globales
+ capitalPagado += Math.round(abono);
 pagado = capitalPagado + interesPagado;
 
-totalPrestamo -= abono;
-totalDeuda -= abono;
+totalPrestamo -= Math.round(abono);
+totalDeuda -= Math.round(abono);
+if (totalPrestamo < 0) totalPrestamo = 0;
+if (totalDeuda < 0) totalDeuda = 0;
 
-if(totalPrestamo < 0) totalPrestamo = 0;
-if(totalDeuda < 0) totalDeuda = 0;
+  // 📌 Cálculo de interés
+  const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
+  const interesMensual = interesAnual / 12;
 
-let interesAnual = parseFloat(document.getElementById("interes").value) / 100;
-let interesMensual = interesAnual / 12;
+  let saldo = totalPrestamo;
+  const labels = [];
+  const saldos = [];
 
-let cuotasRestantes = cuotasTotales - cuotasPagadas;
+  // 🔹 Función helper para actualizar fila de tabla
+  function actualizarFila(i, cuota, interesMes, capital, saldo) {
+    const fila = document.getElementById("fila" + (i + 1));
+    if (!fila) return;
 
-if(cuotasRestantes <= 0){
-alert("El préstamo ya está pagado");
-return;
-}
+    const celdas = fila.getElementsByTagName("td");
+    celdas[2].innerText = "$" + dinero(cuota);
+    celdas[3].innerText = "$" + dinero(interesMes);
+    celdas[4].innerText = "$" + dinero(capital);
+    celdas[5].innerText = "$" + dinero(saldo);
 
-let saldo = totalPrestamo;
+    labels.push("Cuota " + (i + 1));
+    saldos.push(saldo);
+  }
 
-let labels = [];
-let saldos = [];
+  if (tipo === "cuota") {
+    const nuevaCuota =
+      saldo *
+      (interesMensual * Math.pow(1 + interesMensual, cuotasRestantes)) /
+      (Math.pow(1 + interesMensual, cuotasRestantes) - 1);
 
-if(tipo === "cuota"){
+    for (let i = cuotasPagadas; i < cuotasTotales; i++) {
+      const interesMes = saldo * interesMensual;
+      const capital = nuevaCuota - interesMes;
+      saldo = Math.max(saldo - capital, 0);
 
-let nuevaCuota =
-saldo *
-(interesMensual * Math.pow(1 + interesMensual, cuotasRestantes)) /
-(Math.pow(1 + interesMensual, cuotasRestantes) - 1);
+      capitalCuotas[i] = capital;
+      interesCuotas[i] = interesMes;
 
-for(let i=cuotasPagadas;i<cuotasTotales;i++){
+      actualizarFila(i, nuevaCuota, interesMes, capital, saldo);
+    }
+  }
 
-let interesMes = saldo * interesMensual;
-let capital = nuevaCuota - interesMes;
+  if (tipo === "plazo") {
+    const cuotaOriginal = capitalCuotas[cuotasPagadas] + interesCuotas[cuotasPagadas];
+    let i = cuotasPagadas;
 
-saldo -= capital;
-if(saldo < 0) saldo = 0;
+    while (saldo > 0 && i < cuotasTotales) {
+      const interesMes = saldo * interesMensual;
+      const capital = cuotaOriginal - interesMes;
+      saldo = Math.max(saldo - capital, 0);
 
-capitalCuotas[i] = capital;
-interesCuotas[i] = interesMes;
+      capitalCuotas[i] = capital;
+      interesCuotas[i] = interesMes;
 
-let fila = document.getElementById("fila"+(i+1));
-if(!fila) continue;
+      actualizarFila(i, cuotaOriginal, interesMes, capital, saldo);
+      i++;
+    }
 
-let celdas = fila.getElementsByTagName("td");
+    cuotasTotales = i; // Ajustar total de cuotas si se reduce el plazo
+  }
 
-celdas[2].innerText="$"+dinero(nuevaCuota.toFixed(0));
-celdas[3].innerText="$"+dinero(interesMes.toFixed(0));
-celdas[4].innerText="$"+dinero(capital.toFixed(0));
-celdas[5].innerText="$"+dinero(saldo.toFixed(0));
+  // 🔹 Actualizar gráfico
+  if (chart) chart.destroy();
 
-labels.push("Cuota "+(i+1));
-saldos.push(saldo);
-}
-}
+  chart = new Chart(document.getElementById("grafica"), {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Saldo restante",
+          data: saldos,
+          borderColor: "#28a745",
+          backgroundColor: "rgba(40,167,69,0.1)",
+          tension: 0.3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+    },
+  });
 
-if(tipo === "plazo"){
+  actualizarEstado();
 
-let cuotaOriginal = capitalCuotas[cuotasPagadas] + interesCuotas[cuotasPagadas];
+  document.getElementById("abonoCapital").value = "";
 
-let i = cuotasPagadas;
-
-while(saldo > 0 && i < cuotasTotales){
-
-let interesMes = saldo * interesMensual;
-let capital = cuotaOriginal - interesMes;
-
-saldo -= capital;
-if(saldo < 0) saldo = 0;
-
-capitalCuotas[i] = capital;
-interesCuotas[i] = interesMes;
-
-let fila = document.getElementById("fila"+(i+1));
-if(!fila) break;
-
-let celdas = fila.getElementsByTagName("td");
-
-celdas[2].innerText="$"+dinero(cuotaOriginal.toFixed(0));
-celdas[3].innerText="$"+dinero(interesMes.toFixed(0));
-celdas[4].innerText="$"+dinero(capital.toFixed(0));
-celdas[5].innerText="$"+dinero(saldo.toFixed(0));
-
-labels.push("Cuota "+(i+1));
-saldos.push(saldo);
-
-i++;
-}
-
-cuotasTotales = i;
-}
-
-if(chart){
-chart.destroy();
-}
-
-chart = new Chart(document.getElementById("grafica"),{
-type:"line",
-data:{
-labels:labels,
-datasets:[
-{
-label:"Saldo restante",
-data:saldos
-}
-]
-}
-});
-
-actualizarEstado();
-
-document.getElementById("abonoCapital").value="";
-
-alert("Abono aplicado correctamente");
+  alert("Abono aplicado correctamente");
 }

@@ -1,21 +1,31 @@
-function pagarCuota(numero,boton){
+function pagarCuota(numero, boton) {
 
-if(cuotasPagadasEstado[numero-1]) return;
+  if (cuotasPagadasEstado[numero - 1]) return;
 
-cuotasPagadasEstado[numero-1]=true;
+  // Marcar cuota como pagada
+  cuotasPagadasEstado[numero - 1] = true;
 
-let capital = capitalCuotas[numero-1];
-let interes = interesCuotas[numero-1];
+  let capital = capitalCuotas[numero - 1];
+  let interes = interesCuotas[numero - 1];
 
-capitalPagado += capital;
-interesPagado += interes;
+  // ✅ Actualizar pagos
+  capitalPagado += Math.round(capital);
+interesPagado += Math.round(interes);
 
 pagado = capitalPagado + interesPagado;
 
-cuotasPagadas++;
+  cuotasPagadas++;
 
-document.getElementById("estado"+numero).innerText="Pagada";
-boton.disabled=true;
+  // ✅ Reducir saldo pendiente
+  totalPrestamo -= Math.round(capital);
+totalDeuda -= Math.round(capital + interes);
 
-actualizarEstado();
+if (totalPrestamo < 0) totalPrestamo = 0;
+if (totalDeuda < 0) totalDeuda = 0;
+
+  // Actualizar interfaz
+  document.getElementById("estado" + numero).innerText = "Pagada";
+  boton.disabled = true;
+
+  actualizarEstado();
 }

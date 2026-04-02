@@ -1,27 +1,37 @@
-function reiniciar(){
+"use strict";
 
-document.getElementById("tabla").innerHTML="";
+function reiniciar() {
+  // 🔹 Limpiar tabla
+  const tabla = document.getElementById("tabla");
+  if (tabla) tabla.innerHTML = "";
 
-document.getElementById("saldoPendiente").innerText="$0";
-document.getElementById("capitalPagado").innerText="$0";
-document.getElementById("interesPagado").innerText="$0";
-document.getElementById("totalPagado").innerText="$0";
-document.getElementById("progresoPrestamo").innerText="0%";
+  // 🔹 Reiniciar valores de interfaz
+  actualizarTexto("saldoPendiente", "$0");
+  actualizarTexto("capitalPagado", "$0");
+  actualizarTexto("interesPagado", "$0");
+  actualizarTexto("totalPagado", "$0");
+  actualizarTexto("progresoPrestamo", "0%");
 
-document.getElementById("barraProgreso").style.width="0%";
+  const barra = document.getElementById("barraProgreso");
+  if (barra) barra.style.width = "0%";
 
-capitalCuotas=[];
-interesCuotas=[];
-cuotasPagadasEstado=[];
+  // 🔹 Limpiar arrays y variables globales
+  capitalCuotas = [];
+  interesCuotas = [];
+  cuotasPagadasEstado = [];
 
-pagado=0;
-cuotasPagadas=0;
+  pagado = 0;
+  cuotasPagadas = 0;
+  capitalPagado = 0;
+  interesPagado = 0;
 
-capitalPagado=0;
-interesPagado=0;
+  totalPrestamo = 0;
+  totalDeuda = 0;
+  cuotasTotales = 0;
 
-if(chart){
-chart.destroy();
-chart=null;
-}
+  // 🔹 Destruir gráfico si existe
+  if (chart) {
+    chart.destroy();
+    chart = null;
+  }
 }

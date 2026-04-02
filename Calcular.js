@@ -1,114 +1,120 @@
-function calcular(){
+"use strict";
 
-let monto = parseFloat(document.getElementById("monto").value);
-let interesAnual = parseFloat(document.getElementById("interes").value) / 100;
-let cuotas = parseInt(document.getElementById("cuotas").value);
-let diaPago = parseInt(document.getElementById("diaPago").value);
+function calcular() {
+  // 📌 Obtener valores del formulario
+  const monto = parseInt(document.getElementById("monto").value);
+  const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
+  const cuotas = parseInt(document.getElementById("cuotas").value);
+  const diaPago = parseInt(document.getElementById("diaPago").value);
 
-if(isNaN(monto) || isNaN(interesAnual) || isNaN(cuotas) || isNaN(diaPago)){
-alert("Completa todos los campos correctamente");
-return;
-}
+  // 🚨 Validación
+  if ([monto, interesAnual, cuotas, diaPago].some(isNaN) || monto <= 0 || cuotas <= 0 || diaPago <= 0 || diaPago > 31) {
+    alert("Completa todos los campos correctamente");
+    return;
+  }
 
-totalPrestamo = monto;
-cuotasTotales = cuotas;
+  // 🔄 Reiniciar variables globales
+  totalPrestamo = monto;
+  cuotasTotales = cuotas;
+  pagado = 0;
+  cuotasPagadas = 0;
+  capitalPagado = 0;
+  interesPagado = 0;
+  capitalCuotas = [];
+  interesCuotas = [];
+  cuotasPagadasEstado = new Array(cuotas).fill(false);
 
-pagado = 0;
-cuotasPagadas = 0;
+  const interesMensual = interesAnual / 12;
 
-capitalPagado = 0;
-interesPagado = 0;
+  // 📌 Cálculo de cuota mensual
+  let cuota = monto * (interesMensual * Math.pow(1 + interesMensual, cuotas)) / (Math.pow(1 + interesMensual, cuotas) - 1);
+  cuota = Math.round(cuota); // 🔹 Redondear a entero
 
-capitalCuotas = [];
-interesCuotas = [];
-cuotasPagadasEstado = new Array(cuotas).fill(false);
+  let saldo = monto;
+  const tabla = document.getElementById("tabla");
+  tabla.innerHTML = "";
+  const labels = [];
+  const saldos = [];
+  let totalInteres = 0;
+  const fechaBase = new Date();
 
-let interesMensual = interesAnual / 12;
+  // 🗓 Generar cuotas
+  for (let i = 1; i <= cuotas; i++) {
+    let interesMes = Math.round(saldo * interesMensual); // 🔹 Redondear
+    let capital = Math.round(cuota - interesMes);        // 🔹 Redondear
 
-let cuota =
-monto *
-(interesMensual * Math.pow(1 + interesMensual, cuotas)) /
-(Math.pow(1 + interesMensual, cuotas) - 1);
+    saldo -= capital;
+    saldo = Math.max(0, saldo); // 🔹 No permitir saldo negativo
 
-let saldo = monto;
+    capitalCuotas.push(capital);
+    interesCuotas.push(interesMes);
+    totalInteres += interesMes;
 
-let tabla = document.getElementById("tabla");
-tabla.innerHTML="";
+    // 📌 Fecha de pago
+    const fecha = new Date(fechaBase);
+    fecha.setMonth(fecha.getMonth() + i);
+    fecha.setDate(diaPago);
+    const fechaTexto = fecha.toLocaleDateString("es-CO");
 
-let labels = [];
-let saldos = [];
+    // 🔹 Estado de la cuota
+    const hoy = new Date();
+    let estado = "Pendiente";
+    let clase = "";
+    if (hoy > fecha) {
+      estado = "Vencida";
+      clase = "vencida";
+    }
 
-let totalInteres = 0;
+    labels.push("Cuota " + i);
+    saldos.push(saldo);
 
-let fechaBase = new Date();
+    // 📄 Fila de tabla
+    tabla.innerHTML += `
+      <tr id="fila${i}" class="${clase}">
+        <td>${i}</td>
+        <td>${fechaTexto}</td>
+        <td>$${dinero(cuota)}</td>
+        <td>$${dinero(interesMes)}</td>
+        <td>$${dinero(capital)}</td>
+        <td>$${dinero(saldo)}</td>
+        <td id="estado${i}">${estado}</td>
+        <td>
+          <button onclick="pagarCuota(${i}, this)">Pagar</button>
+        </td>
+      </tr>
+    `;
+  }
 
-for(let i=1;i<=cuotas;i++){
+  totalDeuda = monto + totalInteres;
+  totalPrestamo = monto; // 🔹 Asegura que saldo inicial sea correcto
 
-let interesMes = saldo * interesMensual;
-let capital = cuota - interesMes;
+  // 🔹 Actualizar gráfico
+  if (chart) {
+    chart.destroy();
+    chart = null;
+  }
 
-saldo -= capital;
-if(saldo < 0) saldo = 0;
+  chart = new Chart(document.getElementById("grafica"), {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Saldo restante",
+          data: saldos,
+          borderColor: "#007bff",
+          backgroundColor: "rgba(0,123,255,0.1)",
+          tension: 0.3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+      },
+    },
+  });
 
-capitalCuotas.push(capital);
-interesCuotas.push(interesMes);
-
-totalInteres += interesMes;
-
-let fecha = new Date(fechaBase);
-fecha.setMonth(fecha.getMonth()+i);
-fecha.setDate(diaPago);
-
-let fechaTexto = fecha.toLocaleDateString("es-CO");
-
-let hoy = new Date();
-
-let estado="Pendiente";
-let clase="";
-
-if(hoy > fecha){
-estado="Vencida";
-clase="vencida";
-}
-
-labels.push("Cuota "+i);
-saldos.push(saldo);
-
-tabla.innerHTML += `
-<tr id="fila${i}" class="${clase}">
-<td>${i}</td>
-<td>${fechaTexto}</td>
-<td>$${dinero(cuota.toFixed(0))}</td>
-<td>$${dinero(interesMes.toFixed(0))}</td>
-<td>$${dinero(capital.toFixed(0))}</td>
-<td>$${dinero(saldo.toFixed(0))}</td>
-<td id="estado${i}">${estado}</td>
-<td>
-<button onclick="pagarCuota(${i},this)">Pagar</button>
-</td>
-</tr>
-`;
-}
-
-totalDeuda = monto + totalInteres;
-
-if(chart){
-chart.destroy();
-chart = null;
-}
-
-chart = new Chart(document.getElementById("grafica"),{
-type:"line",
-data:{
-labels:labels,
-datasets:[
-{
-label:"Saldo restante",
-data:saldos
-}
-]
-}
-});
-
-actualizarEstado();
+  actualizarEstado();
 }
