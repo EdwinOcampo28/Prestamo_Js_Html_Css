@@ -123,12 +123,29 @@ function calcular() {
       ]
     },
     options: {
-      responsive: true,
-      plugins: {
-        legend: { display: true }
-      }
-    }
+
+responsive:true,
+
+animation:{
+duration:1200,
+easing:"easeOutQuart"
+},
+
+plugins:{
+legend:{
+display:true
+}
+},
+
+scales:{
+y:{
+beginAtZero:true
+}
+}
+
+}
   });
 
   actualizarEstado();
+  guardarPrestamo();
 }

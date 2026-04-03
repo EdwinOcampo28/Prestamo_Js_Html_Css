@@ -35,6 +35,49 @@ function actualizarTexto(id, valor) {
   if (elemento) elemento.innerText = valor;
 }
 
+
+function dinero(valor){
+return valor.toLocaleString("es-CO");
+}
+
+// Guarda el estado actual del préstamo en localStorage
+function guardarPrestamo(){
+
+const datos = {
+totalPrestamo,
+capitalPagado,
+interesPagado,
+cuotasPagadas,
+capitalCuotas,
+interesCuotas,
+cuotasPagadasEstado
+};
+
+localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
+
+}
+
+// Carga el estado del préstamo desde localStorage
+function cargarPrestamo(){
+
+const datos = localStorage.getItem("prestamoSimulador");
+
+if(!datos) return;
+
+const prestamo = JSON.parse(datos);
+
+totalPrestamo = prestamo.totalPrestamo;
+capitalPagado = prestamo.capitalPagado;
+interesPagado = prestamo.interesPagado;
+cuotasPagadas = prestamo.cuotasPagadas;
+capitalCuotas = prestamo.capitalCuotas;
+interesCuotas = prestamo.interesCuotas;
+cuotasPagadasEstado = prestamo.cuotasPagadasEstado;
+
+actualizarEstado();
+
+}
+
 /**
  * Calcula progreso del préstamo
  */
@@ -66,7 +109,9 @@ function actualizarEstado() {
   actualizarTexto("progresoPrestamo", progreso.toFixed(0) + "%");
 
   const barra = document.getElementById("barraProgreso");
-  if (barra) barra.style.width = progreso + "%";
+  if (barra) setTimeout(()=>{
+barra.style.width = progreso + "%";
+},100);
 
   // 🔹 Intereses que quedan en el plan actual
   let interesRestante = 0;

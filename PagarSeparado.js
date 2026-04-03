@@ -105,7 +105,15 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
 for (let i = cuotasPagadas; i < cuotasTotales; i++) {
 
   if (saldo <= 0) {
+
     cuotasPagadasEstado[i] = true;
+
+    // 🔹 marcar fila como cancelada visualmente
+    const fila = document.getElementById("fila" + (i + 1));
+    if (fila) {
+      fila.classList.add("fila-cancelada");
+    }
+
     continue;
   }
 
@@ -168,7 +176,26 @@ data: {
   ]
 },
 options: {
-  responsive: true
+
+responsive:true,
+
+animation:{
+duration:1200,
+easing:"easeOutQuart"
+},
+
+plugins:{
+legend:{
+display:true
+}
+},
+
+scales:{
+y:{
+beginAtZero:true
+}
+}
+
 }
 });
 
@@ -194,6 +221,18 @@ if (!cuotasPagadasEstado[i] && capitalCuotas[i] + interesCuotas[i] > 0) {
 
 let ahorro = Math.round(interesAntes - interesDespues);
 let cuotasReducidas = cuotasAntes - cuotasDespues;
+
+// actualizar comparador
+
+const interesOriginalEl = document.getElementById("interesOriginal");
+const interesConAbonoEl = document.getElementById("interesConAbono");
+const ahorroTotalEl = document.getElementById("ahorroTotal");
+const cuotasReducidasEl = document.getElementById("cuotasReducidas");
+
+if(interesOriginalEl) interesOriginalEl.innerText = "$" + dinero(interesAntes);
+if(interesConAbonoEl) interesConAbonoEl.innerText = "$" + dinero(interesDespues);
+if(ahorroTotalEl) ahorroTotalEl.innerText = "$" + dinero(ahorro);
+if(cuotasReducidasEl) cuotasReducidasEl.innerText = cuotasReducidas;
 
 const resultado = document.getElementById("resultadoAbono");
 

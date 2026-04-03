@@ -26,7 +26,7 @@ function pagarCuota(numero, boton) {
   if (estado) estado.innerText = "Pagada";
 
   if (boton) boton.disabled = true;
-
+  document.getElementById("fila"+numero).classList.add("fila-pagada");
   const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
   const interesMensual = interesAnual / 12;
 

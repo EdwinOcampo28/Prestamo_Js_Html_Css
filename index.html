@@ -188,6 +188,36 @@ Descargar PDF
 
 </div>
 
+<section class="comparador">
+
+<h3>Comparación del préstamo</h3>
+
+<div class="comparador-grid">
+
+<div class="comparador-card">
+<p>Interés sin abono</p>
+<strong id="interesOriginal">$0</strong>
+</div>
+
+<div class="comparador-card">
+<p>Interés con abono</p>
+<strong id="interesConAbono">$0</strong>
+</div>
+
+<div class="comparador-card ahorro">
+<p>Ahorro total</p>
+<strong id="ahorroTotal">$0</strong>
+</div>
+
+<div class="comparador-card">
+<p>Cuotas reducidas</p>
+<strong id="cuotasReducidas">0</strong>
+</div>
+
+</div>
+
+</section>
+
 <!-- SCRIPTS -->
 <script defer src="Calculadora.js"></script>
 <script defer src="Pdf.js"></script>
@@ -222,6 +252,8 @@ btnAbono.addEventListener("click", pagarSeparado);
 }
 
 });
+
+cargarPrestamo();
 
 </script>
 
