@@ -2,131 +2,226 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador de Préstamos</title>
 
-  <!-- Estilos -->
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Chart.js -->
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>Simulador de Préstamos</title>
 
-  <!-- jsPDF -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+
+<!-- Chart.js -->
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- jsPDF -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
 
 <body>
-  <div class="container">
 
-    <h1>Simulador de Préstamos</h1>
+<div class="container">
 
-    <!-- TARJETAS DE ESTADO -->
-    <section class="cards">
-      <div class="card">
-        <h3>Saldo pendiente</h3>
-        <p id="saldoPendiente">$0</p>
-      </div>
-      <div class="card">
-        <h3>Capital pagado</h3>
-        <p id="capitalPagado">$0</p>
-      </div>
-      <div class="card">
-        <h3>Intereses pagados</h3>
-        <p id="interesPagado">$0</p>
-      </div>
-      <div class="card">
-        <h3>Total pagado</h3>
-        <p id="totalPagado">$0</p>
-      </div>
-      <div class="card">
-        <h3>Progreso</h3>
-        <p id="progresoPrestamo">0%</p>
-      </div>
-      <!-- NUEVO CARD: INTERESES AHORRADOS -->
-      <div class="card">
-        <h3>Intereses ahorrados</h3>
-        <p id="interesAhorrado">$0</p>
-      </div>
-    </section>
+<h1>Simulador de Préstamos</h1>
 
-    <!-- BARRA DE PROGRESO -->
-    <div class="barra-container">
-      <div id="barraProgreso"></div>
-    </div>
+<!-- TARJETAS DE ESTADO -->
+<section class="cards">
 
-    <!-- FORMULARIO DE PRÉSTAMO -->
-    <section class="formulario">
-      <input type="number" id="monto" placeholder="Monto del préstamo" value="2200000" min="1">
-      <input type="number" id="interes" placeholder="Interés anual (%)" value="24" min="0">
-      <input type="number" id="cuotas" placeholder="Número de cuotas" value="29" min="1">
-      <input type="number" id="diaPago" placeholder="Día de pago" min="1" max="31" value="15">
-    </section>
+<div class="card">
+<h3>Saldo pendiente</h3>
+<p id="saldoPendiente">$0</p>
+</div>
 
-    <!-- FORMULARIO DE ABONO -->
-    <section class="abono">
-      <input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" min="1">
-      <select id="tipoAbono">
-        <option value="cuota">Reducir cuota</option>
-        <option value="plazo">Reducir plazo</option>
-      </select>
-      <button type="button" id="btnAbono">Aplicar abono</button>
-    </section>
+<div class="card">
+<h3>Capital pagado</h3>
+<p id="capitalPagado">$0</p>
+</div>
 
-    <!-- BOTONES PRINCIPALES -->
-    <section class="botones">
-      <button type="button" id="btnCalcular">Calcular préstamo</button>
-      <button type="button" id="btnReiniciar">Reiniciar</button>
-      <button type="button" id="btnPDF">Descargar PDF</button>
-    </section>
+<div class="card">
+<h3>Intereses pagados</h3>
+<p id="interesPagado">$0</p>
+</div>
 
-    <!-- TABLA DE AMORTIZACIÓN -->
-    <section class="tabla-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Cuota</th>
-            <th>Fecha pago</th>
-            <th>Pago</th>
-            <th>Interés</th>
-            <th>Capital</th>
-            <th>Saldo</th>
-            <th>Estado</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody id="tabla"></tbody>
-      </table>
-    </section>
+<div class="card">
+<h3>Total pagado</h3>
+<p id="totalPagado">$0</p>
+</div>
 
-    <!-- GRÁFICA -->
-    <section class="grafica-container">
-      <canvas id="grafica"></canvas>
-    </section>
+<div class="card">
+<h3>Progreso</h3>
+<p id="progresoPrestamo">0%</p>
+</div>
 
-  </div>
+<div class="card">
+<h3>Intereses ahorrados</h3>
+<p id="interesAhorrado">$0</p>
+</div>
 
-  <!-- SCRIPTS MODULARES -->
-  <script defer src="Calculadora.js"></script>
-  <script defer src="Pdf.js"></script>
-  <script defer src="Calcular.js"></script>
-  <script defer src="PagarCuota.js"></script>
-  <script defer src="PagarSeparado.js"></script>
-  <script defer src="ReiniciarPrestamo.js"></script>
+</section>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const btnCalcular = document.getElementById("btnCalcular");
-      const btnReiniciar = document.getElementById("btnReiniciar");
-      const btnPDF = document.getElementById("btnPDF");
-      const btnAbono = document.getElementById("btnAbono");
+<!-- BARRA DE PROGRESO -->
+<div class="barra-container">
+<div id="barraProgreso"></div>
+</div>
 
-      if (btnCalcular) btnCalcular.addEventListener("click", calcular);
-      if (btnReiniciar) btnReiniciar.addEventListener("click", reiniciar);
-      if (btnPDF) btnPDF.addEventListener("click", generarPDF);
-      if (btnAbono) btnAbono.addEventListener("click", pagarSeparado);
-    });
-  </script>
+<!-- FORMULARIO DEL PRÉSTAMO -->
+<section class="formulario">
+
+<input
+type="number"
+id="monto"
+placeholder="Monto del préstamo"
+value="2200000"
+min="1">
+
+<input
+type="number"
+id="interes"
+placeholder="Interés anual (%)"
+value="24"
+min="0">
+
+<input
+type="number"
+id="cuotas"
+placeholder="Número de cuotas"
+value="29"
+min="1">
+
+<input
+type="number"
+id="diaPago"
+placeholder="Día de pago"
+min="1"
+max="31"
+value="15">
+
+</section>
+
+<!-- ABONO A CAPITAL -->
+<section class="abono">
+
+<input
+type="number"
+id="abonoCapital"
+placeholder="Valor a abonar al capital"
+min="1">
+
+<select id="tipoAbono">
+
+<option value="cuota">
+Reducir cuota
+</option>
+
+<option value="plazo">
+Reducir plazo
+</option>
+
+</select>
+
+<button
+type="button"
+id="btnAbono">
+Aplicar abono
+</button>
+
+</section>
+
+<!-- BOTONES PRINCIPALES -->
+<section class="botones">
+
+<button
+type="button"
+id="btnCalcular">
+Calcular préstamo
+</button>
+
+<button
+type="button"
+id="btnReiniciar">
+Reiniciar
+</button>
+
+<button
+type="button"
+id="btnPDF">
+Descargar PDF
+</button>
+
+</section>
+
+<!-- TABLA DE AMORTIZACIÓN -->
+<section class="tabla-container">
+
+<table id="tablaAmortizacion">
+
+<thead>
+
+<tr>
+<th>Cuota</th>
+<th>Fecha pago</th>
+<th>Pago</th>
+<th>Interés</th>
+<th>Capital</th>
+<th>Saldo</th>
+<th>Estado</th>
+<th>Acción</th>
+</tr>
+
+</thead>
+
+<tbody id="tabla">
+</tbody>
+
+</table>
+
+</section>
+
+<!-- GRÁFICA -->
+<section class="grafica-container">
+
+<canvas id="grafica"></canvas>
+
+</section>
+
+</div>
+
+<!-- SCRIPTS -->
+<script defer src="Calculadora.js"></script>
+<script defer src="Pdf.js"></script>
+<script defer src="Calcular.js"></script>
+<script defer src="PagarCuota.js"></script>
+<script defer src="PagarSeparado.js"></script>
+<script defer src="ReiniciarPrestamo.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+const btnCalcular = document.getElementById("btnCalcular");
+const btnReiniciar = document.getElementById("btnReiniciar");
+const btnPDF = document.getElementById("btnPDF");
+const btnAbono = document.getElementById("btnAbono");
+
+if(btnCalcular){
+btnCalcular.addEventListener("click", calcular);
+}
+
+if(btnReiniciar){
+btnReiniciar.addEventListener("click", reiniciar);
+}
+
+if(btnPDF){
+btnPDF.addEventListener("click", generarPDF);
+}
+
+if(btnAbono){
+btnAbono.addEventListener("click", pagarSeparado);
+}
+
+});
+
+</script>
+
 </body>
-
 </html>

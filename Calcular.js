@@ -1,7 +1,8 @@
 "use strict";
 
 function calcular() {
-  // 📌 Obtener valores del formulario
+
+  // 📌 Obtener valores
   const monto = parseInt(document.getElementById("monto").value);
   const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
   const cuotas = parseInt(document.getElementById("cuotas").value);
@@ -13,53 +14,64 @@ function calcular() {
     return;
   }
 
-  // 🔄 Reiniciar variables globales
+  // 🔄 Reiniciar variables
   totalPrestamo = monto;
   cuotasTotales = cuotas;
   pagado = 0;
   cuotasPagadas = 0;
   capitalPagado = 0;
   interesPagado = 0;
+
   capitalCuotas = [];
   interesCuotas = [];
   cuotasPagadasEstado = new Array(cuotas).fill(false);
 
   const interesMensual = interesAnual / 12;
 
-  // 📌 Cálculo de cuota mensual
-  let cuota = monto * (interesMensual * Math.pow(1 + interesMensual, cuotas)) / (Math.pow(1 + interesMensual, cuotas) - 1);
-  cuota = Math.round(cuota); // 🔹 Redondear a entero
+  // 📌 Cuota fija (Sistema francés)
+  let cuota = monto * (interesMensual * Math.pow(1 + interesMensual, cuotas)) /
+              (Math.pow(1 + interesMensual, cuotas) - 1);
+
+  cuota = Math.round(cuota);
 
   let saldo = monto;
+
   const tabla = document.getElementById("tabla");
   tabla.innerHTML = "";
+
   const labels = [];
   const saldos = [];
+
   let totalInteres = 0;
+
   const fechaBase = new Date();
 
   // 🗓 Generar cuotas
   for (let i = 1; i <= cuotas; i++) {
-    let interesMes = Math.round(saldo * interesMensual); // 🔹 Redondear
-    let capital = Math.round(cuota - interesMes);        // 🔹 Redondear
+
+    let interesMes = Math.round(saldo * interesMensual);
+    let capital = Math.round(cuota - interesMes);
 
     saldo -= capital;
-    saldo = Math.max(0, saldo); // 🔹 No permitir saldo negativo
+    saldo = Math.max(0, saldo);
 
     capitalCuotas.push(capital);
     interesCuotas.push(interesMes);
+
     totalInteres += interesMes;
 
-    // 📌 Fecha de pago
+    // 📅 Fecha de pago
     const fecha = new Date(fechaBase);
     fecha.setMonth(fecha.getMonth() + i);
     fecha.setDate(diaPago);
+
     const fechaTexto = fecha.toLocaleDateString("es-CO");
 
-    // 🔹 Estado de la cuota
+    // Estado de cuota
     const hoy = new Date();
     let estado = "Pendiente";
     let clase = "";
+
     if (hoy > fecha) {
       estado = "Vencida";
       clase = "vencida";
@@ -68,7 +80,6 @@ function calcular() {
     labels.push("Cuota " + i);
     saldos.push(saldo);
 
-    // 📄 Fila de tabla
     tabla.innerHTML += `
       <tr id="fila${i}" class="${clase}">
         <td>${i}</td>
@@ -85,10 +96,13 @@ function calcular() {
     `;
   }
 
-  totalDeuda = monto + totalInteres;
-  totalPrestamo = monto; // 🔹 Asegura que saldo inicial sea correcto
+  // 🔹 Guardar interés original del préstamo
+  interesTotalOriginal = totalInteres;
 
-  // 🔹 Actualizar gráfico
+  totalDeuda = monto + totalInteres;
+  totalPrestamo = monto;
+
+  // 📊 Gráfica
   if (chart) {
     chart.destroy();
     chart = null;
@@ -104,16 +118,16 @@ function calcular() {
           data: saldos,
           borderColor: "#007bff",
           backgroundColor: "rgba(0,123,255,0.1)",
-          tension: 0.3,
-        },
-      ],
+          tension: 0.3
+        }
+      ]
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { display: true },
-      },
-    },
+        legend: { display: true }
+      }
+    }
   });
 
   actualizarEstado();
