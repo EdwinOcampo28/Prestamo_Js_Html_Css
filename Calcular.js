@@ -3,10 +3,10 @@
 function calcular() {
 
   // 📌 Obtener valores
-  const monto = parseInt(document.getElementById("monto").value);
-  const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
-  const cuotas = parseInt(document.getElementById("cuotas").value);
-  const diaPago = parseInt(document.getElementById("diaPago").value);
+  const monto = parseInt(document.getElementById("monto")?.value);
+  const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100;
+  const cuotas = parseInt(document.getElementById("cuotas")?.value);
+  const diaPago = parseInt(document.getElementById("diaPago")?.value);
 
   // 🚨 Validación
   if ([monto, interesAnual, cuotas, diaPago].some(isNaN) || monto <= 0 || cuotas <= 0 || diaPago <= 0 || diaPago > 31) {
@@ -37,6 +37,8 @@ function calcular() {
   let saldo = monto;
 
   const tabla = document.getElementById("tabla");
+  if (!tabla) return;
+
   tabla.innerHTML = "";
 
   const labels = [];
@@ -62,7 +64,7 @@ function calcular() {
 
     // 📅 Fecha de pago
     const fecha = new Date(fechaBase);
-    fecha.setMonth(fecha.getMonth() + i);
+    fecha.setMonth(fechaBase.getMonth() + i);
     fecha.setDate(diaPago);
 
     const fechaTexto = fecha.toLocaleDateString("es-CO");
@@ -90,7 +92,9 @@ function calcular() {
         <td>$${dinero(saldo)}</td>
         <td id="estado${i}">${estado}</td>
         <td>
-          <button onclick="pagarCuota(${i}, this)">Pagar</button>
+          <button onclick="pagarCuota(${i}, this)" style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">
+            Pagar
+          </button>
         </td>
       </tr>
     `;
@@ -108,43 +112,45 @@ function calcular() {
     chart = null;
   }
 
-  chart = new Chart(document.getElementById("grafica"), {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Saldo restante",
-          data: saldos,
-          borderColor: "#007bff",
-          backgroundColor: "rgba(0,123,255,0.1)",
-          tension: 0.3
+  if (typeof Chart !== "undefined") {
+    chart = new Chart(document.getElementById("grafica"), {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Saldo restante",
+            data: saldos,
+            borderColor: "#007bff",
+            backgroundColor: "rgba(0,123,255,0.1)",
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+
+        responsive: true,
+
+        animation:{
+          duration:1200,
+          easing:"easeOutQuart"
+        },
+
+        plugins:{
+          legend:{
+            display:true
+          }
+        },
+
+        scales:{
+          y:{
+            beginAtZero:true
+          }
         }
-      ]
-    },
-    options: {
 
-responsive:true,
-
-animation:{
-duration:1200,
-easing:"easeOutQuart"
-},
-
-plugins:{
-legend:{
-display:true
-}
-},
-
-scales:{
-y:{
-beginAtZero:true
-}
-}
-
-}
-  });
+      }
+    });
+  }
 
   actualizarEstado();
   guardarPrestamo();

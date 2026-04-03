@@ -17,18 +17,18 @@ for (let i = 0; i < capitalCuotas.length; i++) {
   }
 }
 
-let abono = parseFloat(document.getElementById("abonoCapital").value);
+let abono = parseFloat(document.getElementById("abonoCapital")?.value);
 
-if (!abono || abono <= 0) {
+if (!abono || abono <= 0 || isNaN(abono)) {
   alert("Ingresa un valor de abono");
   return;
 }
 
 if (abono > totalPrestamo) abono = totalPrestamo;
 
-const tipo = document.getElementById("tipoAbono").value;
+const tipo = document.getElementById("tipoAbono")?.value || "cuota";
 
-const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
+const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100 || 0;
 const interesMensual = interesAnual / 12;
 
 let interesNuevoRestante = 0;
@@ -39,6 +39,8 @@ capitalPagado += abono;
 pagado = capitalPagado + interesPagado;
 
 const tabla = document.getElementById("tabla");
+if (!tabla) return;
+
 tabla.innerHTML = "";
 
 const labels = [];
@@ -63,10 +65,10 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
 
   if (saldo <= 0) break;
 
-  const interesMes = Math.round(saldo * interesMensual);
+  const interesMes = Math.max(0, Math.round(saldo * interesMensual));
   let capital = Math.round(nuevaCuota - interesMes);
 
-  if (capital > saldo) capital = saldo; // 🔹 última cuota exacta
+  if (capital > saldo) capital = saldo;
 
   saldo -= capital;
   saldo = Math.max(0, saldo);
@@ -81,7 +83,7 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
 
   const fecha = new Date(fechaBase);
   fecha.setMonth(fecha.getMonth() + (i + 1));
-  fecha.setDate(parseInt(document.getElementById("diaPago").value));
+  fecha.setDate(parseInt(document.getElementById("diaPago")?.value));
 
   const fechaTexto = fecha.toLocaleDateString("es-CO");
 
@@ -94,7 +96,11 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
       <td>$${dinero(capital)}</td>
       <td>$${dinero(saldo)}</td>
       <td>Pendiente</td>
-      <td><button onclick="pagarCuota(${i + 1}, this)">Pagar</button></td>
+      <td>
+      <button onclick="pagarCuota(${i + 1}, this)" style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">
+      Pagar
+      </button>
+      </td>
     </tr>
   `;
 }
@@ -108,19 +114,16 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
 
     cuotasPagadasEstado[i] = true;
 
-    // 🔹 marcar fila como cancelada visualmente
     const fila = document.getElementById("fila" + (i + 1));
-    if (fila) {
-      fila.classList.add("fila-cancelada");
-    }
+    if (fila) fila.classList.add("fila-cancelada");
 
     continue;
   }
 
-  const interesMes = Math.round(saldo * interesMensual);
+  const interesMes = Math.max(0, Math.round(saldo * interesMensual));
   let capital = capitalCuotas[i];
 
-  if (capital > saldo) capital = saldo; // 🔹 última cuota exacta
+  if (capital > saldo) capital = saldo;
 
   saldo -= capital;
   saldo = Math.max(0, saldo);
@@ -135,7 +138,7 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
 
   const fecha = new Date(fechaBase);
   fecha.setMonth(fecha.getMonth() + (i + 1));
-  fecha.setDate(parseInt(document.getElementById("diaPago").value));
+  fecha.setDate(parseInt(document.getElementById("diaPago")?.value));
 
   const fechaTexto = fecha.toLocaleDateString("es-CO");
 
@@ -148,18 +151,28 @@ for (let i = cuotasPagadas; i < cuotasTotales; i++) {
       <td>$${dinero(capital)}</td>
       <td>$${dinero(saldo)}</td>
       <td>Pendiente</td>
-      <td><button onclick="pagarCuota(${i + 1}, this)">Pagar</button></td>
+      <td>
+      <button onclick="pagarCuota(${i + 1}, this)" style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">
+      Pagar
+      </button>
+      </td>
     </tr>
   `;
 }
 
 }
 
-document.getElementById("interesAhorrado").innerText =
+const interesAhorradoEl = document.getElementById("interesAhorrado");
+
+if(interesAhorradoEl){
+interesAhorradoEl.innerText =
 "$" + dinero(Math.round(interesAntes - (interesPagado + interesNuevoRestante)));
+}
 
 // actualizar grafica
 if (chart) chart.destroy();
+
+if (typeof Chart !== "undefined") {
 
 chart = new Chart(document.getElementById("grafica"), {
 type: "line",
@@ -199,9 +212,12 @@ beginAtZero:true
 }
 });
 
+}
+
 actualizarEstado();
 
-document.getElementById("abonoCapital").value = "";
+const inputAbono = document.getElementById("abonoCapital");
+if(inputAbono) inputAbono.value = "";
 
 let interesDespues = interesPagado;
 
@@ -246,4 +262,6 @@ resultado.innerHTML = `
 }
 
 alert("Abono aplicado correctamente");
+
+guardarPrestamo();
 }

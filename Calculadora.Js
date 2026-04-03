@@ -19,12 +19,12 @@ let cuotasPagadasEstado = [];
 
 /**
  * Convierte un número a formato de dinero con separador de miles
- * @param {number} num
+ * @param {number} valor
  * @returns {string}
  */
-function dinero(num){
-  num = Math.round(num);
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+function dinero(valor){
+  if(!valor) return "0";
+  return Math.round(valor).toLocaleString("es-CO");
 }
 
 /**
@@ -33,11 +33,6 @@ function dinero(num){
 function actualizarTexto(id, valor) {
   const elemento = document.getElementById(id);
   if (elemento) elemento.innerText = valor;
-}
-
-
-function dinero(valor){
-return valor.toLocaleString("es-CO");
 }
 
 // Guarda el estado actual del préstamo en localStorage
@@ -66,13 +61,13 @@ if(!datos) return;
 
 const prestamo = JSON.parse(datos);
 
-totalPrestamo = prestamo.totalPrestamo;
-capitalPagado = prestamo.capitalPagado;
-interesPagado = prestamo.interesPagado;
-cuotasPagadas = prestamo.cuotasPagadas;
-capitalCuotas = prestamo.capitalCuotas;
-interesCuotas = prestamo.interesCuotas;
-cuotasPagadasEstado = prestamo.cuotasPagadasEstado;
+totalPrestamo = prestamo.totalPrestamo || 0;
+capitalPagado = prestamo.capitalPagado || 0;
+interesPagado = prestamo.interesPagado || 0;
+cuotasPagadas = prestamo.cuotasPagadas || 0;
+capitalCuotas = prestamo.capitalCuotas || [];
+interesCuotas = prestamo.interesCuotas || [];
+cuotasPagadasEstado = prestamo.cuotasPagadasEstado || [];
 
 actualizarEstado();
 
@@ -100,6 +95,9 @@ function calcularProgreso() {
  */
 function actualizarEstado() {
 
+  // recalcular pagado automáticamente
+  pagado = capitalPagado + interesPagado;
+
   const progreso = calcularProgreso();
 
   actualizarTexto("saldoPendiente", "$" + dinero(totalPrestamo));
@@ -110,8 +108,8 @@ function actualizarEstado() {
 
   const barra = document.getElementById("barraProgreso");
   if (barra) setTimeout(()=>{
-barra.style.width = progreso + "%";
-},100);
+    barra.style.width = progreso + "%";
+  },100);
 
   // 🔹 Intereses que quedan en el plan actual
   let interesRestante = 0;

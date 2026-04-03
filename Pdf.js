@@ -2,54 +2,87 @@
 
 // Generar PDF de la simulación de préstamo
 function generarPDF() {
+
+  if (!window.jspdf) {
+    alert("La librería jsPDF no está cargada.");
+    return;
+  }
+
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  // 📌 Configuración inicial
   const margenX = 20;
   let y = 20;
 
+  // 📌 Obtener elementos
+  const totalPagadoEl = document.getElementById("totalPagado");
+  const saldoPendienteEl = document.getElementById("saldoPendiente");
+  const tabla = document.getElementById("tabla");
+
+  if (!tabla) {
+    alert("No hay datos para exportar.");
+    return;
+  }
+
   doc.setFontSize(18);
   doc.text("Simulación de Préstamo", margenX, y);
-  y += 10;
+  y += 12;
 
   doc.setFontSize(12);
-  doc.text("Total pagado: " + document.getElementById("totalPagado").innerText, margenX, y);
+
+  if (totalPagadoEl)
+    doc.text("Total pagado: " + totalPagadoEl.innerText, margenX, y);
+
   y += 8;
-  doc.text("Saldo pendiente: " + document.getElementById("saldoPendiente").innerText, margenX, y);
-  y += 12;
+
+  if (saldoPendienteEl)
+    doc.text("Saldo pendiente: " + saldoPendienteEl.innerText, margenX, y);
+
+  y += 14;
 
   doc.setFontSize(14);
   doc.text("Tabla de amortización", margenX, y);
-  y += 8;
+  y += 10;
 
   // 📄 Encabezados de tabla
   const headers = ["#", "Fecha", "Cuota", "Interés", "Capital", "Saldo", "Estado"];
+
+  const posiciones = [20, 30, 65, 90, 120, 150, 180];
+
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text(headers.join("   "), margenX, y);
+
+  headers.forEach((header, i) => {
+    doc.text(header, posiciones[i], y);
+  });
+
   doc.setFont("helvetica", "normal");
   y += 6;
 
-  // 📌 Recorrer filas de la tabla
-  const filas = document.querySelectorAll("#tabla tr");
-  filas.forEach((fila) => {
-    const columnas = fila.querySelectorAll("td");
-    const textoFila = Array.from(columnas)
-      .slice(0, 7) // Solo las columnas visibles
-      .map((col) => col.innerText)
-      .join("   ");
+  const filas = tabla.querySelectorAll("tr");
 
-    doc.text(textoFila, margenX, y);
+  filas.forEach((fila) => {
+
+    const columnas = fila.querySelectorAll("td");
+
+    columnas.forEach((col, i) => {
+
+      if (i < 7) {
+        doc.text(col.innerText, posiciones[i], y);
+      }
+
+    });
+
     y += 6;
 
-    // Salto de página automático
+    // salto de página automático
     if (y > 280) {
       doc.addPage();
       y = 20;
     }
+
   });
 
-  // 📌 Guardar PDF con nombre dinámico
+  // 📌 Guardar PDF
   doc.save("Simulacion_Prestamo.pdf");
 }

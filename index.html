@@ -119,9 +119,7 @@ Reducir plazo
 
 </select>
 
-<button
-type="button"
-id="btnAbono">
+<button type="button" id="btnAbono">
 Aplicar abono
 </button>
 
@@ -132,21 +130,15 @@ Aplicar abono
 <!-- BOTONES PRINCIPALES -->
 <section class="botones">
 
-<button
-type="button"
-id="btnCalcular">
+<button type="button" id="btnCalcular">
 Calcular préstamo
 </button>
 
-<button
-type="button"
-id="btnReiniciar">
+<button type="button" id="btnReiniciar">
 Reiniciar
 </button>
 
-<button
-type="button"
-id="btnPDF">
+<button type="button" id="btnPDF">
 Descargar PDF
 </button>
 
@@ -158,7 +150,6 @@ Descargar PDF
 <table id="tablaAmortizacion">
 
 <thead>
-
 <tr>
 <th>Cuota</th>
 <th>Fecha pago</th>
@@ -169,11 +160,9 @@ Descargar PDF
 <th>Estado</th>
 <th>Acción</th>
 </tr>
-
 </thead>
 
-<tbody id="tabla">
-</tbody>
+<tbody id="tabla"></tbody>
 
 </table>
 
@@ -181,13 +170,12 @@ Descargar PDF
 
 <!-- GRÁFICA -->
 <section class="grafica-container">
-
 <canvas id="grafica"></canvas>
-
 </section>
 
 </div>
 
+<!-- COMPARADOR -->
 <section class="comparador">
 
 <h3>Comparación del préstamo</h3>
@@ -218,13 +206,13 @@ Descargar PDF
 
 </section>
 
-<!-- SCRIPTS -->
+<!-- SCRIPTS DEL PROYECTO -->
 <script defer src="Calculadora.js"></script>
-<script defer src="Pdf.js"></script>
 <script defer src="Calcular.js"></script>
 <script defer src="PagarCuota.js"></script>
 <script defer src="PagarSeparado.js"></script>
 <script defer src="ReiniciarPrestamo.js"></script>
+<script defer src="Pdf.js"></script>
 
 <script>
 
@@ -235,25 +223,32 @@ const btnReiniciar = document.getElementById("btnReiniciar");
 const btnPDF = document.getElementById("btnPDF");
 const btnAbono = document.getElementById("btnAbono");
 
-if(btnCalcular){
+/* BOTÓN CALCULAR */
+if (btnCalcular && typeof calcular === "function") {
 btnCalcular.addEventListener("click", calcular);
 }
 
-if(btnReiniciar){
+/* BOTÓN REINICIAR */
+if (btnReiniciar && typeof reiniciar === "function") {
 btnReiniciar.addEventListener("click", reiniciar);
 }
 
-if(btnPDF){
+/* BOTÓN PDF */
+if (btnPDF && typeof generarPDF === "function") {
 btnPDF.addEventListener("click", generarPDF);
 }
 
-if(btnAbono){
+/* BOTÓN ABONO */
+if (btnAbono && typeof pagarSeparado === "function") {
 btnAbono.addEventListener("click", pagarSeparado);
 }
 
-});
-
+/* CARGAR PRÉSTAMO GUARDADO */
+if (typeof cargarPrestamo === "function") {
 cargarPrestamo();
+}
+
+});
 
 </script>
 

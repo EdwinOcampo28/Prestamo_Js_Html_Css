@@ -26,8 +26,12 @@ function pagarCuota(numero, boton) {
   if (estado) estado.innerText = "Pagada";
 
   if (boton) boton.disabled = true;
-  document.getElementById("fila"+numero).classList.add("fila-pagada");
-  const interesAnual = parseFloat(document.getElementById("interes").value) / 100;
+
+  const fila = document.getElementById("fila" + numero);
+  if (fila) fila.classList.add("fila-pagada");
+
+  const interesInput = document.getElementById("interes");
+  const interesAnual = parseFloat(interesInput?.value) / 100 || 0;
   const interesMensual = interesAnual / 12;
 
   let saldoRestante = totalPrestamo;
@@ -37,7 +41,7 @@ function pagarCuota(numero, boton) {
 
     if (cuotasPagadasEstado[j]) continue;
 
-    const nuevoInteres = Math.round(saldoRestante * interesMensual);
+    const nuevoInteres = Math.max(0, Math.round(saldoRestante * interesMensual));
     interesCuotas[j] = nuevoInteres;
 
     saldoRestante -= capitalCuotas[j];
@@ -55,12 +59,13 @@ function pagarCuota(numero, boton) {
       const estado = document.getElementById("estado" + (j + 1));
       if (estado) estado.innerText = "Cancelada";
 
-      const boton = document.querySelector(`#fila${j+1} button`);
-      if (boton) boton.disabled = true;
+      const botonFila = document.querySelector(`#fila${j+1} button`);
+      if (botonFila) botonFila.disabled = true;
 
     }
 
   }
 
   actualizarEstado();
+  guardarPrestamo();
 }
