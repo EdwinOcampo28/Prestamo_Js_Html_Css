@@ -232,23 +232,40 @@ for(let i=0;i<capitalCuotas.length;i++){
     }
 }
 
-let ahorro = Math.max(0, Math.round(interesAntes - interesDespues));
+let interesRestanteNuevo = 0;
+
+for(let i=0;i<interesCuotas.length;i++){
+    if(!cuotasPagadasEstado[i]){
+        interesRestanteNuevo += interesCuotas[i];
+    }
+}
+
+let interesTotalNuevo = interesPagado + interesRestanteNuevo;
+
+let ahorro = Math.round(interesTotalOriginal - interesTotalNuevo);
+let ahorroIndividual = Math.round(interesAntes - interesDespues);
+if(ahorroIndividual < 0) ahorroIndividual = 0;
+
+if(ahorro < 0) ahorro = 0;
+actualizarTexto("interesAhorrado", "$" + dinero(ahorro));
 let cuotasReducidas = Math.max(0, cuotasAntes - cuotasDespues);
 
-document.getElementById("interesOriginal").innerText="$"+dinero(interesAntes);
+document.getElementById("interesOriginal").innerText="$"+dinero(interesTotalOriginal);
 document.getElementById("interesConAbono").innerText="$"+dinero(interesDespues);
 document.getElementById("ahorroTotal").innerText="$"+dinero(ahorro);
-document.getElementById("cuotasReducidas").innerText=cuotasReducidas;
+let nuevoPlazo = cuotasDespues;
+
+document.getElementById("cuotasReducidas").innerText =
+cuotasReducidas + " cuotas menos (plazo: " + nuevoPlazo + ")";
 
 /* =========================
    HISTORIAL CON AHORRO
 ========================= */
-
 historialAbonos.push({
   valor: abono,
   fecha: new Date().toLocaleString("es-CO"),
   tipo: tipo,
-  ahorro: ahorro
+  ahorro: ahorroIndividual
 });
 
 alert("Abono aplicado correctamente");
