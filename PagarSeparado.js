@@ -28,25 +28,86 @@ if(abono > totalPrestamo){
     return;
 }
 
-const inputAbono = document.getElementById("abonoCapital");
-if(inputAbono){
-    inputAbono.max = totalPrestamo;
+/* =========================
+   🔥 DETECTOR AUTOMÁTICO
+========================= */
+const EPSILON = 1;
+let tipoOperacion = "normal";
+
+if(abono >= totalPrestamo - EPSILON){
+    tipoOperacion = "liquidacion_total";
 }
-
-const tipo = document.getElementById("tipoAbono")?.value || "cuota";
-
-const interesAnual = parseFloat(document.getElementById("interes")?.value)/100 || 0;
-const interesMensual = interesAnual/12;
-
-let interesNuevoRestante = 0;
 
 /* =========================
    APLICAR ABONO
 ========================= */
 
+if(tipoOperacion === "liquidacion_total"){
+    abono = totalPrestamo; // 🔥 exactitud total
+}
+
 totalPrestamo -= abono;
+totalPrestamo = Math.max(0,totalPrestamo);
+
 capitalPagado += abono;
 pagado = capitalPagado + interesPagado;
+
+/* =========================
+   🔥 LIQUIDACIÓN TOTAL
+========================= */
+if(tipoOperacion === "liquidacion_total"){
+
+    let interesRestanteAntes = 0;
+
+    for(let i=0;i<interesCuotas.length;i++){
+        if(!cuotasPagadasEstado[i]){
+            interesRestanteAntes += interesCuotas[i];
+        }
+    }
+
+    for(let i=0;i<cuotasTotales;i++){
+        if(!cuotasPagadasEstado[i]){
+            cuotasPagadasEstado[i] = true;
+            capitalCuotas[i] = 0;
+            interesCuotas[i] = 0;
+        }
+    }
+
+    const ahorroTotal = Math.round(interesTotalOriginal - interesPagado);
+    const ahorroIndividual = Math.round(interesRestanteAntes);
+
+    actualizarTexto("interesAhorrado", "$" + dinero(ahorroTotal));
+
+    document.getElementById("interesOriginal").innerText="$"+dinero(interesTotalOriginal);
+    document.getElementById("interesConAbono").innerText="$"+dinero(interesPagado);
+    document.getElementById("ahorroTotal").innerText="$"+dinero(ahorroTotal);
+    document.getElementById("cuotasReducidas").innerText =
+    cuotasAntes + " cuotas menos (plazo: 0)";
+
+    historialAbonos.push({
+        valor: abono,
+        fecha: new Date().toLocaleString("es-CO"),
+        tipo: "liquidación total",
+        ahorro: ahorroIndividual
+    });
+
+    reconstruirTabla();
+    guardarPrestamo();
+    actualizarEstado();
+    renderHistorial();
+
+    alert("Préstamo liquidado completamente ✅");
+
+    return;
+}
+
+/* =========================
+   RECÁLCULO NORMAL
+========================= */
+
+const tipo = document.getElementById("tipoAbono")?.value || "cuota";
+const interesAnual = parseFloat(document.getElementById("interes")?.value)/100 || 0;
+const interesMensual = interesAnual/12;
 
 let saldo = totalPrestamo;
 
@@ -124,8 +185,6 @@ if(tipo==="cuota"){
         interesCuotas[i] = interesMes;
         capitalCuotas[i] = capital;
 
-        interesNuevoRestante += interesMes;
-
         tabla.innerHTML+=`
         <tr id="fila${i+1}">
         <td>${i+1}</td>
@@ -142,8 +201,6 @@ if(tipo==="cuota"){
     }
 
 }else{
-
-/* REDUCIR PLAZO */
 
 for(let i=0;i<cuotasTotales;i++){
 
@@ -192,9 +249,6 @@ for(let i=0;i<cuotasTotales;i++){
     saldo = Math.max(0,saldo);
 
     interesCuotas[i] = interesMes;
-    capitalCuotas[i] = capital;
-
-    interesNuevoRestante += interesMes;
 
     tabla.innerHTML+=`
     <tr id="fila${i+1}">
@@ -213,24 +267,8 @@ for(let i=0;i<cuotasTotales;i++){
 }
 
 /* =========================
-   COMPARADOR
+   COMPARADOR FINAL CORRECTO
 ========================= */
-
-let interesDespues = interesPagado;
-
-for(let i=0;i<interesCuotas.length;i++){
-    if(!cuotasPagadasEstado[i]){
-        interesDespues += interesCuotas[i];
-    }
-}
-
-let cuotasDespues=0;
-
-for(let i=0;i<capitalCuotas.length;i++){
-    if(!cuotasPagadasEstado[i] && capitalCuotas[i]+interesCuotas[i]>0){
-        cuotasDespues++;
-    }
-}
 
 let interesRestanteNuevo = 0;
 
@@ -243,24 +281,30 @@ for(let i=0;i<interesCuotas.length;i++){
 let interesTotalNuevo = interesPagado + interesRestanteNuevo;
 
 let ahorro = Math.round(interesTotalOriginal - interesTotalNuevo);
-let ahorroIndividual = Math.round(interesAntes - interesDespues);
+if(ahorro < 0) ahorro = 0;
+
+let ahorroIndividual = Math.round(interesAntes - interesTotalNuevo);
 if(ahorroIndividual < 0) ahorroIndividual = 0;
 
-if(ahorro < 0) ahorro = 0;
-actualizarTexto("interesAhorrado", "$" + dinero(ahorro));
+let cuotasDespues = 0;
+
+for(let i=0;i<capitalCuotas.length;i++){
+    if(!cuotasPagadasEstado[i] && capitalCuotas[i]+interesCuotas[i]>0){
+        cuotasDespues++;
+    }
+}
+
 let cuotasReducidas = Math.max(0, cuotasAntes - cuotasDespues);
 
+actualizarTexto("interesAhorrado", "$" + dinero(ahorro));
+
 document.getElementById("interesOriginal").innerText="$"+dinero(interesTotalOriginal);
-document.getElementById("interesConAbono").innerText="$"+dinero(interesDespues);
+document.getElementById("interesConAbono").innerText="$"+dinero(interesTotalNuevo);
 document.getElementById("ahorroTotal").innerText="$"+dinero(ahorro);
-let nuevoPlazo = cuotasDespues;
 
 document.getElementById("cuotasReducidas").innerText =
-cuotasReducidas + " cuotas menos (plazo: " + nuevoPlazo + ")";
+cuotasReducidas + " cuotas menos (plazo: " + cuotasDespues + ")";
 
-/* =========================
-   HISTORIAL CON AHORRO
-========================= */
 historialAbonos.push({
   valor: abono,
   fecha: new Date().toLocaleString("es-CO"),
