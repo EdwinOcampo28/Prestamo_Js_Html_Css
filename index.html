@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,12 +9,9 @@
 
 <link rel="stylesheet" href="styles.css">
 
-<!-- Chart.js -->
+<!-- Librerías -->
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- jsPDF -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 </head>
 
 <body>
@@ -26,57 +22,29 @@
 
 <!-- TARJETAS -->
 <section class="cards">
-
-<div class="card">
-<h3>Saldo pendiente</h3>
-<p id="saldoPendiente">$0</p>
-</div>
-
-<div class="card">
-<h3>Capital pagado</h3>
-<p id="capitalPagado">$0</p>
-</div>
-
-<div class="card">
-<h3>Intereses pagados</h3>
-<p id="interesPagado">$0</p>
-</div>
-
-<div class="card">
-<h3>Total pagado</h3>
-<p id="totalPagado">$0</p>
-</div>
-
-<div class="card">
-<h3>Progreso</h3>
-<p id="progresoPrestamo">0%</p>
-</div>
-
-<div class="card">
-<h3>Intereses ahorrados</h3>
-<p id="interesAhorrado">$0</p>
-</div>
-
+<div class="card"><h3>Saldo pendiente</h3><p id="saldoPendiente">$0</p></div>
+<div class="card"><h3>Capital pagado</h3><p id="capitalPagado">$0</p></div>
+<div class="card"><h3>Intereses pagados</h3><p id="interesPagado">$0</p></div>
+<div class="card"><h3>Total pagado</h3><p id="totalPagado">$0</p></div>
+<div class="card"><h3>Progreso</h3><p id="progresoPrestamo">0%</p></div>
+<div class="card"><h3>Intereses ahorrados</h3><p id="interesAhorrado">$0</p></div>
 </section>
 
 <!-- BARRA -->
 <div class="barra-container">
-<div id="barraProgreso"></div>
+  <div id="barraProgreso"></div>
 </div>
 
 <!-- FORMULARIO -->
 <section class="formulario">
-
 <input type="number" id="monto" value="2200000" min="1">
 <input type="number" id="interes" value="24" min="0">
 <input type="number" id="cuotas" value="29" min="1">
 <input type="number" id="diaPago" value="15" min="1" max="31">
-
 </section>
 
 <!-- ABONO -->
 <section class="abono">
-
 <input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" min="1">
 
 <select id="tipoAbono">
@@ -85,40 +53,20 @@
 </select>
 
 <button type="button" id="btnAbono">Aplicar abono</button>
-
 </section>
 
 <!-- BOTONES -->
 <section class="botones">
-
 <button type="button" id="btnCalcular">Calcular préstamo</button>
 <button type="button" id="btnReiniciar">Reiniciar</button>
 <button type="button" id="btnPDF">Descargar PDF</button>
-
 </section>
 
 <!-- TABLA -->
 <section class="tabla-container">
-
-<table id="tablaAmortizacion">
-
-<thead>
-<tr>
-<th>Cuota</th>
-<th>Fecha pago</th>
-<th>Pago</th>
-<th>Interés</th>
-<th>Capital</th>
-<th>Saldo</th>
-<th>Estado</th>
-<th>Acción</th>
-</tr>
-</thead>
-
+<table>
 <tbody id="tabla"></tbody>
-
 </table>
-
 </section>
 
 <!-- GRÁFICA -->
@@ -128,11 +76,9 @@
 
 <!-- COMPARADOR -->
 <section class="comparador">
-
 <h3>Comparación del préstamo</h3>
 
 <div class="comparador-grid">
-
 <div class="comparador-card">
 <p>Interés Total con abono</p>
 <strong id="interesOriginal">$0</strong>
@@ -152,9 +98,14 @@
 <p>Cuotas reducidas</p>
 <strong id="cuotasReducidas">0</strong>
 </div>
-
 </div>
 
+</section>
+
+<!-- HISTORIAL -->
+<section class="historial">
+<h3>Historial de abonos</h3>
+<div id="listaAbonos"></div>
 </section>
 
 </div>
@@ -175,7 +126,6 @@ const btnReiniciar = document.getElementById("btnReiniciar");
 const btnPDF = document.getElementById("btnPDF");
 const btnAbono = document.getElementById("btnAbono");
 
-/* EVENTOS */
 if (btnCalcular && typeof calcular === "function") {
   btnCalcular.addEventListener("click", calcular);
 }
@@ -191,9 +141,6 @@ if (btnPDF && typeof generarPDF === "function") {
 if (btnAbono && typeof pagarSeparado === "function") {
   btnAbono.addEventListener("click", pagarSeparado);
 }
-
-/* ⚠️ IMPORTANTE: NO llamar cargarPrestamo aquí */
-/* ya se ejecuta en Calculadora.js */
 
 });
 </script>

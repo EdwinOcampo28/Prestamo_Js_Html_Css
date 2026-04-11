@@ -2,21 +2,23 @@
 
 function reiniciar() {
 
-  // 🔹 Limpiar tabla
+  /* =========================
+     LIMPIAR TABLA
+  ========================= */
   const tabla = document.getElementById("tabla");
   if (tabla) tabla.innerHTML = "";
 
-  // 🔹 Reiniciar valores de interfaz
+  /* =========================
+     RESETEAR UI
+  ========================= */
   actualizarTexto("saldoPendiente", "$0");
   actualizarTexto("capitalPagado", "$0");
   actualizarTexto("interesPagado", "$0");
   actualizarTexto("totalPagado", "$0");
   actualizarTexto("progresoPrestamo", "0%");
-
-  // 🔥 limpiar interés ahorrado
   actualizarTexto("interesAhorrado", "$0");
 
-  // 🔥 limpiar comparador
+  /* COMPARADOR */
   actualizarTexto("interesOriginal", "$0");
   actualizarTexto("interesConAbono", "$0");
   actualizarTexto("ahorroTotal", "$0");
@@ -25,12 +27,19 @@ function reiniciar() {
   const barra = document.getElementById("barraProgreso");
   if (barra) barra.style.width = "0%";
 
-  // 🔹 Limpiar arrays
+  /* =========================
+     LIMPIAR ARRAYS
+  ========================= */
   capitalCuotas = [];
   interesCuotas = [];
   cuotasPagadasEstado = [];
 
-  // 🔹 Reiniciar variables globales
+  /* 🔥 NUEVO: limpiar historial */
+  historialAbonos = [];
+
+  /* =========================
+     VARIABLES GLOBALES
+  ========================= */
   pagado = 0;
   cuotasPagadas = 0;
   capitalPagado = 0;
@@ -39,22 +48,30 @@ function reiniciar() {
   totalPrestamo = 0;
   totalDeuda = 0;
   cuotasTotales = 0;
-
   interesTotalOriginal = 0;
 
-  // 🔹 Limpiar inputs opcionales
+  /* =========================
+     INPUTS
+  ========================= */
   const abono = document.getElementById("abonoCapital");
   if (abono) abono.value = "";
 
-  // 🔹 Destruir gráfico si existe
+  /* =========================
+     GRÁFICA
+  ========================= */
   if (chart) {
     chart.destroy();
     chart = null;
   }
 
-  // 🔹 Limpiar datos guardados
+  /* =========================
+     STORAGE
+  ========================= */
   localStorage.removeItem("prestamoSimulador");
 
-  // 🔥 asegurar consistencia total
+  /* =========================
+     UI FINAL
+  ========================= */
   actualizarEstado();
+  renderHistorial(); // 🔥 CLAVE
 }

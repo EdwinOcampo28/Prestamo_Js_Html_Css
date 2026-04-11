@@ -26,9 +26,21 @@ function pagarCuota(numero, boton) {
   if (boton) boton.disabled = true;
 
   const fila = document.getElementById("fila" + numero);
-  if (fila) fila.classList.add("fila-pagada");
+  if (fila){
+    fila.classList.add("fila-pagada");
 
-  /* 🔥 RECÁLCULO CORRECTO */
+    fila.animate([
+      { transform: "scale(1.05)", background:"#064e3b" },
+      { transform: "scale(1)" }
+    ], {
+      duration: 400,
+      easing: "ease"
+    });
+  }
+
+  /* =========================
+     RECÁLCULO
+  ========================= */
 
   const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100 || 0;
   const interesMensual = interesAnual / 12;
@@ -39,14 +51,11 @@ function pagarCuota(numero, boton) {
 
     if (cuotasPagadasEstado[j]) continue;
 
-    /* ❌ antes: Math.round */
     const interesNuevo = saldoRestante * interesMensual;
-
     interesCuotas[j] = interesNuevo;
 
     let capitalNuevo = capitalCuotas[j];
 
-    /* 🔥 ajuste por si el saldo cambió */
     if (capitalNuevo > saldoRestante) {
       capitalNuevo = saldoRestante;
       capitalCuotas[j] = capitalNuevo;
@@ -56,7 +65,7 @@ function pagarCuota(numero, boton) {
     saldoRestante = Math.max(0, saldoRestante);
   }
 
-  /* 🔥 SI SE TERMINA EL PRÉSTAMO */
+  /* SI SE TERMINA EL PRÉSTAMO */
   if (totalPrestamo <= 0) {
 
     for (let j = i + 1; j < cuotasTotales; j++) {
@@ -68,11 +77,10 @@ function pagarCuota(numero, boton) {
 
       const botonFila = document.querySelector(`#fila${j+1} button`);
       if (botonFila) botonFila.disabled = true;
-
     }
   }
 
-  /* 🔥 CLAVE: reconstruir tabla completa */
+  /* reconstruir tabla */
   if(typeof reconstruirTabla === "function"){
     reconstruirTabla();
   }
@@ -81,6 +89,9 @@ function pagarCuota(numero, boton) {
   guardarPrestamo();
 }
 
+/* =========================
+   RECONSTRUIR TABLA (MEJORADO)
+========================= */
 function reconstruirTabla(){
 
 const tabla = document.getElementById("tabla");
@@ -102,8 +113,8 @@ for(let i=0;i<cuotasTotales;i++){
 
     const fechaTexto = fecha.toLocaleDateString("es-CO");
 
+    /* PAGADAS */
     if(cuotasPagadasEstado[i]){
-
         tabla.innerHTML+=`
         <tr class="fila-pagada">
         <td>${i+1}</td>
@@ -114,13 +125,12 @@ for(let i=0;i<cuotasTotales;i++){
         <td>$0</td>
         <td>Pagado</td>
         <td>✔</td>
-        </tr>
-        `;
+        </tr>`;
         continue;
     }
 
+    /* CANCELADAS */
     if(saldo <= 0){
-
         tabla.innerHTML+=`
         <tr class="fila-cancelada">
         <td>${i+1}</td>
@@ -131,8 +141,7 @@ for(let i=0;i<cuotasTotales;i++){
         <td>$0</td>
         <td>Cancelada</td>
         <td>-</td>
-        </tr>
-        `;
+        </tr>`;
         continue;
     }
 
@@ -142,22 +151,32 @@ for(let i=0;i<cuotasTotales;i++){
     saldo -= capital;
     saldo = Math.max(0,saldo);
 
+    /* detectar vencidas */
+    const hoy = new Date();
+    const fechaPago = new Date(fecha);
+    let estado = "Pendiente";
+    let clase = "";
+
+    if(hoy > fechaPago){
+        estado = "Vencida";
+        clase = "fila-vencida";
+    }
+
     tabla.innerHTML+=`
-    <tr id="fila${i+1}">
+    <tr id="fila${i+1}" class="${clase}">
     <td>${i+1}</td>
     <td>${fechaTexto}</td>
     <td>$${dinero(capital+interesMes)}</td>
     <td>$${dinero(interesMes)}</td>
     <td>$${dinero(capital)}</td>
     <td>$${dinero(saldo)}</td>
-    <td id="estado${i + 1}">Pendiente</td>
+    <td id="estado${i + 1}">${estado}</td>
     <td>
     <button onclick="pagarCuota(${i+1},this)">
     Pagar
     </button>
     </td>
-    </tr>
-    `;
+    </tr>`;
 }
 
 }

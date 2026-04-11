@@ -16,6 +16,7 @@ let interesTotalOriginal = 0;
 let capitalCuotas = [];
 let interesCuotas = [];
 let cuotasPagadasEstado = [];
+let historialAbonos = [];
 
 /* =========================
    FORMATO DINERO
@@ -34,29 +35,26 @@ function actualizarTexto(id, valor) {
 }
 
 /* =========================
-   GUARDAR (UNIFICADO)
+   GUARDAR
 ========================= */
 function guardarPrestamo(){
 
 const datos = {
-totalPrestamo,
-capitalPagado,
-interesPagado,
-pagado,
-cuotasTotales,
-cuotasPagadas,
-interesTotalOriginal,
-capitalCuotas,
-interesCuotas,
-cuotasPagadasEstado
+  totalPrestamo,
+  capitalPagado,
+  interesPagado,
+  cuotasPagadas,
+  capitalCuotas,
+  interesCuotas,
+  cuotasPagadasEstado,
+  historialAbonos
 };
 
 localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
-
 }
 
 /* =========================
-   CARGAR (CORREGIDO)
+   CARGAR
 ========================= */
 function cargarPrestamo(){
 
@@ -72,15 +70,12 @@ cuotasPagadas = prestamo.cuotasPagadas || 0;
 capitalCuotas = prestamo.capitalCuotas || [];
 interesCuotas = prestamo.interesCuotas || [];
 cuotasPagadasEstado = prestamo.cuotasPagadasEstado || [];
+historialAbonos = prestamo.historialAbonos || []; // ✅ CORREGIDO
 
-// 🔥 ESTO FALTABA
 cuotasTotales = capitalCuotas.length;
 
-// 🔥 reconstruir tabla
 reconstruirTabla();
-
 actualizarEstado();
-
 }
 
 /* =========================
@@ -122,7 +117,7 @@ function actualizarEstado() {
     },100);
   }
 
-  /* 🔹 Intereses restantes */
+  /* intereses restantes */
   let interesRestante = 0;
 
   for (let i = 0; i < interesCuotas.length; i++) {
@@ -141,8 +136,39 @@ function actualizarEstado() {
 }
 
 /* =========================
-   INICIO (ÚNICO)
+   INICIO
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
   cargarPrestamo();
+  renderHistorial();
 });
+
+/* =========================
+   HISTORIAL (MEJORADO)
+========================= */
+function renderHistorial(){
+
+  const contenedor = document.getElementById("listaAbonos");
+  if(!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  if(historialAbonos.length === 0){
+    contenedor.innerHTML = "<p>No hay abonos registrados</p>";
+    return;
+  }
+
+  historialAbonos.forEach(a => {
+
+    contenedor.innerHTML += `
+      <div class="abono-item">
+        <strong>$${dinero(a.valor)}</strong>
+        <span>${a.tipo === "plazo" ? "Reducir plazo" : "Reducir cuota"}</span>
+        <span style="color:#22c55e;">
+          Ahorro: $${dinero(a.ahorro || 0)}
+        </span>
+        <small>${a.fecha}</small>
+      </div>
+    `;
+  });
+}

@@ -29,7 +29,6 @@ if(abono > totalPrestamo){
 }
 
 const inputAbono = document.getElementById("abonoCapital");
-
 if(inputAbono){
     inputAbono.max = totalPrestamo;
 }
@@ -41,12 +40,14 @@ const interesMensual = interesAnual/12;
 
 let interesNuevoRestante = 0;
 
-// ✅ aplicar abono correctamente
+/* =========================
+   APLICAR ABONO
+========================= */
+
 totalPrestamo -= abono;
 capitalPagado += abono;
 pagado = capitalPagado + interesPagado;
 
-// ✅ ESTE ES EL SALDO REAL (NO TOCAR MÁS)
 let saldo = totalPrestamo;
 
 const tabla = document.getElementById("tabla");
@@ -93,8 +94,7 @@ if(tipo==="cuota"){
             <td>$0</td>
             <td>Pagado</td>
             <td>✔</td>
-            </tr>
-            `;
+            </tr>`;
             continue;
         }
 
@@ -109,8 +109,7 @@ if(tipo==="cuota"){
             <td>$0</td>
             <td>Cancelada</td>
             <td>-</td>
-            </tr>
-            `;
+            </tr>`;
             continue;
         }
 
@@ -137,12 +136,9 @@ if(tipo==="cuota"){
         <td>$${dinero(Math.round(saldo))}</td>
         <td id="estado${i + 1}">Pendiente</td>
         <td>
-        <button onclick="pagarCuota(${i+1},this)">
-        Pagar
-        </button>
+        <button onclick="pagarCuota(${i+1},this)">Pagar</button>
         </td>
-        </tr>
-        `;
+        </tr>`;
     }
 
 }else{
@@ -168,8 +164,7 @@ for(let i=0;i<cuotasTotales;i++){
         <td>$0</td>
         <td>Pagada</td>
         <td>✔</td>
-        </tr>
-        `;
+        </tr>`;
         continue;
     }
 
@@ -184,8 +179,7 @@ for(let i=0;i<cuotasTotales;i++){
         <td>$0</td>
         <td>Cancelada</td>
         <td>-</td>
-        </tr>
-        `;
+        </tr>`;
         continue;
     }
 
@@ -212,16 +206,15 @@ for(let i=0;i<cuotasTotales;i++){
     <td>$${dinero(Math.round(saldo))}</td>
     <td id="estado${i + 1}">Pendiente</td>
     <td>
-    <button onclick="pagarCuota(${i+1},this)">
-    Pagar
-    </button>
+    <button onclick="pagarCuota(${i+1},this)">Pagar</button>
     </td>
-    </tr>
-    `;
+    </tr>`;
 }
 }
 
-/* comparadores (igual que tú) */
+/* =========================
+   COMPARADOR
+========================= */
 
 let interesDespues = interesPagado;
 
@@ -239,17 +232,28 @@ for(let i=0;i<capitalCuotas.length;i++){
     }
 }
 
-let ahorro = Math.round(interesAntes - interesDespues);
-let cuotasReducidas = cuotasAntes - cuotasDespues;
+let ahorro = Math.max(0, Math.round(interesAntes - interesDespues));
+let cuotasReducidas = Math.max(0, cuotasAntes - cuotasDespues);
 
 document.getElementById("interesOriginal").innerText="$"+dinero(interesAntes);
 document.getElementById("interesConAbono").innerText="$"+dinero(interesDespues);
 document.getElementById("ahorroTotal").innerText="$"+dinero(ahorro);
 document.getElementById("cuotasReducidas").innerText=cuotasReducidas;
 
+/* =========================
+   HISTORIAL CON AHORRO
+========================= */
+
+historialAbonos.push({
+  valor: abono,
+  fecha: new Date().toLocaleString("es-CO"),
+  tipo: tipo,
+  ahorro: ahorro
+});
+
 alert("Abono aplicado correctamente");
 
 guardarPrestamo();
 actualizarEstado();
-
+renderHistorial();
 }

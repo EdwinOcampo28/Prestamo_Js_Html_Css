@@ -12,7 +12,9 @@ function calcular() {
     return;
   }
 
-  /* RESET */
+  /* =========================
+     RESET TOTAL
+  ========================= */
   totalPrestamo = monto;
   cuotasTotales = cuotas;
   pagado = 0;
@@ -24,9 +26,11 @@ function calcular() {
   interesCuotas = [];
   cuotasPagadasEstado = new Array(cuotas).fill(false);
 
+  historialAbonos = []; // ✅ IMPORTANTE (nuevo préstamo limpio)
+
   const interesMensual = interesAnual / 12;
 
-  /* 🔥 CUOTA CORRECTA */
+  /* CUOTA */
   let cuota;
 
   if(interesMensual === 0){
@@ -53,11 +57,9 @@ function calcular() {
 
   for (let i = 1; i <= cuotas; i++) {
 
-    /* 🔥 SIN REDONDEO INTERNO */
     let interesMes = saldo * interesMensual;
     let capital = cuota - interesMes;
 
-    /* 🔥 AJUSTE ÚLTIMA CUOTA */
     if(capital > saldo){
       capital = saldo;
     }
@@ -82,11 +84,11 @@ function calcular() {
 
     if (cuotasPagadasEstado[i-1]) {
       estado = "Pagado";
-      clase = "pagado";
+      clase = "fila-pagada";
     }
     else if (hoy > fecha) {
       estado = "Vencida";
-      clase = "vencida";
+      clase = "fila-vencida";
     }
 
     labels.push("Cuota " + i);
@@ -102,7 +104,7 @@ function calcular() {
         <td>$${dinero(Math.round(saldo))}</td>
         <td id="estado${i}">${estado}</td>
         <td>
-          <button onclick="pagarCuota(${i}, this)" style="background:#28a745;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">
+          <button onclick="pagarCuota(${i}, this)">
             Pagar
           </button>
         </td>
@@ -110,7 +112,7 @@ function calcular() {
     `;
   }
 
-  /* 🔥 GUARDAR INTERÉS ORIGINAL */
+  /* GUARDAR INTERÉS ORIGINAL */
   interesTotalOriginal = totalInteres;
 
   totalDeuda = monto + totalInteres;
@@ -131,8 +133,8 @@ function calcular() {
           {
             label: "Saldo restante",
             data: saldos,
-            borderColor: "#007bff",
-            backgroundColor: "rgba(0,123,255,0.1)",
+            borderColor: "#38bdf8",
+            backgroundColor: "rgba(56,189,248,0.1)",
             tension: 0.3
           }
         ]
@@ -155,4 +157,5 @@ function calcular() {
 
   actualizarEstado();
   guardarPrestamo();
+  renderHistorial(); // ✅ para limpiar visualmente
 }
