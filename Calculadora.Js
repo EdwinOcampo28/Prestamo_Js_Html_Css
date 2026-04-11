@@ -35,7 +35,7 @@ function actualizarTexto(id, valor) {
 }
 
 /* =========================
-   GUARDAR
+   GUARDAR (CORREGIDO)
 ========================= */
 function guardarPrestamo(){
 
@@ -47,14 +47,23 @@ const datos = {
   capitalCuotas,
   interesCuotas,
   cuotasPagadasEstado,
-  historialAbonos
+  historialAbonos,
+
+  // 🔥 comparador persistente
+  interesTotalOriginal,
+  comparador: {
+    interesOriginal: document.getElementById("interesOriginal")?.innerText || "$0",
+    interesConAbono: document.getElementById("interesConAbono")?.innerText || "$0",
+    ahorroTotal: document.getElementById("ahorroTotal")?.innerText || "$0",
+    cuotasReducidas: document.getElementById("cuotasReducidas")?.innerText || "0"
+  }
 };
 
 localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
 }
 
 /* =========================
-   CARGAR
+   CARGAR (MEJORADO)
 ========================= */
 function cargarPrestamo(){
 
@@ -70,12 +79,23 @@ cuotasPagadas = prestamo.cuotasPagadas || 0;
 capitalCuotas = prestamo.capitalCuotas || [];
 interesCuotas = prestamo.interesCuotas || [];
 cuotasPagadasEstado = prestamo.cuotasPagadasEstado || [];
-historialAbonos = prestamo.historialAbonos || []; // ✅ CORREGIDO
+historialAbonos = prestamo.historialAbonos || [];
+
+interesTotalOriginal = prestamo.interesTotalOriginal || 0;
 
 cuotasTotales = capitalCuotas.length;
 
+/* reconstruir UI */
 reconstruirTabla();
 actualizarEstado();
+
+/* 🔥 restaurar comparador */
+if(prestamo.comparador){
+  actualizarTexto("interesOriginal", prestamo.comparador.interesOriginal);
+  actualizarTexto("interesConAbono", prestamo.comparador.interesConAbono);
+  actualizarTexto("ahorroTotal", prestamo.comparador.ahorroTotal);
+  actualizarTexto("cuotasReducidas", prestamo.comparador.cuotasReducidas);
+}
 }
 
 /* =========================
@@ -96,7 +116,7 @@ function calcularProgreso() {
 }
 
 /* =========================
-   ACTUALIZAR UI
+   ACTUALIZAR UI (CORREGIDO)
 ========================= */
 function actualizarEstado() {
 
@@ -117,22 +137,8 @@ function actualizarEstado() {
     },100);
   }
 
-  /* intereses restantes */
-  let interesRestante = 0;
-
-  for (let i = 0; i < interesCuotas.length; i++) {
-    if (!cuotasPagadasEstado[i]) {
-      interesRestante += interesCuotas[i];
-    }
-  }
-
-  let interesActualTotal = interesPagado + interesRestante;
-
-  let interesesAhorrados = interesTotalOriginal - interesActualTotal;
-
-  if (interesesAhorrados < 0) interesesAhorrados = 0;
-
-  actualizarTexto("interesAhorrado", "$" + dinero(interesesAhorrados));
+  /* 🔥 IMPORTANTE: NO recalcular ahorro aquí */
+  /* ahora lo controla solo el abono */
 }
 
 /* =========================
