@@ -61,7 +61,6 @@ localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
 function cargarPrestamo(){
 
 const datos = localStorage.getItem("prestamoSimulador");
-
 if(!datos) return;
 
 const prestamo = JSON.parse(datos);
@@ -69,20 +68,16 @@ const prestamo = JSON.parse(datos);
 totalPrestamo = prestamo.totalPrestamo || 0;
 capitalPagado = prestamo.capitalPagado || 0;
 interesPagado = prestamo.interesPagado || 0;
-pagado = prestamo.pagado || 0;
-
-cuotasTotales = prestamo.cuotasTotales || 0;
 cuotasPagadas = prestamo.cuotasPagadas || 0;
-interesTotalOriginal = prestamo.interesTotalOriginal || 0;
-
 capitalCuotas = prestamo.capitalCuotas || [];
 interesCuotas = prestamo.interesCuotas || [];
 cuotasPagadasEstado = prestamo.cuotasPagadasEstado || [];
 
-/* 🔥 SOLO reconstruir, NO recalcular */
-if(typeof reconstruirTabla === "function"){
-  reconstruirTabla();
-}
+// 🔥 ESTO FALTABA
+cuotasTotales = capitalCuotas.length;
+
+// 🔥 reconstruir tabla
+reconstruirTabla();
 
 actualizarEstado();
 

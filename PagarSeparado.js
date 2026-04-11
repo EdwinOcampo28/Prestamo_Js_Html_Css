@@ -23,7 +23,16 @@ if(!abono || abono<=0 || isNaN(abono)){
     return;
 }
 
-if(abono>totalPrestamo) abono = totalPrestamo;
+if(abono > totalPrestamo){
+    alert("El abono no puede ser mayor al saldo pendiente ($" + dinero(totalPrestamo) + ")");
+    return;
+}
+
+const inputAbono = document.getElementById("abonoCapital");
+
+if(inputAbono){
+    inputAbono.max = totalPrestamo;
+}
 
 const tipo = document.getElementById("tipoAbono")?.value || "cuota";
 
