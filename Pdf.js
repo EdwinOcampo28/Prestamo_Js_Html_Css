@@ -19,8 +19,9 @@ function generarPDF() {
   const saldoPendienteEl = document.getElementById("saldoPendiente");
   const tabla = document.getElementById("tabla");
 
-  if (!tabla) {
-    alert("No hay datos para exportar.");
+  // 🔥 VALIDACIÓN REAL
+  if (!tabla || tabla.children.length === 0) {
+    alert("Primero calcula el préstamo o aplica un abono.");
     return;
   }
 
@@ -47,7 +48,8 @@ function generarPDF() {
   // 📄 Encabezados de tabla
   const headers = ["#", "Fecha", "Cuota", "Interés", "Capital", "Saldo", "Estado"];
 
-  const posiciones = [20, 30, 65, 90, 120, 150, 180];
+  // 🔥 AJUSTE DE POSICIONES (mejor distribuido)
+  const posiciones = [20, 30, 60, 85, 110, 140, 170];
 
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
@@ -68,15 +70,17 @@ function generarPDF() {
     columnas.forEach((col, i) => {
 
       if (i < 7) {
-        doc.text(col.innerText, posiciones[i], y);
+        // 🔥 evitar textos muy largos
+        let texto = col.innerText.toString().substring(0, 15);
+        doc.text(texto, posiciones[i], y);
       }
 
     });
 
     y += 6;
 
-    // salto de página automático
-    if (y > 280) {
+    // 🔥 salto de página más limpio
+    if (y > 270) {
       doc.addPage();
       y = 20;
     }

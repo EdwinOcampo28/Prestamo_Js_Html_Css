@@ -13,6 +13,15 @@ function reiniciar() {
   actualizarTexto("totalPagado", "$0");
   actualizarTexto("progresoPrestamo", "0%");
 
+  // 🔥 limpiar interés ahorrado
+  actualizarTexto("interesAhorrado", "$0");
+
+  // 🔥 limpiar comparador
+  actualizarTexto("interesOriginal", "$0");
+  actualizarTexto("interesConAbono", "$0");
+  actualizarTexto("ahorroTotal", "$0");
+  actualizarTexto("cuotasReducidas", "0");
+
   const barra = document.getElementById("barraProgreso");
   if (barra) barra.style.width = "0%";
 
@@ -45,4 +54,7 @@ function reiniciar() {
 
   // 🔹 Limpiar datos guardados
   localStorage.removeItem("prestamoSimulador");
+
+  // 🔥 asegurar consistencia total
+  actualizarEstado();
 }

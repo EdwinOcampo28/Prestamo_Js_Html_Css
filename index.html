@@ -24,7 +24,7 @@
 
 <h1>Simulador de Préstamos</h1>
 
-<!-- TARJETAS DE ESTADO -->
+<!-- TARJETAS -->
 <section class="cards">
 
 <div class="card">
@@ -59,92 +59,45 @@
 
 </section>
 
-<!-- BARRA DE PROGRESO -->
+<!-- BARRA -->
 <div class="barra-container">
 <div id="barraProgreso"></div>
 </div>
 
-<!-- FORMULARIO DEL PRÉSTAMO -->
+<!-- FORMULARIO -->
 <section class="formulario">
 
-<input
-type="number"
-id="monto"
-placeholder="Monto del préstamo"
-value="2200000"
-min="1">
-
-<input
-type="number"
-id="interes"
-placeholder="Interés anual (%)"
-value="24"
-min="0">
-
-<input
-type="number"
-id="cuotas"
-placeholder="Número de cuotas"
-value="29"
-min="1">
-
-<input
-type="number"
-id="diaPago"
-placeholder="Día de pago"
-min="1"
-max="31"
-value="15">
+<input type="number" id="monto" value="2200000" min="1">
+<input type="number" id="interes" value="24" min="0">
+<input type="number" id="cuotas" value="29" min="1">
+<input type="number" id="diaPago" value="15" min="1" max="31">
 
 </section>
 
-<!-- ABONO A CAPITAL -->
+<!-- ABONO -->
 <section class="abono">
 
-<input
-type="number"
-id="abonoCapital"
-placeholder="Valor a abonar al capital"
-min="1">
+<input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" min="1">
 
 <select id="tipoAbono">
-
-<option value="cuota">
-Reducir cuota
-</option>
-
-<option value="plazo">
-Reducir plazo
-</option>
-
+<option value="cuota">Reducir cuota</option>
+<option value="plazo">Reducir plazo</option>
 </select>
 
-<button type="button" id="btnAbono">
-Aplicar abono
-</button>
-
-<div id="resultadoAbono" class="resultado-abono"></div>
+<button type="button" id="btnAbono">Aplicar abono</button>
 
 </section>
 
-<!-- BOTONES PRINCIPALES -->
+<!-- BOTONES -->
 <section class="botones">
 
-<button type="button" id="btnCalcular">
-Calcular préstamo
-</button>
-
-<button type="button" id="btnReiniciar">
-Reiniciar
-</button>
-
-<button type="button" id="btnPDF">
-Descargar PDF
-</button>
+<button type="button" id="btnCalcular">Calcular préstamo</button>
+<button type="button" id="btnReiniciar">Reiniciar</button>
+<button type="button" id="btnPDF">Descargar PDF</button>
 
 </section>
 
-<!-- TABLA DE AMORTIZACIÓN -->
+<!-- TABLA -->
 <section class="tabla-container">
 
 <table id="tablaAmortizacion">
@@ -173,8 +126,6 @@ Descargar PDF
 <canvas id="grafica"></canvas>
 </section>
 
-</div>
-
 <!-- COMPARADOR -->
 <section class="comparador">
 
@@ -183,7 +134,7 @@ Descargar PDF
 <div class="comparador-grid">
 
 <div class="comparador-card">
-<p>Interés sin abono</p>
+<p>Interés Total con abono</p>
 <strong id="interesOriginal">$0</strong>
 </div>
 
@@ -206,7 +157,9 @@ Descargar PDF
 
 </section>
 
-<!-- SCRIPTS DEL PROYECTO -->
+</div>
+
+<!-- SCRIPTS -->
 <script defer src="Calculadora.js"></script>
 <script defer src="Calcular.js"></script>
 <script defer src="PagarCuota.js"></script>
@@ -215,7 +168,6 @@ Descargar PDF
 <script defer src="Pdf.js"></script>
 
 <script>
-
 document.addEventListener("DOMContentLoaded", () => {
 
 const btnCalcular = document.getElementById("btnCalcular");
@@ -223,33 +175,27 @@ const btnReiniciar = document.getElementById("btnReiniciar");
 const btnPDF = document.getElementById("btnPDF");
 const btnAbono = document.getElementById("btnAbono");
 
-/* BOTÓN CALCULAR */
+/* EVENTOS */
 if (btnCalcular && typeof calcular === "function") {
-btnCalcular.addEventListener("click", calcular);
+  btnCalcular.addEventListener("click", calcular);
 }
 
-/* BOTÓN REINICIAR */
 if (btnReiniciar && typeof reiniciar === "function") {
-btnReiniciar.addEventListener("click", reiniciar);
+  btnReiniciar.addEventListener("click", reiniciar);
 }
 
-/* BOTÓN PDF */
 if (btnPDF && typeof generarPDF === "function") {
-btnPDF.addEventListener("click", generarPDF);
+  btnPDF.addEventListener("click", generarPDF);
 }
 
-/* BOTÓN ABONO */
 if (btnAbono && typeof pagarSeparado === "function") {
-btnAbono.addEventListener("click", pagarSeparado);
+  btnAbono.addEventListener("click", pagarSeparado);
 }
 
-/* CARGAR PRÉSTAMO GUARDADO */
-if (typeof cargarPrestamo === "function") {
-cargarPrestamo();
-}
+/* ⚠️ IMPORTANTE: NO llamar cargarPrestamo aquí */
+/* ya se ejecuta en Calculadora.js */
 
 });
-
 </script>
 
 </body>

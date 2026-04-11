@@ -17,32 +17,35 @@ let capitalCuotas = [];
 let interesCuotas = [];
 let cuotasPagadasEstado = [];
 
-/**
- * Convierte un número a formato de dinero con separador de miles
- * @param {number} valor
- * @returns {string}
- */
+/* =========================
+   FORMATO DINERO
+========================= */
 function dinero(valor){
-  if(!valor) return "0";
+  if(valor === undefined || valor === null) return "0";
   return Math.round(valor).toLocaleString("es-CO");
 }
 
-/**
- * Actualiza texto en un elemento del DOM
- */
+/* =========================
+   ACTUALIZAR TEXTO
+========================= */
 function actualizarTexto(id, valor) {
   const elemento = document.getElementById(id);
   if (elemento) elemento.innerText = valor;
 }
 
-// Guarda el estado actual del préstamo en localStorage
+/* =========================
+   GUARDAR (UNIFICADO)
+========================= */
 function guardarPrestamo(){
 
 const datos = {
 totalPrestamo,
 capitalPagado,
 interesPagado,
+pagado,
+cuotasTotales,
 cuotasPagadas,
+interesTotalOriginal,
 capitalCuotas,
 interesCuotas,
 cuotasPagadasEstado
@@ -52,7 +55,9 @@ localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
 
 }
 
-// Carga el estado del préstamo desde localStorage
+/* =========================
+   CARGAR (CORREGIDO)
+========================= */
 function cargarPrestamo(){
 
 const datos = localStorage.getItem("prestamoSimulador");
@@ -64,18 +69,28 @@ const prestamo = JSON.parse(datos);
 totalPrestamo = prestamo.totalPrestamo || 0;
 capitalPagado = prestamo.capitalPagado || 0;
 interesPagado = prestamo.interesPagado || 0;
+pagado = prestamo.pagado || 0;
+
+cuotasTotales = prestamo.cuotasTotales || 0;
 cuotasPagadas = prestamo.cuotasPagadas || 0;
+interesTotalOriginal = prestamo.interesTotalOriginal || 0;
+
 capitalCuotas = prestamo.capitalCuotas || [];
 interesCuotas = prestamo.interesCuotas || [];
 cuotasPagadasEstado = prestamo.cuotasPagadasEstado || [];
+
+/* 🔥 SOLO reconstruir, NO recalcular */
+if(typeof reconstruirTabla === "function"){
+  reconstruirTabla();
+}
 
 actualizarEstado();
 
 }
 
-/**
- * Calcula progreso del préstamo
- */
+/* =========================
+   PROGRESO
+========================= */
 function calcularProgreso() {
 
   const totalPagado = capitalPagado + interesPagado;
@@ -90,12 +105,11 @@ function calcularProgreso() {
   return progreso;
 }
 
-/**
- * Actualiza toda la interfaz del préstamo
- */
+/* =========================
+   ACTUALIZAR UI
+========================= */
 function actualizarEstado() {
 
-  // recalcular pagado automáticamente
   pagado = capitalPagado + interesPagado;
 
   const progreso = calcularProgreso();
@@ -107,11 +121,13 @@ function actualizarEstado() {
   actualizarTexto("progresoPrestamo", progreso.toFixed(0) + "%");
 
   const barra = document.getElementById("barraProgreso");
-  if (barra) setTimeout(()=>{
-    barra.style.width = progreso + "%";
-  },100);
+  if (barra) {
+    setTimeout(()=>{
+      barra.style.width = progreso + "%";
+    },100);
+  }
 
-  // 🔹 Intereses que quedan en el plan actual
+  /* 🔹 Intereses restantes */
   let interesRestante = 0;
 
   for (let i = 0; i < interesCuotas.length; i++) {
@@ -120,13 +136,18 @@ function actualizarEstado() {
     }
   }
 
-  // 🔹 Interés total del préstamo actual
   let interesActualTotal = interesPagado + interesRestante;
 
-  // 🔹 Interés ahorrado
   let interesesAhorrados = interesTotalOriginal - interesActualTotal;
 
   if (interesesAhorrados < 0) interesesAhorrados = 0;
 
   actualizarTexto("interesAhorrado", "$" + dinero(interesesAhorrados));
 }
+
+/* =========================
+   INICIO (ÚNICO)
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  cargarPrestamo();
+});

@@ -4,52 +4,59 @@ function pagarCuota(numero, boton) {
 
   if (cuotasPagadasEstado[i]) return;
 
-  let capital = capitalCuotas[i];
-  let interes = interesCuotas[i];
+  let capital = capitalCuotas[i] || 0;
+  let interes = interesCuotas[i] || 0;
 
   const capitalPendiente = Math.min(capital, totalPrestamo);
-  const interesPendiente = Math.min(interes, totalDeuda - totalPrestamo);
 
-  capitalPagado += Math.round(capitalPendiente);
-  interesPagado += Math.round(interesPendiente);
+  capitalPagado += capitalPendiente;
+  interesPagado += interes;
 
   pagado = capitalPagado + interesPagado;
 
   totalPrestamo = Math.max(0, totalPrestamo - capitalPendiente);
-  totalDeuda = Math.max(0, totalDeuda - (capitalPendiente + interesPendiente));
 
   cuotasPagadas++;
   cuotasPagadasEstado[i] = true;
 
-  // actualizar estado visual
+  /* UI */
   const estado = document.getElementById("estado" + numero);
-  if (estado) estado.innerText = "Pagada";
+  if (estado) estado.innerText = "Pagado";
 
   if (boton) boton.disabled = true;
 
   const fila = document.getElementById("fila" + numero);
   if (fila) fila.classList.add("fila-pagada");
 
-  const interesInput = document.getElementById("interes");
-  const interesAnual = parseFloat(interesInput?.value) / 100 || 0;
+  /* 🔥 RECÁLCULO CORRECTO */
+
+  const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100 || 0;
   const interesMensual = interesAnual / 12;
 
   let saldoRestante = totalPrestamo;
 
-  // recalcular intereses futuros
   for (let j = i + 1; j < cuotasTotales; j++) {
 
     if (cuotasPagadasEstado[j]) continue;
 
-    const nuevoInteres = Math.max(0, Math.round(saldoRestante * interesMensual));
-    interesCuotas[j] = nuevoInteres;
+    /* ❌ antes: Math.round */
+    const interesNuevo = saldoRestante * interesMensual;
 
-    saldoRestante -= capitalCuotas[j];
+    interesCuotas[j] = interesNuevo;
+
+    let capitalNuevo = capitalCuotas[j];
+
+    /* 🔥 ajuste por si el saldo cambió */
+    if (capitalNuevo > saldoRestante) {
+      capitalNuevo = saldoRestante;
+      capitalCuotas[j] = capitalNuevo;
+    }
+
+    saldoRestante -= capitalNuevo;
     saldoRestante = Math.max(0, saldoRestante);
-
   }
 
-  // si el préstamo se pagó completamente
+  /* 🔥 SI SE TERMINA EL PRÉSTAMO */
   if (totalPrestamo <= 0) {
 
     for (let j = i + 1; j < cuotasTotales; j++) {
@@ -63,7 +70,11 @@ function pagarCuota(numero, boton) {
       if (botonFila) botonFila.disabled = true;
 
     }
+  }
 
+  /* 🔥 CLAVE: reconstruir tabla completa */
+  if(typeof reconstruirTabla === "function"){
+    reconstruirTabla();
   }
 
   actualizarEstado();
