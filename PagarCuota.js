@@ -39,7 +39,7 @@ function pagarCuota(numero, boton) {
   }
 
   /* =========================
-     RECÁLCULO
+     RECÁLCULO PRO
   ========================= */
 
   const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100 || 0;
@@ -47,19 +47,27 @@ function pagarCuota(numero, boton) {
 
   let saldoRestante = totalPrestamo;
 
-  for (let j = i + 1; j < cuotasTotales; j++) {
+  for (let j = 0; j < cuotasTotales; j++) {
 
     if (cuotasPagadasEstado[j]) continue;
 
-    const interesNuevo = saldoRestante * interesMensual;
-    interesCuotas[j] = interesNuevo;
-
-    let capitalNuevo = capitalCuotas[j];
-
-    if (capitalNuevo > saldoRestante) {
-      capitalNuevo = saldoRestante;
-      capitalCuotas[j] = capitalNuevo;
+    if (saldoRestante <= 0) {
+      capitalCuotas[j] = 0;
+      interesCuotas[j] = 0;
+      continue;
     }
+
+    let interesNuevo = saldoRestante * interesMensual;
+    let capitalNuevo = capitalCuotas[j] || 0;
+
+    // 🔥 ajuste clave
+    if (capitalNuevo >= saldoRestante) {
+      capitalNuevo = saldoRestante;
+      interesNuevo = 0;
+    }
+
+    capitalCuotas[j] = capitalNuevo;
+    interesCuotas[j] = interesNuevo;
 
     saldoRestante -= capitalNuevo;
     saldoRestante = Math.max(0, saldoRestante);
@@ -68,15 +76,17 @@ function pagarCuota(numero, boton) {
   /* SI SE TERMINA EL PRÉSTAMO */
   if (totalPrestamo <= 0) {
 
-    for (let j = i + 1; j < cuotasTotales; j++) {
+    for (let j = 0; j < cuotasTotales; j++) {
 
-      cuotasPagadasEstado[j] = true;
+      if (!cuotasPagadasEstado[j]) {
+        cuotasPagadasEstado[j] = true;
 
-      const estado = document.getElementById("estado" + (j + 1));
-      if (estado) estado.innerText = "Cancelada";
+        const estado = document.getElementById("estado" + (j + 1));
+        if (estado) estado.innerText = "Cancelada";
 
-      const botonFila = document.querySelector(`#fila${j+1} button`);
-      if (botonFila) botonFila.disabled = true;
+        const botonFila = document.querySelector(`#fila${j+1} button`);
+        if (botonFila) botonFila.disabled = true;
+      }
     }
   }
 
@@ -90,7 +100,7 @@ function pagarCuota(numero, boton) {
 }
 
 /* =========================
-   RECONSTRUIR TABLA (MEJORADO)
+   RECONSTRUIR TABLA (PRO)
 ========================= */
 function reconstruirTabla(){
 
@@ -145,15 +155,21 @@ for(let i=0;i<cuotasTotales;i++){
         continue;
     }
 
-    const interesMes = interesCuotas[i] || 0;
-    const capital = capitalCuotas[i] || 0;
+    let interesMes = interesCuotas[i] || 0;
+    let capital = capitalCuotas[i] || 0;
+
+    // 🔥 ajuste final anti-residuos
+    if(capital >= saldo){
+        capital = saldo;
+        interesMes = 0;
+    }
 
     saldo -= capital;
     saldo = Math.max(0,saldo);
 
-    /* detectar vencidas */
     const hoy = new Date();
     const fechaPago = new Date(fecha);
+
     let estado = "Pendiente";
     let clase = "";
 

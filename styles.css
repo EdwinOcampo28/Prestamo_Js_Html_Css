@@ -6,9 +6,7 @@ box-sizing:border-box;
 font-family:"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-html{
-scroll-behavior:smooth;
-}
+html{ scroll-behavior:smooth; }
 
 body{
 background:#020617;
@@ -18,7 +16,7 @@ padding:20px;
 
 /* CONTENEDOR */
 .container{
-max-width:420px;
+max-width:700px;
 margin:auto;
 background:#0f172a;
 border-radius:20px;
@@ -44,13 +42,11 @@ gap:12px;
 background:linear-gradient(135deg,#1e293b,#0f172a);
 border-radius:16px;
 padding:15px;
-text-align:left;
 box-shadow:inset 0 0 10px rgba(255,255,255,0.05);
+transition:0.2s;
 }
 
-.card:hover{
-transform:scale(1.02);
-}
+.card:hover{ transform:scale(1.02); }
 
 .card h3{
 font-size:12px;
@@ -61,16 +57,6 @@ color:#94a3b8;
 font-size:18px;
 font-weight:bold;
 color:#38bdf8;
-}
-
-.saldo-card{
-grid-column:span 2;
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
-}
-
-.saldo-card p{
-color:white;
-font-size:22px;
 }
 
 /* BARRA */
@@ -85,7 +71,6 @@ margin:15px 0;
 #barraProgreso{
 height:100%;
 background:linear-gradient(90deg,#22c55e,#4ade80);
-border-radius:20px;
 }
 
 /* FORM */
@@ -105,7 +90,6 @@ background:#1e293b;
 color:white;
 }
 
-/* 🔥 NUEVO: focus UX */
 input:focus, select:focus{
 outline:none;
 border-color:#38bdf8;
@@ -126,76 +110,70 @@ border:none;
 border-radius:10px;
 cursor:pointer;
 font-weight:bold;
-transition:all 0.2s ease;
+transition:0.2s;
 }
 
-button:active{
-transform:scale(0.96);
-}
+button:active{ transform:scale(0.96); }
 
 #btnCalcular{ background:#3b82f6; }
 #btnAbono{ background:#22c55e; }
 #btnReiniciar{ background:#ef4444; }
 
-/* TABLA CLASICA MODERNA */
+/* TABLA */
 .tabla-container{
 margin-top:15px;
-overflow-x:auto;
+max-height:420px;
+overflow-y:auto;
+overflow-x:hidden;
 }
 
-table{
+.tabla-wrapper{
 width:100%;
+overflow:hidden;
+}
+
+#tablaPrincipal{
+width:100%;
+table-layout:fixed;
 border-collapse:collapse;
 background:#1e293b;
 border-radius:12px;
 overflow:hidden;
 box-shadow:0 4px 12px rgba(0,0,0,0.25);
-border-spacing:0;
+font-size:12px;
 }
 
 /* ENCABEZADO */
-th{
+#tablaPrincipal th{
 background:#020617;
 color:#38bdf8;
-padding:12px;
-font-size:13px;
-text-transform:uppercase;
-letter-spacing:0.5px;
+padding:6px 4px;
+font-size:11px;
+}
+
+/* CELDAS */
+#tablaPrincipal td{
+padding:6px 4px;
+text-align:center;
+border-bottom:1px solid #334155;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 /* FILAS */
-tr{
-transition:0.2s;
-}
-
-td{
-padding:10px;
-font-size:13px;
-text-align:center;
-border-bottom:1px solid #334155;
-color:#e2e8f0;
-}
-
-/* última fila sin borde */
-tr:last-child td{
-border-bottom:none;
-}
-
-/* hover */
-tr:hover{
+#tablaPrincipal tr:hover{
 background:#273449;
 }
 
-/* 🔥 zebra seguro */
-tr:nth-child(even):not(.fila-pagada):not(.fila-cancelada):not(.fila-vencida){
+#tablaPrincipal tr:nth-child(even):not(.fila-pagada):not(.fila-cancelada):not(.fila-vencida){
 background:#172033;
 }
 
-/* estados */
+/* ESTADOS */
 .fila-pagada{
 background:#064e3b !important;
 color:#22c55e;
-font-weight:500;
 }
 
 .fila-cancelada{
@@ -209,27 +187,30 @@ background:#78350f !important;
 color:#facc15;
 }
 
-/* 🔥 BOTONES EN TABLA */
-td button{
+/* BOTONES TABLA */
+#tablaPrincipal button{
 background:#22c55e;
 color:white;
-padding:6px 10px;
+padding:4px 6px;
+font-size:11px;
 border-radius:6px;
-font-size:12px;
-cursor:pointer;
-transition:0.2s;
 }
 
-td button:hover{
-transform:scale(1.05);
-box-shadow:0 4px 10px rgba(0,0,0,0.3);
-}
-
-td button:disabled{
+#tablaPrincipal button:disabled{
 background:#555;
-cursor:not-allowed;
 opacity:0.6;
+cursor:not-allowed;
 }
+
+/* COLUMNAS */
+#tablaPrincipal td:nth-child(1){ width:5%; }
+#tablaPrincipal td:nth-child(2){ width:14%; }
+#tablaPrincipal td:nth-child(3){ width:14%; }
+#tablaPrincipal td:nth-child(4){ width:13%; }
+#tablaPrincipal td:nth-child(5){ width:13%; }
+#tablaPrincipal td:nth-child(6){ width:15%; }
+#tablaPrincipal td:nth-child(7){ width:13%; }
+#tablaPrincipal td:nth-child(8){ width:13%; }
 
 /* HISTORIAL */
 .historial{
@@ -251,12 +232,10 @@ padding:12px;
 border-radius:10px;
 background:#0f172a;
 margin-bottom:10px;
-transition:all 0.2s ease;
+transition:0.2s;
 }
 
-.abono-item:hover{
-transform:scale(1.02);
-}
+.abono-item:hover{ transform:scale(1.02); }
 
 .abono-item strong{
 font-size:16px;
@@ -273,7 +252,7 @@ font-size:11px;
 color:#64748b;
 }
 
-/* COMPARADOR MEJORADO */
+/* COMPARADOR */
 .comparador{
 margin-top:25px;
 background:linear-gradient(135deg,#1e293b,#0f172a);
@@ -299,7 +278,7 @@ background:#020617;
 padding:12px;
 border-radius:12px;
 text-align:center;
-transition:all 0.2s ease;
+transition:0.2s;
 border:1px solid #1e293b;
 }
 
@@ -311,7 +290,6 @@ box-shadow:0 6px 15px rgba(0,0,0,0.4);
 .comparador-card p{
 font-size:12px;
 color:#94a3b8;
-margin-bottom:5px;
 }
 
 .comparador-card strong{
@@ -319,11 +297,8 @@ font-size:18px;
 color:#e2e8f0;
 }
 
-/* destaque ahorro */
 .comparador-card.ahorro{
 background:linear-gradient(135deg,#064e3b,#022c22);
-color:#22c55e;
-font-weight:bold;
 border:1px solid #22c55e;
 }
 

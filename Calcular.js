@@ -26,7 +26,7 @@ function calcular() {
   interesCuotas = [];
   cuotasPagadasEstado = new Array(cuotas).fill(false);
 
-  historialAbonos = []; // ✅ IMPORTANTE (nuevo préstamo limpio)
+  historialAbonos = [];
 
   const interesMensual = interesAnual / 12;
 
@@ -57,11 +57,14 @@ function calcular() {
 
   for (let i = 1; i <= cuotas; i++) {
 
+    // 🔥 cálculo sin redondeo interno
     let interesMes = saldo * interesMensual;
     let capital = cuota - interesMes;
 
-    if(capital > saldo){
+    // 🔥 ajuste clave para evitar residuos finales
+    if(capital >= saldo){
       capital = saldo;
+      interesMes = 0;
     }
 
     saldo -= capital;
@@ -98,10 +101,10 @@ function calcular() {
       <tr id="fila${i}" class="${clase}">
         <td>${i}</td>
         <td>${fechaTexto}</td>
-        <td>$${dinero(Math.round(cuota))}</td>
-        <td>$${dinero(Math.round(interesMes))}</td>
-        <td>$${dinero(Math.round(capital))}</td>
-        <td>$${dinero(Math.round(saldo))}</td>
+        <td>$${dinero(cuota)}</td>
+        <td>$${dinero(interesMes)}</td>
+        <td>$${dinero(capital)}</td>
+        <td>$${dinero(saldo)}</td>
         <td id="estado${i}">${estado}</td>
         <td>
           <button onclick="pagarCuota(${i}, this)">
@@ -110,6 +113,15 @@ function calcular() {
         </td>
       </tr>
     `;
+  }
+
+  /* =========================
+     AJUSTE FINAL ANTI-RESIDUOS
+  ========================= */
+  if(saldo === 0){
+    for(let i=0;i<interesCuotas.length;i++){
+      interesCuotas[i] = Math.max(0, interesCuotas[i]);
+    }
   }
 
   /* GUARDAR INTERÉS ORIGINAL */
@@ -157,5 +169,5 @@ function calcular() {
 
   actualizarEstado();
   guardarPrestamo();
-  renderHistorial(); // ✅ para limpiar visualmente
+  renderHistorial();
 }

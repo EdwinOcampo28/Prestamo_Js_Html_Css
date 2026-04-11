@@ -19,10 +19,10 @@ let cuotasPagadasEstado = [];
 let historialAbonos = [];
 
 /* =========================
-   FORMATO DINERO
+   FORMATO DINERO (MEJORADO)
 ========================= */
 function dinero(valor){
-  if(valor === undefined || valor === null) return "0";
+  if(valor === undefined || valor === null || isNaN(valor)) return "0";
   return Math.round(valor).toLocaleString("es-CO");
 }
 
@@ -35,7 +35,7 @@ function actualizarTexto(id, valor) {
 }
 
 /* =========================
-   GUARDAR (CORREGIDO)
+   GUARDAR (ROBUSTO)
 ========================= */
 function guardarPrestamo(){
 
@@ -48,9 +48,8 @@ const datos = {
   interesCuotas,
   cuotasPagadasEstado,
   historialAbonos,
-
-  // 🔥 comparador persistente
   interesTotalOriginal,
+
   comparador: {
     interesOriginal: document.getElementById("interesOriginal")?.innerText || "$0",
     interesConAbono: document.getElementById("interesConAbono")?.innerText || "$0",
@@ -63,7 +62,7 @@ localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
 }
 
 /* =========================
-   CARGAR (MEJORADO)
+   CARGAR (CORREGIDO)
 ========================= */
 function cargarPrestamo(){
 
@@ -99,24 +98,22 @@ if(prestamo.comparador){
 }
 
 /* =========================
-   PROGRESO
+   PROGRESO (PRECISO)
 ========================= */
 function calcularProgreso() {
 
   const totalPagado = capitalPagado + interesPagado;
   const total = totalPrestamo + totalPagado;
 
-  if (total === 0) return 0;
+  if (total <= 0) return 0;
 
   let progreso = (totalPagado / total) * 100;
 
-  if (progreso > 100) progreso = 100;
-
-  return progreso;
+  return Math.min(100, Math.max(0, progreso));
 }
 
 /* =========================
-   ACTUALIZAR UI (CORREGIDO)
+   ACTUALIZAR UI (ESTABLE)
 ========================= */
 function actualizarEstado() {
 
@@ -137,8 +134,7 @@ function actualizarEstado() {
     },100);
   }
 
-  /* 🔥 IMPORTANTE: NO recalcular ahorro aquí */
-  /* ahora lo controla solo el abono */
+  /* 🔥 NO tocar comparador aquí */
 }
 
 /* =========================
@@ -150,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   HISTORIAL (MEJORADO)
+   HISTORIAL (PRO)
 ========================= */
 function renderHistorial(){
 

@@ -62,11 +62,13 @@
 <button type="button" id="btnPDF">Descargar PDF</button>
 </section>
 
-<!-- TABLA -->
+<!-- TABLA (🔥 SOLO AQUÍ CAMBIO CLAVE) -->
 <section class="tabla-container">
-<table>
+<div class="tabla-wrapper"> <!-- 🔥 NUEVO -->
+<table id="tablaPrincipal"> <!-- 🔥 NUEVO ID -->
 <tbody id="tabla"></tbody>
 </table>
+</div>
 </section>
 
 <!-- GRÁFICA -->
@@ -80,7 +82,7 @@
 
 <div class="comparador-grid">
 <div class="comparador-card">
-<p>Interés Total con abono</p>
+<p>Interés Total</p>
 <strong id="interesOriginal">$0</strong>
 </div>
 

@@ -28,14 +28,12 @@ function reiniciar() {
   if (barra) barra.style.width = "0%";
 
   /* =========================
-     LIMPIAR ARRAYS
+     LIMPIAR ARRAYS (SEGURO)
   ========================= */
-  capitalCuotas = [];
-  interesCuotas = [];
-  cuotasPagadasEstado = [];
-
-  /* 🔥 NUEVO: limpiar historial */
-  historialAbonos = [];
+  capitalCuotas.length = 0;
+  interesCuotas.length = 0;
+  cuotasPagadasEstado.length = 0;
+  historialAbonos.length = 0;
 
   /* =========================
      VARIABLES GLOBALES
@@ -54,7 +52,10 @@ function reiniciar() {
      INPUTS
   ========================= */
   const abono = document.getElementById("abonoCapital");
-  if (abono) abono.value = "";
+  if (abono){
+    abono.value = "";
+    abono.removeAttribute("max"); // 🔥 evita límite viejo
+  }
 
   /* =========================
      GRÁFICA
@@ -65,7 +66,7 @@ function reiniciar() {
   }
 
   /* =========================
-     STORAGE
+     STORAGE (LIMPIO TOTAL)
   ========================= */
   localStorage.removeItem("prestamoSimulador");
 
@@ -73,5 +74,5 @@ function reiniciar() {
      UI FINAL
   ========================= */
   actualizarEstado();
-  renderHistorial(); // 🔥 CLAVE
+  renderHistorial();
 }
