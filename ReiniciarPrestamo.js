@@ -2,11 +2,9 @@
 
 function reiniciar() {
 
-  /* TABLA */
   const tabla = document.getElementById("tabla");
   if (tabla) tabla.innerHTML = "";
 
-  /* UI */
   actualizarTexto("saldoPendiente", "$0");
   actualizarTexto("capitalPagado", "$0");
   actualizarTexto("interesPagado", "$0");
@@ -22,13 +20,11 @@ function reiniciar() {
   const barra = document.getElementById("barraProgreso");
   if (barra) barra.style.width = "0%";
 
-  /* ARRAYS */
   capitalCuotas.length = 0;
   interesCuotas.length = 0;
   cuotasPagadasEstado.length = 0;
   historialAbonos.length = 0;
 
-  /* ESTADO */
   pagado = 0;
   cuotasPagadas = 0;
   capitalPagado = 0;
@@ -39,7 +35,11 @@ function reiniciar() {
   cuotasTotales = 0;
   interesTotalOriginal = 0;
 
-  /* INPUTS */
+  montoInicial = 0;
+  interesAnualPrestamo = 0;
+  diaPagoPrestamo = 1;
+  fechaInicioPrestamo = "";
+
   const abono = document.getElementById("abonoCapital");
 
   if (abono) {
@@ -47,16 +47,13 @@ function reiniciar() {
     abono.removeAttribute("max");
   }
 
-  /* GRÁFICA */
   if (chart) {
     chart.destroy();
     chart = null;
   }
 
-  /* STORAGE */
   localStorage.removeItem("prestamoSimulador");
 
-  /* FINAL */
   actualizarEstado?.();
   renderHistorial?.();
 }

@@ -4,8 +4,8 @@ function pagarCuota(numero, boton) {
 
   if (cuotasPagadasEstado[i]) return;
 
-  let capital = Number(capitalCuotas[i]) || 0;
-  let interes = Number(interesCuotas[i]) || 0;
+  let capital = aNumero(capitalCuotas[i]);
+  let interes = aNumero(interesCuotas[i]);
 
   const capitalPendiente = Math.min(capital, totalPrestamo);
 
@@ -19,7 +19,6 @@ function pagarCuota(numero, boton) {
   cuotasPagadas++;
   cuotasPagadasEstado[i] = true;
 
-  /* UI */
   const estadoEl = document.getElementById("estado" + numero);
   if (estadoEl) estadoEl.innerText = "Pagado";
 
@@ -34,21 +33,11 @@ function pagarCuota(numero, boton) {
         { transform: "scale(1.05)", background: "#064e3b" },
         { transform: "scale(1)" }
       ],
-      {
-        duration: 400,
-        easing: "ease"
-      }
+      { duration: 400, easing: "ease" }
     );
   }
 
-  /* =========================
-     RECÁLCULO PRO
-  ========================= */
-
-  const interesAnual =
-    Number(document.getElementById("interes")?.value) / 100 || 0;
-
-  const interesMensual = interesAnual / 12;
+  const interesMensual = obtenerInteresMensual();
 
   let saldoRestante = totalPrestamo;
 
@@ -63,7 +52,7 @@ function pagarCuota(numero, boton) {
     }
 
     let interesNuevo = saldoRestante * interesMensual;
-    let capitalNuevo = Number(capitalCuotas[j]) || 0;
+    let capitalNuevo = aNumero(capitalCuotas[j]);
 
     if (capitalNuevo > saldoRestante) {
       capitalNuevo = saldoRestante;
@@ -76,7 +65,6 @@ function pagarCuota(numero, boton) {
     saldoRestante = Math.max(0, saldoRestante - capitalNuevo);
   }
 
-  /* PRÉSTAMO FINALIZADO */
   if (totalPrestamo <= 0) {
 
     for (let j = 0; j < cuotasTotales; j++) {
@@ -98,6 +86,7 @@ function pagarCuota(numero, boton) {
   guardarPrestamo?.();
 }
 
+
 /* =========================
    RECONSTRUIR TABLA
 ========================= */
@@ -110,13 +99,10 @@ function reconstruirTabla() {
 
   let saldo = totalPrestamo;
 
-  const interesAnual =
-    Number(document.getElementById("interes")?.value) / 100 || 0;
+  const interesMensual = obtenerInteresMensual();
 
-  const interesMensual = interesAnual / 12;
-
-  const fechaBase = new Date();
-  const diaPago = Number(document.getElementById("diaPago")?.value) || 1;
+  const fechaBase = obtenerFechaBasePrestamo();
+  const diaPago = obtenerDiaPago();
 
   for (let i = 0; i < cuotasTotales; i++) {
 
@@ -133,7 +119,7 @@ function reconstruirTabla() {
         <tr class="fila-pagada">
           <td>${i + 1}</td>
           <td>${fechaTexto}</td>
-          <td>$${dinero(capitalCuotas[i] + interesCuotas[i])}</td>
+          <td>$${dinero(aNumero(capitalCuotas[i]) + aNumero(interesCuotas[i]))}</td>
           <td>$${dinero(interesCuotas[i])}</td>
           <td>$${dinero(capitalCuotas[i])}</td>
           <td>$0</td>
@@ -164,8 +150,8 @@ function reconstruirTabla() {
       continue;
     }
 
-    let interesMes = Number(interesCuotas[i]) || 0;
-    let capital = Number(capitalCuotas[i]) || 0;
+    let interesMes = aNumero(interesCuotas[i]);
+    let capital = aNumero(capitalCuotas[i]);
 
     if (capital > saldo) {
       capital = saldo;
@@ -174,9 +160,7 @@ function reconstruirTabla() {
 
     saldo = Math.max(0, saldo - capital);
 
-    const hoy = new Date(fecha);
-
-    const vencida = new Date() > hoy;
+    const vencida = new Date() > fecha;
 
     const estado = vencida ? "Vencida" : "Pendiente";
     const clase = vencida ? "fila-vencida" : "";

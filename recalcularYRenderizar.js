@@ -4,10 +4,7 @@ function recalcularYRenderizar(ctx) {
 
   const tipo = document.getElementById("tipoAbono")?.value || "cuota";
 
-  const interesAnual =
-    Number(document.getElementById("interes")?.value) / 100 || 0;
-
-  const interesMensual = interesAnual / 12;
+  const interesMensual = obtenerInteresMensual();
 
   let saldo = totalPrestamo;
 
@@ -16,30 +13,40 @@ function recalcularYRenderizar(ctx) {
 
   tabla.innerHTML = "";
 
-  const fechaBase = new Date();
-  const diaPago = Number(document.getElementById("diaPago")?.value) || 1;
+  const fechaBase = obtenerFechaBasePrestamo();
+  const diaPago = obtenerDiaPago();
 
-  /* ORQUESTADOR */
   if (tipo === "cuota") {
-    saldo = recalcularCuota({ saldo, interesMensual, tabla, fechaBase, diaPago });
+    saldo = recalcularCuota({
+      saldo,
+      interesMensual,
+      tabla,
+      fechaBase,
+      diaPago
+    });
   } else {
-    saldo = recalcularPlazo({ saldo, interesMensual, tabla, fechaBase, diaPago });
+    saldo = recalcularPlazo({
+      saldo,
+      interesMensual,
+      tabla,
+      fechaBase,
+      diaPago
+    });
   }
 
-  /* MÉTRICAS */
   let interesRestanteNuevo = 0;
 
   for (let i = 0; i < interesCuotas.length; i++) {
     if (!cuotasPagadasEstado[i]) {
-      interesRestanteNuevo += Number(interesCuotas[i]) || 0;
+      interesRestanteNuevo += aNumero(interesCuotas[i]);
     }
   }
 
-  const interesTotalNuevo = (Number(interesPagado) || 0) + interesRestanteNuevo;
+  const interesTotalNuevo = aNumero(interesPagado) + interesRestanteNuevo;
 
   const ahorro = Math.max(
     0,
-    Math.round((Number(interesTotalOriginal) || 0) - interesTotalNuevo)
+    Math.round(aNumero(interesTotalOriginal) - interesTotalNuevo)
   );
 
   const ahorroIndividual = Math.max(
@@ -50,7 +57,7 @@ function recalcularYRenderizar(ctx) {
   let cuotasDespues = 0;
 
   for (let i = 0; i < capitalCuotas.length; i++) {
-    if (!cuotasPagadasEstado[i] && (capitalCuotas[i] + interesCuotas[i]) > 0) {
+    if (!cuotasPagadasEstado[i] && (aNumero(capitalCuotas[i]) + aNumero(interesCuotas[i])) > 0) {
       cuotasDespues++;
     }
   }
@@ -101,7 +108,7 @@ function renderFilaPagada(tabla, i, fechaTexto) {
     <tr class="fila-pagada">
       <td>${i + 1}</td>
       <td>${fechaTexto}</td>
-      <td>$${dinero(Number(capitalCuotas[i]) + Number(interesCuotas[i]))}</td>
+      <td>$${dinero(aNumero(capitalCuotas[i]) + aNumero(interesCuotas[i]))}</td>
       <td>$${dinero(interesCuotas[i])}</td>
       <td>$${dinero(capitalCuotas[i])}</td>
       <td>$0</td>
@@ -137,10 +144,10 @@ function renderFilaPendiente(tabla, i, fechaTexto, capital, interesMes, saldo) {
     <tr id="fila${i + 1}">
       <td>${i + 1}</td>
       <td>${fechaTexto}</td>
-      <td>$${dinero(Math.round(capital + interesMes))}</td>
-      <td>$${dinero(Math.round(interesMes))}</td>
-      <td>$${dinero(Math.round(capital))}</td>
-      <td>$${dinero(Math.round(saldo))}</td>
+      <td>$${dinero(aNumero(capital) + aNumero(interesMes))}</td>
+      <td>$${dinero(interesMes)}</td>
+      <td>$${dinero(capital)}</td>
+      <td>$${dinero(saldo)}</td>
       <td>Pendiente</td>
       <td>
         <button onclick="pagarCuota(${i + 1}, this)">Pagar</button>

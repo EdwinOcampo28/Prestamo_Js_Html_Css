@@ -9,7 +9,6 @@
 
 <link rel="stylesheet" href="styles.css">
 
-<!-- Librerías -->
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -20,7 +19,6 @@
 
 <h1>Simulador de Préstamos</h1>
 
-<!-- TARJETAS -->
 <section class="cards">
 <div class="card"><h3>Saldo pendiente</h3><p id="saldoPendiente">$0</p></div>
 <div class="card"><h3>Capital pagado</h3><p id="capitalPagado">$0</p></div>
@@ -30,12 +28,10 @@
 <div class="card"><h3>Intereses ahorrados</h3><p id="interesAhorrado">$0</p></div>
 </section>
 
-<!-- BARRA -->
 <div class="barra-container">
   <div id="barraProgreso"></div>
 </div>
 
-<!-- FORMULARIO -->
 <section class="formulario">
 <input type="number" id="monto" value="2200000" min="1">
 <input type="number" id="interes" value="24" min="0">
@@ -43,26 +39,23 @@
 <input type="number" id="diaPago" value="15" min="1" max="31">
 </section>
 
-<!-- ABONO -->
 <section class="abono">
 <input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" min="1">
 
 <select id="tipoAbono">
-<option value="cuota">Reducir cuota</option>
-<option value="plazo">Reducir plazo</option>
+<option value="plazo">Reducir cuota</option>
+<option value="cuota">Reducir plazo</option>
 </select>
 
 <button type="button" id="btnAbono">Aplicar abono</button>
 </section>
 
-<!-- BOTONES -->
 <section class="botones">
 <button type="button" id="btnCalcular">Calcular préstamo</button>
 <button type="button" id="btnReiniciar">Reiniciar</button>
 <button type="button" id="btnPDF">Descargar PDF</button>
 </section>
 
-<!-- TABLA -->
 <section class="tabla-container">
 <div class="tabla-wrapper">
 <table id="tablaPrincipal">
@@ -71,12 +64,10 @@
 </div>
 </section>
 
-<!-- GRÁFICA -->
 <section class="grafica-container">
 <canvas id="grafica"></canvas>
 </section>
 
-<!-- COMPARADOR -->
 <section class="comparador">
 <h3>Comparación del préstamo</h3>
 
@@ -95,16 +86,10 @@
 <p>Ahorro total</p>
 <strong id="ahorroTotal">$0</strong>
 </div>
-
-<div class="comparador-card">
-<p>Cuotas reducidas</p>
-<strong id="cuotasReducidas">0</strong>
-</div>
 </div>
 
 </section>
 
-<!-- HISTORIAL -->
 <section class="historial">
 <h3>Historial de abonos</h3>
 <div id="listaAbonos"></div>
@@ -112,14 +97,12 @@
 
 </div>
 
-<!-- SCRIPTS -->
 <script defer src="Calculadora.js"></script>
 <script defer src="Calcular.js"></script>
 <script defer src="PagarCuota.js"></script>
 <script defer src="prepararYValidarAbono.js"></script>
 <script defer src="recalcularYRenderizar.js"></script>
 <script defer src="aplicarAbono.js"></script>
-<script defer src="recalcularCuota.js"></script>
 <script defer src="recalcularPlazo.js"></script>
 <script defer src="ReiniciarPrestamo.js"></script>
 <script defer src="Pdf.js"></script>

@@ -36,7 +36,7 @@ h1 {
 /* CARDS */
 .cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
@@ -150,7 +150,6 @@ button:active {
 
 #tablaPrincipal {
   width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
   background: #1e293b;
   border-radius: 12px;

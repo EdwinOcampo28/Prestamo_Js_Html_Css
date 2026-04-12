@@ -9,7 +9,7 @@ function aplicarAbono(ctx = {}) {
     }
 
     totalPrestamo -= abono;
-    totalPrestamo = Math.max(0, totalPrestamo);
+    if (totalPrestamo < 0) totalPrestamo = 0;
 
     capitalPagado += abono;
     pagado = capitalPagado + interesPagado;
@@ -18,14 +18,9 @@ function aplicarAbono(ctx = {}) {
 
         let interesRestanteAntes = 0;
 
-        for (let i = 0; i < interesCuotas.length; i++) {
-            if (!cuotasPagadasEstado[i]) {
-                interesRestanteAntes += interesCuotas[i];
-            }
-        }
-
         for (let i = 0; i < cuotasTotales; i++) {
             if (!cuotasPagadasEstado[i]) {
+                interesRestanteAntes += (interesCuotas[i] || 0);
                 cuotasPagadasEstado[i] = true;
                 capitalCuotas[i] = 0;
                 interesCuotas[i] = 0;

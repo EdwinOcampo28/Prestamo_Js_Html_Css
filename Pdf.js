@@ -1,6 +1,5 @@
 "use strict";
 
-// Generar PDF de la simulación de préstamo
 function generarPDF() {
 
   if (!window.jspdf) {
@@ -11,8 +10,8 @@ function generarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  const margenX = 15;
-  let y = 20;
+  let y = 18;
+  const margin = 14;
 
   const totalPagadoEl = document.getElementById("totalPagado");
   const saldoPendienteEl = document.getElementById("saldoPendiente");
@@ -23,45 +22,58 @@ function generarPDF() {
     return;
   }
 
-  /* TITULO */
-  doc.setFontSize(18);
-  doc.setFont("helvetica", "bold");
-  doc.text("Simulación de Préstamo", margenX, y);
-  y += 12;
+  const bg = [10, 12, 20];
+  const card = [22, 28, 45];
+  const header = [15, 20, 35];
 
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
+  const white = [240, 240, 240];
+  const muted = [180, 180, 180];
 
-  if (totalPagadoEl) {
-    doc.text("Total pagado: " + totalPagadoEl.innerText, margenX, y);
-    y += 6;
-  }
+  const accent = [56, 189, 248];
+  const green = [34, 197, 94];
+  const red = [239, 68, 68];
+  const yellow = [234, 179, 8];
 
-  if (saldoPendienteEl) {
-    doc.text("Saldo pendiente: " + saldoPendienteEl.innerText, margenX, y);
-    y += 10;
-  } else {
-    y += 6;
-  }
-
-  /* TABLA */
-  doc.setFontSize(13);
-  doc.setFont("helvetica", "bold");
-  doc.text("Tabla de amortización", margenX, y);
-  y += 8;
-
-  const headers = ["#", "Fecha", "Cuota", "Interés", "Capital", "Saldo", "Estado"];
-  const positions = [15, 32, 60, 90, 120, 150, 175];
-
-  doc.setFontSize(10);
-
-  const drawHeader = () => {
-    doc.setFont("helvetica", "bold");
-    headers.forEach((h, i) => doc.text(h, positions[i], y));
-    doc.setFont("helvetica", "normal");
+  const box = (x, y, w, h, color) => {
+    doc.setFillColor(...color);
+    doc.roundedRect(x, y, w, h, 2, 2, "F");
   };
 
-  drawHeader();
+  const text = (t, x, y, color = white, size = 10, bold = false) => {
+    doc.setFontSize(size);
+    doc.setFont("helvetica", bold ? "bold" : "normal");
+    doc.setTextColor(...color);
+    doc.text(String(t), x, y);
+  };
+
+  box(10, 8, 190, 18, header);
+  text("SIMULACIÓN DE PRÉSTAMO", margin, 20, accent, 14, true);
+
+  y = 32;
+
+  box(10, y, 92, 26, card);
+  box(108, y, 92, 26, card);
+
+  text("Total Pagado", 14, y + 9, muted, 9);
+  text(totalPagadoEl?.innerText || "$0", 14, y + 19, white, 12, true);
+
+  text("Saldo Pendiente", 112, y + 9, muted, 9);
+  text(saldoPendienteEl?.innerText || "$0", 112, y + 19, white, 12, true);
+
+  y += 36;
+
+  box(10, y - 6, 190, 10, header);
+
+  const headers = ["#", "Fecha", "Cuota", "Interés", "Capital", "Saldo", "Estado"];
+  const pos = [12, 32, 65, 92, 118, 145, 172];
+
+  text("TABLA DE AMORTIZACIÓN", margin, y + 3, accent, 11, true);
+  y += 10;
+
+  headers.forEach((h, i) => {
+    text(h, pos[i], y, white, 9, true);
+  });
+
   y += 6;
 
   const filas = tabla.querySelectorAll("tr");
@@ -71,69 +83,70 @@ function generarPDF() {
     const cols = fila.querySelectorAll("td");
     if (!cols.length) return;
 
+    box(10, y - 4, 190, 7, card);
+
     for (let i = 0; i < Math.min(7, cols.length); i++) {
 
-      let texto = (cols[i].innerText || "").toString();
+      let txt = (cols[i].innerText || "").toString();
+      if (txt.length > 18) txt = txt.slice(0, 18) + "...";
 
-      if (texto.length > 20) {
-        texto = texto.slice(0, 20) + "...";
+      let color = white;
+
+      if (i === 6) {
+        if (txt.includes("Pagado")) color = green;
+        else if (txt.includes("Vencida")) color = red;
+        else color = yellow;
       }
 
-      doc.text(texto, positions[i], y);
+      text(txt, pos[i], y, color, 8);
     }
 
-    y += 5;
+    y += 7;
 
-    if (y > 275) {
+    if (y > 265) {
       doc.addPage();
       y = 20;
-      drawHeader();
-      y += 6;
     }
   });
 
-  /* HISTORIAL */
   y += 10;
 
-  doc.setFontSize(13);
-  doc.setFont("helvetica", "bold");
-  doc.text("Historial de abonos", margenX, y);
-  y += 7;
+  box(10, y, 190, 10, header);
+  text("HISTORIAL DE ABONOS", margin, y + 7, accent, 11, true);
 
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
+  y += 16;
 
   const safeHistorial = Array.isArray(historialAbonos) ? historialAbonos : [];
 
-  if (safeHistorial.length === 0) {
-    doc.text("No hay abonos registrados", margenX, y);
+  if (!safeHistorial.length) {
+    text("No hay abonos registrados", margin, y, muted, 10);
   } else {
 
-    for (const a of safeHistorial) {
+    safeHistorial.forEach((a) => {
 
-      let tipo =
+      box(10, y - 4, 190, 10, card);
+
+      const tipo =
         a.tipo === "plazo"
           ? "Plazo"
           : a.tipo === "liquidación total"
-            ? "Liquidación total"
+            ? "Liquidación"
             : "Cuota";
 
-      let texto = `$${dinero(a.valor)} | ${tipo}`;
+      const linea =
+        `$${dinero(a.valor)} | ${tipo}` +
+        (a.ahorro ? ` | ahorro: $${dinero(a.ahorro)}` : "") +
+        ` | ${a.fecha || ""}`;
 
-      if (a.ahorro != null) {
-        texto += ` | Ahorro: $${dinero(a.ahorro)}`;
-      }
+      text(linea, margin, y + 3, white, 9);
 
-      texto += ` | ${a.fecha || ""}`;
+      y += 10;
 
-      doc.text(texto, margenX, y);
-      y += 5;
-
-      if (y > 280) {
+      if (y > 265) {
         doc.addPage();
         y = 20;
       }
-    }
+    });
   }
 
   doc.save("Simulacion_Prestamo.pdf");

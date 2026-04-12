@@ -1,4 +1,14 @@
+function PMT(saldo, tasa, n) {
+  if (tasa === 0) return saldo / n;
+
+  const f = Math.pow(1 + tasa, n);
+  return saldo * (tasa * f) / (f - 1);
+}
+
 function recalcularPlazo({ saldo, interesMensual, tabla, fechaBase, diaPago }) {
+
+  let saldoActual = aNumero(saldo);
+  let totalInteres = 0;
 
   for (let i = 0; i < cuotasTotales; i++) {
 
@@ -9,23 +19,40 @@ function recalcularPlazo({ saldo, interesMensual, tabla, fechaBase, diaPago }) {
       continue;
     }
 
-    if (saldo <= 0) {
+    if (saldoActual <= 0) {
       renderFilaCancelada(tabla, i, fechaTexto);
       continue;
     }
 
-    const interesMes = saldo * interesMensual;
+    const restantes = cuotasTotales - i;
 
-    let capital = Number(capitalCuotas[i]) || 0;
+    const cuota = PMT(saldoActual, interesMensual, restantes);
 
-    if (capital > saldo) capital = saldo;
+    const interesMes = saldoActual * interesMensual;
 
-    saldo = Math.max(0, saldo - capital);
+    let capital = cuota - interesMes;
+
+    if (capital > saldoActual) capital = saldoActual;
+
+    saldoActual = Math.max(0, saldoActual - capital);
 
     interesCuotas[i] = interesMes;
+    capitalCuotas[i] = capital;
 
-    renderFilaPendiente(tabla, i, fechaTexto, capital, interesMes, saldo);
+    totalInteres += interesMes;
+
+    renderFilaPendiente(
+      tabla,
+      i,
+      fechaTexto,
+      capital,
+      interesMes,
+      saldoActual
+    );
   }
 
-  return saldo;
+  return {
+    saldoFinal: saldoActual,
+    interesTotal: totalInteres
+  };
 }
