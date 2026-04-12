@@ -14,137 +14,20 @@ function recalcularYRenderizar(ctx){
     tabla.innerHTML="";
 
     const fechaBase = new Date();
+    const diaPago = parseInt(document.getElementById("diaPago")?.value);
 
     /* =========================
-       RECÁLCULO
+       ORQUESTADOR
     ========================= */
 
-    if(tipo==="cuota"){
-
-        // 🔥 CORREGIDO: calcular cuotas reales pendientes
-        let cuotasRestantes = 0;
-        for(let i=0;i<cuotasTotales;i++){
-            if(!cuotasPagadasEstado[i]){
-                cuotasRestantes++;
-            }
-        }
-
-        if(cuotasRestantes <= 0) return;
-
-        let nuevaCuota;
-
-        if(interesMensual === 0){
-            nuevaCuota = saldo / cuotasRestantes;
-        }else{
-            nuevaCuota = saldo *
-            (interesMensual*Math.pow(1+interesMensual,cuotasRestantes)) /
-            (Math.pow(1+interesMensual,cuotasRestantes)-1);
-        }
-
-        for(let i=0;i<cuotasTotales;i++){
-
-            const fecha = new Date(fechaBase);
-            fecha.setMonth(fecha.getMonth()+(i+1));
-            fecha.setDate(parseInt(document.getElementById("diaPago")?.value));
-
-            const fechaTexto = fecha.toLocaleDateString("es-CO");
-
-            if(cuotasPagadasEstado[i]){
-                tabla.innerHTML+=`<tr class="fila-pagada">
-                <td>${i+1}</td><td>${fechaTexto}</td>
-                <td>$${dinero(capitalCuotas[i]+interesCuotas[i])}</td>
-                <td>$${dinero(interesCuotas[i])}</td>
-                <td>$${dinero(capitalCuotas[i])}</td>
-                <td>$0</td><td>Pagado</td><td>✔</td></tr>`;
-                continue;
-            }
-
-            if(saldo <= 0){
-                tabla.innerHTML+=`<tr class="fila-cancelada">
-                <td>${i+1}</td><td>${fechaTexto}</td>
-                <td>$0</td><td>$0</td><td>$0</td>
-                <td>$0</td><td>Cancelada</td><td>-</td></tr>`;
-                continue;
-            }
-
-            const interesMes = saldo * interesMensual;
-            let capital = nuevaCuota - interesMes;
-
-            // 🔥 ajuste de precisión (clave)
-            if(capital > saldo || i === cuotasTotales-1){
-                capital = saldo;
-            }
-
-            saldo -= capital;
-            saldo = Math.max(0,saldo);
-
-            interesCuotas[i] = interesMes;
-            capitalCuotas[i] = capital;
-
-            tabla.innerHTML+=`<tr id="fila${i+1}">
-            <td>${i+1}</td><td>${fechaTexto}</td>
-            <td>$${dinero(Math.round(capital+interesMes))}</td>
-            <td>$${dinero(Math.round(interesMes))}</td>
-            <td>$${dinero(Math.round(capital))}</td>
-            <td>$${dinero(Math.round(saldo))}</td>
-            <td>Pendiente</td>
-            <td><button onclick="pagarCuota(${i+1},this)">Pagar</button></td>
-            </tr>`;
-        }
-
+    if(tipo === "cuota"){
+        saldo = recalcularCuota({saldo, interesMensual, tabla, fechaBase, diaPago});
     } else {
-
-        // 🔥 TU BLOQUE DE PLAZO ORIGINAL (SIN TOCAR)
-        for(let i=0;i<cuotasTotales;i++){
-
-            const fecha = new Date(fechaBase);
-            fecha.setMonth(fecha.getMonth()+(i+1));
-            fecha.setDate(parseInt(document.getElementById("diaPago")?.value));
-
-            const fechaTexto = fecha.toLocaleDateString("es-CO");
-
-            if(cuotasPagadasEstado[i]){
-                tabla.innerHTML+=`<tr class="fila-pagada">
-                <td>${i+1}</td><td>${fechaTexto}</td>
-                <td>$${dinero(capitalCuotas[i]+interesCuotas[i])}</td>
-                <td>$${dinero(interesCuotas[i])}</td>
-                <td>$${dinero(capitalCuotas[i])}</td>
-                <td>$0</td><td>Pagada</td><td>✔</td></tr>`;
-                continue;
-            }
-
-            if(saldo <= 0){
-                tabla.innerHTML+=`<tr class="fila-cancelada">
-                <td>${i+1}</td><td>${fechaTexto}</td>
-                <td>$0</td><td>$0</td><td>$0</td>
-                <td>$0</td><td>Cancelada</td><td>-</td></tr>`;
-                continue;
-            }
-
-            const interesMes = saldo * interesMensual;
-            let capital = capitalCuotas[i];
-
-            if(capital > saldo) capital = saldo;
-
-            saldo -= capital;
-            saldo = Math.max(0,saldo);
-
-            interesCuotas[i] = interesMes;
-
-            tabla.innerHTML+=`<tr id="fila${i+1}">
-            <td>${i+1}</td><td>${fechaTexto}</td>
-            <td>$${dinero(Math.round(capital+interesMes))}</td>
-            <td>$${dinero(Math.round(interesMes))}</td>
-            <td>$${dinero(Math.round(capital))}</td>
-            <td>$${dinero(Math.round(saldo))}</td>
-            <td>Pendiente</td>
-            <td><button onclick="pagarCuota(${i+1},this)">Pagar</button></td>
-            </tr>`;
-        }
+        saldo = recalcularPlazo({saldo, interesMensual, tabla, fechaBase, diaPago});
     }
 
     /* =========================
-       MÉTRICAS FINALES (IGUAL)
+       MÉTRICAS (IGUAL)
     ========================= */
 
     let interesRestanteNuevo = 0;
@@ -191,4 +74,39 @@ function recalcularYRenderizar(ctx){
     guardarPrestamo();
     actualizarEstado();
     renderHistorial();
+}
+
+function generarFecha(fechaBase, i, diaPago){
+    const fecha = new Date(fechaBase);
+    fecha.setMonth(fecha.getMonth()+(i+1));
+    fecha.setDate(diaPago);
+    return fecha.toLocaleDateString("es-CO");
+}
+
+function renderFilaPagada(tabla, i, fechaTexto){
+    tabla.innerHTML+=`<tr class="fila-pagada">
+    <td>${i+1}</td><td>${fechaTexto}</td>
+    <td>$${dinero(capitalCuotas[i]+interesCuotas[i])}</td>
+    <td>$${dinero(interesCuotas[i])}</td>
+    <td>$${dinero(capitalCuotas[i])}</td>
+    <td>$0</td><td>Pagado</td><td>✔</td></tr>`;
+}
+
+function renderFilaCancelada(tabla, i, fechaTexto){
+    tabla.innerHTML+=`<tr class="fila-cancelada">
+    <td>${i+1}</td><td>${fechaTexto}</td>
+    <td>$0</td><td>$0</td><td>$0</td>
+    <td>$0</td><td>Cancelada</td><td>-</td></tr>`;
+}
+
+function renderFilaPendiente(tabla, i, fechaTexto, capital, interesMes, saldo){
+    tabla.innerHTML+=`<tr id="fila${i+1}">
+    <td>${i+1}</td><td>${fechaTexto}</td>
+    <td>$${dinero(Math.round(capital+interesMes))}</td>
+    <td>$${dinero(Math.round(interesMes))}</td>
+    <td>$${dinero(Math.round(capital))}</td>
+    <td>$${dinero(Math.round(saldo))}</td>
+    <td>Pendiente</td>
+    <td><button onclick="pagarCuota(${i+1},this)">Pagar</button></td>
+    </tr>`;
 }
