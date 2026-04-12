@@ -23,9 +23,7 @@ function generarPDF() {
     return;
   }
 
-  /* =========================
-     TITULO
-  ========================= */
+  /* TITULO */
   doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
   doc.text("Simulación de Préstamo", margenX, y);
@@ -34,78 +32,67 @@ function generarPDF() {
   doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
 
-  if (totalPagadoEl)
+  if (totalPagadoEl) {
     doc.text("Total pagado: " + totalPagadoEl.innerText, margenX, y);
+    y += 6;
+  }
 
-  y += 6;
-
-  if (saldoPendienteEl)
+  if (saldoPendienteEl) {
     doc.text("Saldo pendiente: " + saldoPendienteEl.innerText, margenX, y);
+    y += 10;
+  } else {
+    y += 6;
+  }
 
-  y += 12;
-
-  /* =========================
-     TABLA
-  ========================= */
+  /* TABLA */
   doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
   doc.text("Tabla de amortización", margenX, y);
   y += 8;
 
   const headers = ["#", "Fecha", "Cuota", "Interés", "Capital", "Saldo", "Estado"];
-
-  // 🔥 posiciones mejor distribuidas (sin desbordes)
-  const posiciones = [15, 28, 55, 80, 105, 135, 165];
+  const positions = [15, 32, 60, 90, 120, 150, 175];
 
   doc.setFontSize(10);
-  headers.forEach((header, i) => {
-    doc.text(header, posiciones[i], y);
-  });
 
-  y += 5;
+  const drawHeader = () => {
+    doc.setFont("helvetica", "bold");
+    headers.forEach((h, i) => doc.text(h, positions[i], y));
+    doc.setFont("helvetica", "normal");
+  };
 
-  doc.setFont("helvetica", "normal");
+  drawHeader();
+  y += 6;
 
   const filas = tabla.querySelectorAll("tr");
 
   filas.forEach((fila) => {
 
-    const columnas = fila.querySelectorAll("td");
+    const cols = fila.querySelectorAll("td");
+    if (!cols.length) return;
 
-    columnas.forEach((col, i) => {
-      if (i < 7) {
+    for (let i = 0; i < Math.min(7, cols.length); i++) {
 
-        let texto = col.innerText.toString();
+      let texto = (cols[i].innerText || "").toString();
 
-        // 🔥 limitar texto sin cortar números importantes
-        if (texto.length > 18) {
-          texto = texto.substring(0, 18) + "...";
-        }
-
-        doc.text(texto, posiciones[i], y);
+      if (texto.length > 20) {
+        texto = texto.slice(0, 20) + "...";
       }
-    });
+
+      doc.text(texto, positions[i], y);
+    }
 
     y += 5;
 
-    // 🔥 salto de página mejor controlado
-    if (y > 270) {
+    if (y > 275) {
       doc.addPage();
       y = 20;
-
-      // repetir encabezado
-      doc.setFont("helvetica", "bold");
-      headers.forEach((header, i) => {
-        doc.text(header, posiciones[i], y);
-      });
-      doc.setFont("helvetica", "normal");
+      drawHeader();
       y += 6;
     }
   });
 
-  /* =========================
-     HISTORIAL (PRO)
-  ========================= */
+  /* HISTORIAL */
   y += 10;
 
   doc.setFontSize(13);
@@ -116,19 +103,28 @@ function generarPDF() {
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
 
-  if (historialAbonos.length === 0) {
+  const safeHistorial = Array.isArray(historialAbonos) ? historialAbonos : [];
+
+  if (safeHistorial.length === 0) {
     doc.text("No hay abonos registrados", margenX, y);
   } else {
 
-    historialAbonos.forEach(a => {
+    for (const a of safeHistorial) {
 
-      let texto = `$${dinero(a.valor)} | ${a.tipo === "plazo" ? "Plazo" : "Cuota"}`;
+      let tipo =
+        a.tipo === "plazo"
+          ? "Plazo"
+          : a.tipo === "liquidación total"
+            ? "Liquidación total"
+            : "Cuota";
 
-      if (a.ahorro !== undefined) {
+      let texto = `$${dinero(a.valor)} | ${tipo}`;
+
+      if (a.ahorro != null) {
         texto += ` | Ahorro: $${dinero(a.ahorro)}`;
       }
 
-      texto += ` | ${a.fecha}`;
+      texto += ` | ${a.fecha || ""}`;
 
       doc.text(texto, margenX, y);
       y += 5;
@@ -137,11 +133,8 @@ function generarPDF() {
         doc.addPage();
         y = 20;
       }
-    });
+    }
   }
 
-  /* =========================
-     GUARDAR
-  ========================= */
   doc.save("Simulacion_Prestamo.pdf");
 }

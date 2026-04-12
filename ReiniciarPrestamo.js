@@ -2,15 +2,11 @@
 
 function reiniciar() {
 
-  /* =========================
-     LIMPIAR TABLA
-  ========================= */
+  /* TABLA */
   const tabla = document.getElementById("tabla");
   if (tabla) tabla.innerHTML = "";
 
-  /* =========================
-     RESETEAR UI
-  ========================= */
+  /* UI */
   actualizarTexto("saldoPendiente", "$0");
   actualizarTexto("capitalPagado", "$0");
   actualizarTexto("interesPagado", "$0");
@@ -18,7 +14,6 @@ function reiniciar() {
   actualizarTexto("progresoPrestamo", "0%");
   actualizarTexto("interesAhorrado", "$0");
 
-  /* COMPARADOR */
   actualizarTexto("interesOriginal", "$0");
   actualizarTexto("interesConAbono", "$0");
   actualizarTexto("ahorroTotal", "$0");
@@ -27,17 +22,13 @@ function reiniciar() {
   const barra = document.getElementById("barraProgreso");
   if (barra) barra.style.width = "0%";
 
-  /* =========================
-     LIMPIAR ARRAYS (SEGURO)
-  ========================= */
+  /* ARRAYS */
   capitalCuotas.length = 0;
   interesCuotas.length = 0;
   cuotasPagadasEstado.length = 0;
   historialAbonos.length = 0;
 
-  /* =========================
-     VARIABLES GLOBALES
-  ========================= */
+  /* ESTADO */
   pagado = 0;
   cuotasPagadas = 0;
   capitalPagado = 0;
@@ -48,31 +39,24 @@ function reiniciar() {
   cuotasTotales = 0;
   interesTotalOriginal = 0;
 
-  /* =========================
-     INPUTS
-  ========================= */
+  /* INPUTS */
   const abono = document.getElementById("abonoCapital");
-  if (abono){
+
+  if (abono) {
     abono.value = "";
-    abono.removeAttribute("max"); // 🔥 evita límite viejo
+    abono.removeAttribute("max");
   }
 
-  /* =========================
-     GRÁFICA
-  ========================= */
+  /* GRÁFICA */
   if (chart) {
     chart.destroy();
     chart = null;
   }
 
-  /* =========================
-     STORAGE (LIMPIO TOTAL)
-  ========================= */
+  /* STORAGE */
   localStorage.removeItem("prestamoSimulador");
 
-  /* =========================
-     UI FINAL
-  ========================= */
-  actualizarEstado();
-  renderHistorial();
+  /* FINAL */
+  actualizarEstado?.();
+  renderHistorial?.();
 }

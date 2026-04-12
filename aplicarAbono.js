@@ -1,29 +1,31 @@
-function aplicarAbono(ctx){
+function aplicarAbono(ctx = {}) {
 
-    let {abono, tipoOperacion, cuotasAntes} = ctx;
+    let { abono = 0, tipoOperacion, cuotasAntes = 0 } = ctx;
 
-    if(tipoOperacion === "liquidacion_total"){
+    abono = Number(abono) || 0;
+
+    if (tipoOperacion === "liquidacion_total") {
         abono = totalPrestamo;
     }
 
     totalPrestamo -= abono;
-    totalPrestamo = Math.max(0,totalPrestamo);
+    totalPrestamo = Math.max(0, totalPrestamo);
 
     capitalPagado += abono;
     pagado = capitalPagado + interesPagado;
 
-    if(tipoOperacion === "liquidacion_total"){
+    if (tipoOperacion === "liquidacion_total") {
 
         let interesRestanteAntes = 0;
 
-        for(let i=0;i<interesCuotas.length;i++){
-            if(!cuotasPagadasEstado[i]){
+        for (let i = 0; i < interesCuotas.length; i++) {
+            if (!cuotasPagadasEstado[i]) {
                 interesRestanteAntes += interesCuotas[i];
             }
         }
 
-        for(let i=0;i<cuotasTotales;i++){
-            if(!cuotasPagadasEstado[i]){
+        for (let i = 0; i < cuotasTotales; i++) {
+            if (!cuotasPagadasEstado[i]) {
                 cuotasPagadasEstado[i] = true;
                 capitalCuotas[i] = 0;
                 interesCuotas[i] = 0;
@@ -35,11 +37,17 @@ function aplicarAbono(ctx){
 
         actualizarTexto("interesAhorrado", "$" + dinero(ahorroTotal));
 
-        document.getElementById("interesOriginal").innerText="$"+dinero(interesTotalOriginal);
-        document.getElementById("interesConAbono").innerText="$"+dinero(interesPagado);
-        document.getElementById("ahorroTotal").innerText="$"+dinero(ahorroTotal);
-        document.getElementById("cuotasReducidas").innerText =
-        cuotasAntes + " cuotas menos (plazo: 0)";
+        const elInteresOriginal = document.getElementById("interesOriginal");
+        const elInteresConAbono = document.getElementById("interesConAbono");
+        const elAhorroTotal = document.getElementById("ahorroTotal");
+        const elCuotasReducidas = document.getElementById("cuotasReducidas");
+
+        if (elInteresOriginal) elInteresOriginal.innerText = "$" + dinero(interesTotalOriginal);
+        if (elInteresConAbono) elInteresConAbono.innerText = "$" + dinero(interesPagado);
+        if (elAhorroTotal) elAhorroTotal.innerText = "$" + dinero(ahorroTotal);
+        if (elCuotasReducidas) {
+            elCuotasReducidas.innerText = cuotasAntes + " cuotas menos (plazo: 0)";
+        }
 
         historialAbonos.push({
             valor: abono,
@@ -61,13 +69,13 @@ function aplicarAbono(ctx){
     return "continuar";
 }
 
-function pagarSeparado(){
+function pagarSeparado() {
 
     const contexto = prepararYValidarAbono();
-    if(!contexto) return;
+    if (!contexto) return;
 
     const resultado = aplicarAbono(contexto);
-    if(resultado === "liquidado") return;
+    if (resultado === "liquidado") return;
 
     recalcularYRenderizar(contexto);
 }

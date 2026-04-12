@@ -1,11 +1,11 @@
 function pagarCuota(numero, boton) {
 
-  const i = numero - 1;
+  const i = Number(numero) - 1;
 
   if (cuotasPagadasEstado[i]) return;
 
-  let capital = capitalCuotas[i] || 0;
-  let interes = interesCuotas[i] || 0;
+  let capital = Number(capitalCuotas[i]) || 0;
+  let interes = Number(interesCuotas[i]) || 0;
 
   const capitalPendiente = Math.min(capital, totalPrestamo);
 
@@ -20,29 +20,34 @@ function pagarCuota(numero, boton) {
   cuotasPagadasEstado[i] = true;
 
   /* UI */
-  const estado = document.getElementById("estado" + numero);
-  if (estado) estado.innerText = "Pagado";
+  const estadoEl = document.getElementById("estado" + numero);
+  if (estadoEl) estadoEl.innerText = "Pagado";
 
   if (boton) boton.disabled = true;
 
   const fila = document.getElementById("fila" + numero);
-  if (fila){
+  if (fila) {
     fila.classList.add("fila-pagada");
 
-    fila.animate([
-      { transform: "scale(1.05)", background:"#064e3b" },
-      { transform: "scale(1)" }
-    ], {
-      duration: 400,
-      easing: "ease"
-    });
+    fila.animate(
+      [
+        { transform: "scale(1.05)", background: "#064e3b" },
+        { transform: "scale(1)" }
+      ],
+      {
+        duration: 400,
+        easing: "ease"
+      }
+    );
   }
 
   /* =========================
      RECÁLCULO PRO
   ========================= */
 
-  const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100 || 0;
+  const interesAnual =
+    Number(document.getElementById("interes")?.value) / 100 || 0;
+
   const interesMensual = interesAnual / 12;
 
   let saldoRestante = totalPrestamo;
@@ -58,10 +63,9 @@ function pagarCuota(numero, boton) {
     }
 
     let interesNuevo = saldoRestante * interesMensual;
-    let capitalNuevo = capitalCuotas[j] || 0;
+    let capitalNuevo = Number(capitalCuotas[j]) || 0;
 
-    // 🔥 ajuste clave
-    if (capitalNuevo >= saldoRestante) {
+    if (capitalNuevo > saldoRestante) {
       capitalNuevo = saldoRestante;
       interesNuevo = 0;
     }
@@ -69,11 +73,10 @@ function pagarCuota(numero, boton) {
     capitalCuotas[j] = capitalNuevo;
     interesCuotas[j] = interesNuevo;
 
-    saldoRestante -= capitalNuevo;
-    saldoRestante = Math.max(0, saldoRestante);
+    saldoRestante = Math.max(0, saldoRestante - capitalNuevo);
   }
 
-  /* SI SE TERMINA EL PRÉSTAMO */
+  /* PRÉSTAMO FINALIZADO */
   if (totalPrestamo <= 0) {
 
     for (let j = 0; j < cuotasTotales; j++) {
@@ -84,115 +87,118 @@ function pagarCuota(numero, boton) {
         const estado = document.getElementById("estado" + (j + 1));
         if (estado) estado.innerText = "Cancelada";
 
-        const botonFila = document.querySelector(`#fila${j+1} button`);
-        if (botonFila) botonFila.disabled = true;
+        const btn = document.querySelector(`#fila${j + 1} button`);
+        if (btn) btn.disabled = true;
       }
     }
   }
 
-  /* reconstruir tabla */
-  if(typeof reconstruirTabla === "function"){
-    reconstruirTabla();
-  }
-
-  actualizarEstado();
-  guardarPrestamo();
+  reconstruirTabla?.();
+  actualizarEstado?.();
+  guardarPrestamo?.();
 }
 
 /* =========================
-   RECONSTRUIR TABLA (PRO)
+   RECONSTRUIR TABLA
 ========================= */
-function reconstruirTabla(){
+function reconstruirTabla() {
 
-const tabla = document.getElementById("tabla");
-if(!tabla) return;
+  const tabla = document.getElementById("tabla");
+  if (!tabla) return;
 
-tabla.innerHTML = "";
+  tabla.innerHTML = "";
 
-let saldo = totalPrestamo;
-const interesAnual = parseFloat(document.getElementById("interes")?.value)/100 || 0;
-const interesMensual = interesAnual/12;
+  let saldo = totalPrestamo;
 
-const fechaBase = new Date();
+  const interesAnual =
+    Number(document.getElementById("interes")?.value) / 100 || 0;
 
-for(let i=0;i<cuotasTotales;i++){
+  const interesMensual = interesAnual / 12;
+
+  const fechaBase = new Date();
+  const diaPago = Number(document.getElementById("diaPago")?.value) || 1;
+
+  for (let i = 0; i < cuotasTotales; i++) {
 
     const fecha = new Date(fechaBase);
-    fecha.setMonth(fecha.getMonth()+(i+1));
-    fecha.setDate(parseInt(document.getElementById("diaPago")?.value));
+    fecha.setMonth(fecha.getMonth() + (i + 1));
+    fecha.setDate(diaPago);
 
     const fechaTexto = fecha.toLocaleDateString("es-CO");
 
-    /* PAGADAS */
-    if(cuotasPagadasEstado[i]){
-        tabla.innerHTML+=`
+    if (cuotasPagadasEstado[i]) {
+      tabla.insertAdjacentHTML(
+        "beforeend",
+        `
         <tr class="fila-pagada">
-        <td>${i+1}</td>
-        <td>${fechaTexto}</td>
-        <td>$${dinero(capitalCuotas[i]+interesCuotas[i])}</td>
-        <td>$${dinero(interesCuotas[i])}</td>
-        <td>$${dinero(capitalCuotas[i])}</td>
-        <td>$0</td>
-        <td>Pagado</td>
-        <td>✔</td>
-        </tr>`;
-        continue;
+          <td>${i + 1}</td>
+          <td>${fechaTexto}</td>
+          <td>$${dinero(capitalCuotas[i] + interesCuotas[i])}</td>
+          <td>$${dinero(interesCuotas[i])}</td>
+          <td>$${dinero(capitalCuotas[i])}</td>
+          <td>$0</td>
+          <td>Pagado</td>
+          <td>✔</td>
+        </tr>
+        `
+      );
+      continue;
     }
 
-    /* CANCELADAS */
-    if(saldo <= 0){
-        tabla.innerHTML+=`
+    if (saldo <= 0) {
+      tabla.insertAdjacentHTML(
+        "beforeend",
+        `
         <tr class="fila-cancelada">
-        <td>${i+1}</td>
+          <td>${i + 1}</td>
+          <td>${fechaTexto}</td>
+          <td>$0</td>
+          <td>$0</td>
+          <td>$0</td>
+          <td>$0</td>
+          <td>Cancelada</td>
+          <td>-</td>
+        </tr>
+        `
+      );
+      continue;
+    }
+
+    let interesMes = Number(interesCuotas[i]) || 0;
+    let capital = Number(capitalCuotas[i]) || 0;
+
+    if (capital > saldo) {
+      capital = saldo;
+      interesMes = 0;
+    }
+
+    saldo = Math.max(0, saldo - capital);
+
+    const hoy = new Date(fecha);
+
+    const vencida = new Date() > hoy;
+
+    const estado = vencida ? "Vencida" : "Pendiente";
+    const clase = vencida ? "fila-vencida" : "";
+
+    tabla.insertAdjacentHTML(
+      "beforeend",
+      `
+      <tr id="fila${i + 1}" class="${clase}">
+        <td>${i + 1}</td>
         <td>${fechaTexto}</td>
-        <td>$0</td>
-        <td>$0</td>
-        <td>$0</td>
-        <td>$0</td>
-        <td>Cancelada</td>
-        <td>-</td>
-        </tr>`;
-        continue;
-    }
-
-    let interesMes = interesCuotas[i] || 0;
-    let capital = capitalCuotas[i] || 0;
-
-    // 🔥 ajuste final anti-residuos
-    if(capital >= saldo){
-        capital = saldo;
-        interesMes = 0;
-    }
-
-    saldo -= capital;
-    saldo = Math.max(0,saldo);
-
-    const hoy = new Date();
-    const fechaPago = new Date(fecha);
-
-    let estado = "Pendiente";
-    let clase = "";
-
-    if(hoy > fechaPago){
-        estado = "Vencida";
-        clase = "fila-vencida";
-    }
-
-    tabla.innerHTML+=`
-    <tr id="fila${i+1}" class="${clase}">
-    <td>${i+1}</td>
-    <td>${fechaTexto}</td>
-    <td>$${dinero(capital+interesMes)}</td>
-    <td>$${dinero(interesMes)}</td>
-    <td>$${dinero(capital)}</td>
-    <td>$${dinero(saldo)}</td>
-    <td id="estado${i + 1}">${estado}</td>
-    <td>
-    <button onclick="pagarCuota(${i+1},this)">
-    Pagar
-    </button>
-    </td>
-    </tr>`;
-}
-
+        <td>$${dinero(capital + interesMes)}</td>
+        <td>$${dinero(interesMes)}</td>
+        <td>$${dinero(capital)}</td>
+        <td>$${dinero(saldo)}</td>
+        <td id="estado${i + 1}">${estado}</td>
+        <td>
+          <button onclick="pagarCuota(${i + 1}, this)">
+            Pagar
+          </button>
+        </td>
+      </tr>
+      `
+    );
+  }
 }

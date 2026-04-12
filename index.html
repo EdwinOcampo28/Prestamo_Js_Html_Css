@@ -62,10 +62,10 @@
 <button type="button" id="btnPDF">Descargar PDF</button>
 </section>
 
-<!-- TABLA (🔥 SOLO AQUÍ CAMBIO CLAVE) -->
+<!-- TABLA -->
 <section class="tabla-container">
-<div class="tabla-wrapper"> <!-- 🔥 NUEVO -->
-<table id="tablaPrincipal"> <!-- 🔥 NUEVO ID -->
+<div class="tabla-wrapper">
+<table id="tablaPrincipal">
 <tbody id="tabla"></tbody>
 </table>
 </div>
@@ -127,28 +127,17 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-const btnCalcular = document.getElementById("btnCalcular");
-const btnReiniciar = document.getElementById("btnReiniciar");
-const btnPDF = document.getElementById("btnPDF");
-const btnAbono = document.getElementById("btnAbono");
+  const btnCalcular = document.getElementById("btnCalcular");
+  const btnReiniciar = document.getElementById("btnReiniciar");
+  const btnPDF = document.getElementById("btnPDF");
+  const btnAbono = document.getElementById("btnAbono");
 
-if (btnCalcular && typeof calcular === "function") {
-  btnCalcular.addEventListener("click", calcular);
-}
-
-if (btnReiniciar && typeof reiniciar === "function") {
-  btnReiniciar.addEventListener("click", reiniciar);
-}
-
-if (btnPDF && typeof generarPDF === "function") {
-  btnPDF.addEventListener("click", generarPDF);
-}
-
-if (btnAbono && typeof pagarSeparado === "function") {
-  btnAbono.addEventListener("click", pagarSeparado);
-}
-
+  btnCalcular?.addEventListener("click", calcular);
+  btnReiniciar?.addEventListener("click", reiniciar);
+  btnPDF?.addEventListener("click", generarPDF);
+  btnAbono?.addEventListener("click", pagarSeparado);
 });
+
 </script>
 
 </body>

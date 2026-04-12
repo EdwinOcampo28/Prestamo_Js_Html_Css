@@ -2,19 +2,26 @@
 
 function calcular() {
 
-  const monto = parseFloat(document.getElementById("monto")?.value);
-  const interesAnual = parseFloat(document.getElementById("interes")?.value) / 100;
+  const monto = Number(document.getElementById("monto")?.value);
+  const interesAnual = Number(document.getElementById("interes")?.value) / 100;
   const cuotas = parseInt(document.getElementById("cuotas")?.value);
   const diaPago = parseInt(document.getElementById("diaPago")?.value);
 
-  if ([monto, interesAnual, cuotas, diaPago].some(isNaN) || monto <= 0 || cuotas <= 0 || diaPago <= 0 || diaPago > 31) {
+  if (
+    !isFinite(monto) ||
+    !isFinite(interesAnual) ||
+    !isFinite(cuotas) ||
+    !isFinite(diaPago) ||
+    monto <= 0 ||
+    cuotas <= 0 ||
+    diaPago < 1 ||
+    diaPago > 31
+  ) {
     alert("Completa todos los campos correctamente");
     return;
   }
 
-  /* =========================
-     RESET TOTAL
-  ========================= */
+  /* RESET */
   totalPrestamo = monto;
   cuotasTotales = cuotas;
   pagado = 0;
@@ -25,7 +32,6 @@ function calcular() {
   capitalCuotas = [];
   interesCuotas = [];
   cuotasPagadasEstado = new Array(cuotas).fill(false);
-
   historialAbonos = [];
 
   const interesMensual = interesAnual / 12;
@@ -33,12 +39,11 @@ function calcular() {
   /* CUOTA */
   let cuota;
 
-  if(interesMensual === 0){
+  if (interesMensual === 0) {
     cuota = monto / cuotas;
-  }else{
-    cuota = monto *
-      (interesMensual * Math.pow(1 + interesMensual, cuotas)) /
-      (Math.pow(1 + interesMensual, cuotas) - 1);
+  } else {
+    const factor = Math.pow(1 + interesMensual, cuotas);
+    cuota = monto * ((interesMensual * factor) / (factor - 1));
   }
 
   let saldo = monto;
@@ -50,25 +55,22 @@ function calcular() {
 
   const labels = [];
   const saldos = [];
-
   let totalInteres = 0;
 
   const fechaBase = new Date();
+  const hoy = new Date();
 
   for (let i = 1; i <= cuotas; i++) {
 
-    // 🔥 cálculo sin redondeo interno
     let interesMes = saldo * interesMensual;
     let capital = cuota - interesMes;
 
-    // 🔥 ajuste clave para evitar residuos finales
-    if(capital >= saldo){
+    if (capital > saldo) {
       capital = saldo;
       interesMes = 0;
     }
 
-    saldo -= capital;
-    saldo = Math.max(0, saldo);
+    saldo = Math.max(0, saldo - capital);
 
     capitalCuotas.push(capital);
     interesCuotas.push(interesMes);
@@ -81,15 +83,13 @@ function calcular() {
 
     const fechaTexto = fecha.toLocaleDateString("es-CO");
 
-    const hoy = new Date();
     let estado = "Pendiente";
     let clase = "";
 
-    if (cuotasPagadasEstado[i-1]) {
+    if (cuotasPagadasEstado[i - 1]) {
       estado = "Pagado";
       clase = "fila-pagada";
-    }
-    else if (hoy > fecha) {
+    } else if (hoy > fecha) {
       estado = "Vencida";
       clase = "fila-vencida";
     }
@@ -97,7 +97,9 @@ function calcular() {
     labels.push("Cuota " + i);
     saldos.push(saldo);
 
-    tabla.innerHTML += `
+    tabla.insertAdjacentHTML(
+      "beforeend",
+      `
       <tr id="fila${i}" class="${clase}">
         <td>${i}</td>
         <td>${fechaTexto}</td>
@@ -112,19 +114,13 @@ function calcular() {
           </button>
         </td>
       </tr>
-    `;
+    `
+    );
   }
 
-  /* =========================
-     AJUSTE FINAL ANTI-RESIDUOS
-  ========================= */
-  if(saldo === 0){
-    for(let i=0;i<interesCuotas.length;i++){
-      interesCuotas[i] = Math.max(0, interesCuotas[i]);
-    }
-  }
+  /* NORMALIZACIÓN FINAL */
+  interesCuotas = interesCuotas.map(v => Math.max(0, v));
 
-  /* GUARDAR INTERÉS ORIGINAL */
   interesTotalOriginal = totalInteres;
 
   totalDeuda = monto + totalInteres;
@@ -140,7 +136,7 @@ function calcular() {
     chart = new Chart(document.getElementById("grafica"), {
       type: "line",
       data: {
-        labels: labels,
+        labels,
         datasets: [
           {
             label: "Saldo restante",
@@ -153,21 +149,21 @@ function calcular() {
       },
       options: {
         responsive: true,
-        animation:{
-          duration:1200,
-          easing:"easeOutQuart"
+        animation: {
+          duration: 1200,
+          easing: "easeOutQuart"
         },
-        plugins:{
-          legend:{ display:true }
+        plugins: {
+          legend: { display: true }
         },
-        scales:{
-          y:{ beginAtZero:true }
+        scales: {
+          y: { beginAtZero: true }
         }
       }
     });
   }
 
-  actualizarEstado();
-  guardarPrestamo();
-  renderHistorial();
+  actualizarEstado?.();
+  guardarPrestamo?.();
+  renderHistorial?.();
 }

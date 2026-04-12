@@ -1,44 +1,47 @@
-function prepararYValidarAbono(){
+function prepararYValidarAbono() {
 
-    let interesAntes = interesPagado;
+  let interesAntes = Number(interesPagado) || 0;
 
-    for(let i=0;i<interesCuotas.length;i++){
-        if(!cuotasPagadasEstado[i]){
-            interesAntes += interesCuotas[i];
-        }
+  for (let i = 0; i < interesCuotas.length; i++) {
+    if (!cuotasPagadasEstado[i]) {
+      interesAntes += Number(interesCuotas[i]) || 0;
     }
+  }
 
-    let cuotasAntes = 0;
+  let cuotasAntes = 0;
 
-    for(let i=0;i<capitalCuotas.length;i++){
-        if(!cuotasPagadasEstado[i]){
-            cuotasAntes++;
-        }
+  for (let i = 0; i < capitalCuotas.length; i++) {
+    if (!cuotasPagadasEstado[i]) {
+      cuotasAntes++;
     }
+  }
 
-    let abono = parseFloat(document.getElementById("abonoCapital")?.value);
+  const abonoRaw = document.getElementById("abonoCapital")?.value;
+  const abono = Number(abonoRaw);
 
-    if(!abono || abono<=0 || isNaN(abono)){
-        alert("Ingresa un valor de abono");
-        return null;
-    }
+  if (!isFinite(abono) || abono <= 0) {
+    alert("Ingresa un valor de abono");
+    return null;
+  }
 
-    if(abono > totalPrestamo){
-        alert("El abono no puede ser mayor al saldo pendiente ($" + dinero(totalPrestamo) + ")");
-        return null;
-    }
+  if (abono > totalPrestamo) {
+    alert(
+      "El abono no puede ser mayor al saldo pendiente ($" +
+        dinero(totalPrestamo) +
+        ")"
+    );
+    return null;
+  }
 
-    const EPSILON = 1;
-    let tipoOperacion = "normal";
+  const EPSILON = 1;
 
-    if(abono >= totalPrestamo - EPSILON){
-        tipoOperacion = "liquidacion_total";
-    }
+  const tipoOperacion =
+    abono >= totalPrestamo - EPSILON ? "liquidacion_total" : "normal";
 
-    return {
-        abono,
-        tipoOperacion,
-        interesAntes,
-        cuotasAntes
-    };
+  return {
+    abono,
+    tipoOperacion,
+    interesAntes,
+    cuotasAntes
+  };
 }
