@@ -5,14 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulador de Prestamos</title>
 <link rel="stylesheet" href="styles.css">
-
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
 
 <div class="container">
-
 <h1>Simulador de Prestamos</h1>
 
 <section class="cards">
@@ -37,7 +35,6 @@
 
 <section class="abono">
 <input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" min="1">
-
 <button type="button" id="btnAbono">Aplicar abono</button>
 </section>
 
@@ -59,20 +56,20 @@
 <h3>Comparacion del prestamo</h3>
 
 <div class="comparador-grid">
-<div class="comparador-card">
-<p>Interes total</p>
-<strong id="interesOriginal">$0</strong>
-</div>
+  <div class="comparador-card">
+    <p>Interes total</p>
+    <strong id="interesOriginal">$0</strong>
+  </div>
 
-<div class="comparador-card">
-<p>Interes con abono</p>
-<strong id="interesConAbono">$0</strong>
-</div>
+  <div class="comparador-card">
+    <p>Interes con abono</p>
+    <strong id="interesConAbono">$0</strong>
+  </div>
 
-<div class="comparador-card ahorro">
-<p>Ahorro total</p>
-<strong id="ahorroTotal">$0</strong>
-</div>
+  <div class="comparador-card ahorro">
+    <p>Ahorro total</p>
+    <strong id="ahorroTotal">$0</strong>
+  </div>
 </div>
 
 </section>

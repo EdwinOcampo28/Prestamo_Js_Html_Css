@@ -129,8 +129,8 @@ function generarPDF() {
       const tipo =
         a.tipo === "plazo"
           ? "Plazo"
-          : a.tipo === "liquidación total"
-            ? "Liquidación"
+          : a.tipo === "liquidacion_total" || a.tipo === "liquidación total"
+            ? "Liquidacion"
             : "Cuota";
 
       const linea =

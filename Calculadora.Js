@@ -242,7 +242,8 @@ function guardarPrestamo() {
       interesOriginal: document.getElementById("interesOriginal")?.innerText || "$0",
       interesConAbono: document.getElementById("interesConAbono")?.innerText || "$0",
       ahorroTotal: document.getElementById("ahorroTotal")?.innerText || "$0",
-      cuotasReducidas: document.getElementById("cuotasReducidas")?.innerText || "0"
+      cuotasReducidas: document.getElementById("cuotasReducidas")?.innerText || "0",
+      interesAhorrado: document.getElementById("interesAhorrado")?.innerText || "$0"
     }
   };
 
@@ -278,6 +279,14 @@ function cargarPrestamo() {
 
   cuotasTotales = cuotasTotales || capitalCuotas.length;
 
+  if (!interesAnualPrestamo) {
+    interesAnualPrestamo = aNumero(document.getElementById("interes")?.value) / 100;
+  }
+
+  if (!montoInicial) {
+    montoInicial = aNumero(document.getElementById("monto")?.value) || totalPrestamo;
+  }
+
   restaurarFormularioPrestamo();
   reconstruirTabla?.();
   actualizarEstado?.();
@@ -287,6 +296,7 @@ function cargarPrestamo() {
     actualizarTexto("interesConAbono", p.comparador.interesConAbono);
     actualizarTexto("ahorroTotal", p.comparador.ahorroTotal);
     actualizarTexto("cuotasReducidas", p.comparador.cuotasReducidas);
+    actualizarTexto("interesAhorrado", p.comparador.interesAhorrado || "$0");
   }
 }
 
@@ -341,8 +351,8 @@ function renderHistorial() {
     const tipo =
       a.tipo === "plazo"
         ? "Reducir plazo"
-        : a.tipo === "liquidacion_total"
-          ? "Liquidación total"
+        : a.tipo === "liquidacion_total" || a.tipo === "liquidación total"
+          ? "Liquidacion total"
           : "Reducir cuota";
 
     cont.innerHTML += `
