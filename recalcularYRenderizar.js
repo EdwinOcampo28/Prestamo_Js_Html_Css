@@ -83,7 +83,7 @@ function renderFilaPagada(tabla, i, fechaTexto) {
       <td>$${dinero(capitalCuotas[i])}</td>
       <td>$0</td>
       <td>Pagado</td>
-      <td>OK</td>
+      <td>✔</td>
     </tr>
     `
   );

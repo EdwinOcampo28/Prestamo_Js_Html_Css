@@ -45,7 +45,7 @@ function aplicarAbono(ctx = {}) {
     actualizarEstado?.();
     renderHistorial?.();
 
-    alert("Prestamo liquidado completamente");
+    alert("PRÉSTAMO LIQUIDADO COMPLETAMENTE ✔️ 🎉");
     return "liquidado";
   }
 
