@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Simulador de Préstamos</title>
-
+<title>Simulador de Prestamos</title>
 <link rel="stylesheet" href="styles.css">
 
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
@@ -17,7 +13,7 @@
 
 <div class="container">
 
-<h1>Simulador de Préstamos</h1>
+<h1>Simulador de Prestamos</h1>
 
 <section class="cards">
 <div class="card"><h3>Saldo pendiente</h3><p id="saldoPendiente">$0</p></div>
@@ -34,7 +30,7 @@
 
 <section class="formulario">
 <input type="number" id="monto" value="2200000" min="1">
-<input type="number" id="interes" value="24" min="0">
+<input type="number" id="interes" value="24" min="0" step="0.01">
 <input type="number" id="cuotas" value="29" min="1">
 <input type="number" id="diaPago" value="15" min="1" max="31">
 </section>
@@ -42,16 +38,11 @@
 <section class="abono">
 <input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" min="1">
 
-<select id="tipoAbono">
-<option value="plazo">Reducir cuota</option>
-<option value="cuota">Reducir plazo</option>
-</select>
-
 <button type="button" id="btnAbono">Aplicar abono</button>
 </section>
 
 <section class="botones">
-<button type="button" id="btnCalcular">Calcular préstamo</button>
+<button type="button" id="btnCalcular">Calcular prestamo</button>
 <button type="button" id="btnReiniciar">Reiniciar</button>
 <button type="button" id="btnPDF">Descargar PDF</button>
 </section>
@@ -64,21 +55,17 @@
 </div>
 </section>
 
-<section class="grafica-container">
-<canvas id="grafica"></canvas>
-</section>
-
 <section class="comparador">
-<h3>Comparación del préstamo</h3>
+<h3>Comparacion del prestamo</h3>
 
 <div class="comparador-grid">
 <div class="comparador-card">
-<p>Interés Total</p>
+<p>Interes total</p>
 <strong id="interesOriginal">$0</strong>
 </div>
 
 <div class="comparador-card">
-<p>Interés con abono</p>
+<p>Interes con abono</p>
 <strong id="interesConAbono">$0</strong>
 </div>
 
@@ -97,19 +84,19 @@
 
 </div>
 
-<script defer src="Calculadora.js"></script>
+<script defer src="Calculadora.Js"></script>
 <script defer src="Calcular.js"></script>
 <script defer src="PagarCuota.js"></script>
 <script defer src="prepararYValidarAbono.js"></script>
 <script defer src="recalcularYRenderizar.js"></script>
 <script defer src="aplicarAbono.js"></script>
+<script defer src="recalcularCuota.js"></script>
 <script defer src="recalcularPlazo.js"></script>
 <script defer src="ReiniciarPrestamo.js"></script>
 <script defer src="Pdf.js"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
   const btnCalcular = document.getElementById("btnCalcular");
   const btnReiniciar = document.getElementById("btnReiniciar");
   const btnPDF = document.getElementById("btnPDF");
@@ -120,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
   btnPDF?.addEventListener("click", generarPDF);
   btnAbono?.addEventListener("click", pagarSeparado);
 });
-
 </script>
 
 </body>

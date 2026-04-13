@@ -1,76 +1,63 @@
 function aplicarAbono(ctx = {}) {
+  let { abono = 0, tipoOperacion, cuotasAntes = 0 } = ctx;
 
-    let { abono = 0, tipoOperacion, cuotasAntes = 0 } = ctx;
+  abono = normalizarMoneda(abono);
 
-    abono = Number(abono) || 0;
+  if (tipoOperacion === "liquidacion_total") {
+    abono = normalizarMoneda(totalPrestamo);
+  }
 
-    if (tipoOperacion === "liquidacion_total") {
-        abono = totalPrestamo;
+  totalPrestamo = Math.max(0, normalizarMoneda(totalPrestamo - abono));
+  capitalPagado += abono;
+  pagado = capitalPagado + interesPagado;
+
+  if (tipoOperacion === "liquidacion_total") {
+    const interesRestanteAntes = sumarInteresPendiente();
+
+    for (let i = 0; i < cuotasTotales; i++) {
+      if (!cuotasPagadasEstado[i]) {
+        capitalCuotas[i] = 0;
+        interesCuotas[i] = 0;
+      }
     }
 
-    totalPrestamo -= abono;
-    if (totalPrestamo < 0) totalPrestamo = 0;
+    const ahorroTotal = Math.max(
+      0,
+      normalizarMoneda(interesTotalOriginal - interesPagado)
+    );
+    const ahorroIndividual = Math.max(0, normalizarMoneda(interesRestanteAntes));
 
-    capitalPagado += abono;
-    pagado = capitalPagado + interesPagado;
+    actualizarTexto("interesAhorrado", "$" + dinero(ahorroTotal));
+    actualizarTexto("interesOriginal", "$" + dinero(interesTotalOriginal));
+    actualizarTexto("interesConAbono", "$" + dinero(interesPagado));
+    actualizarTexto("ahorroTotal", "$" + dinero(ahorroTotal));
+    actualizarTexto("cuotasReducidas", cuotasAntes + " cuotas menos (plazo: 0)");
 
-    if (tipoOperacion === "liquidacion_total") {
+    historialAbonos.push({
+      valor: abono,
+      fecha: new Date().toLocaleString("es-CO"),
+      tipo: "liquidacion_total",
+      ahorro: ahorroIndividual
+    });
 
-        let interesRestanteAntes = 0;
+    reconstruirTabla?.();
+    guardarPrestamo?.();
+    actualizarEstado?.();
+    renderHistorial?.();
 
-        for (let i = 0; i < cuotasTotales; i++) {
-            if (!cuotasPagadasEstado[i]) {
-                interesRestanteAntes += (interesCuotas[i] || 0);
-                cuotasPagadasEstado[i] = true;
-                capitalCuotas[i] = 0;
-                interesCuotas[i] = 0;
-            }
-        }
+    alert("Prestamo liquidado completamente");
+    return "liquidado";
+  }
 
-        const ahorroTotal = Math.round(interesTotalOriginal - interesPagado);
-        const ahorroIndividual = Math.round(interesRestanteAntes);
-
-        actualizarTexto("interesAhorrado", "$" + dinero(ahorroTotal));
-
-        const elInteresOriginal = document.getElementById("interesOriginal");
-        const elInteresConAbono = document.getElementById("interesConAbono");
-        const elAhorroTotal = document.getElementById("ahorroTotal");
-        const elCuotasReducidas = document.getElementById("cuotasReducidas");
-
-        if (elInteresOriginal) elInteresOriginal.innerText = "$" + dinero(interesTotalOriginal);
-        if (elInteresConAbono) elInteresConAbono.innerText = "$" + dinero(interesPagado);
-        if (elAhorroTotal) elAhorroTotal.innerText = "$" + dinero(ahorroTotal);
-        if (elCuotasReducidas) {
-            elCuotasReducidas.innerText = cuotasAntes + " cuotas menos (plazo: 0)";
-        }
-
-        historialAbonos.push({
-            valor: abono,
-            fecha: new Date().toLocaleString("es-CO"),
-            tipo: "liquidación total",
-            ahorro: ahorroIndividual
-        });
-
-        reconstruirTabla();
-        guardarPrestamo();
-        actualizarEstado();
-        renderHistorial();
-
-        alert("Préstamo liquidado completamente ✅");
-
-        return "liquidado";
-    }
-
-    return "continuar";
+  return "continuar";
 }
 
 function pagarSeparado() {
+  const contexto = prepararYValidarAbono();
+  if (!contexto) return;
 
-    const contexto = prepararYValidarAbono();
-    if (!contexto) return;
+  const resultado = aplicarAbono(contexto);
+  if (resultado === "liquidado") return;
 
-    const resultado = aplicarAbono(contexto);
-    if (resultado === "liquidado") return;
-
-    recalcularYRenderizar(contexto);
+  recalcularYRenderizar(contexto);
 }

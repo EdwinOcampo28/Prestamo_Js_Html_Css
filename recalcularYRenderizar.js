@@ -1,89 +1,48 @@
 function recalcularYRenderizar(ctx) {
-
   const { abono, interesAntes, cuotasAntes } = ctx;
-
   const tipo = document.getElementById("tipoAbono")?.value || "cuota";
 
-  const interesMensual = obtenerInteresMensual();
-
-  let saldo = totalPrestamo;
-
-  const tabla = document.getElementById("tabla");
-  if (!tabla) return;
-
-  tabla.innerHTML = "";
-
-  const fechaBase = obtenerFechaBasePrestamo();
-  const diaPago = obtenerDiaPago();
-
-  if (tipo === "cuota") {
-    saldo = recalcularCuota({
-      saldo,
-      interesMensual,
-      tabla,
-      fechaBase,
-      diaPago
+  if (tipo === "plazo") {
+    recalcularPlazo({
+      saldo: totalPrestamo,
+      interesMensual: obtenerInteresMensual(),
+      cuotaObjetivo: obtenerCuotaPendienteActual()
     });
   } else {
-    saldo = recalcularPlazo({
-      saldo,
-      interesMensual,
-      tabla,
-      fechaBase,
-      diaPago
+    recalcularCuota({
+      saldo: totalPrestamo,
+      interesMensual: obtenerInteresMensual()
     });
   }
 
-  let interesRestanteNuevo = 0;
+  reconstruirTabla?.();
 
-  for (let i = 0; i < interesCuotas.length; i++) {
-    if (!cuotasPagadasEstado[i]) {
-      interesRestanteNuevo += aNumero(interesCuotas[i]);
-    }
-  }
-
-  const interesTotalNuevo = aNumero(interesPagado) + interesRestanteNuevo;
-
+  const interesRestanteNuevo = sumarInteresPendiente();
+  const interesTotalNuevo = normalizarMoneda(interesPagado + interesRestanteNuevo);
   const ahorro = Math.max(
     0,
-    Math.round(aNumero(interesTotalOriginal) - interesTotalNuevo)
+    normalizarMoneda(interesTotalOriginal - interesTotalNuevo)
   );
-
   const ahorroIndividual = Math.max(
     0,
-    Math.round(interesAntes - interesTotalNuevo)
+    normalizarMoneda(interesAntes - interesTotalNuevo)
   );
-
-  let cuotasDespues = 0;
-
-  for (let i = 0; i < capitalCuotas.length; i++) {
-    if (!cuotasPagadasEstado[i] && (aNumero(capitalCuotas[i]) + aNumero(interesCuotas[i])) > 0) {
-      cuotasDespues++;
-    }
-  }
-
+  const cuotasDespues = contarCuotasActivas();
   const cuotasReducidas = Math.max(0, cuotasAntes - cuotasDespues);
 
   actualizarTexto("interesAhorrado", "$" + dinero(ahorro));
-
-  const elOrig = document.getElementById("interesOriginal");
-  const elCon = document.getElementById("interesConAbono");
-  const elAhorro = document.getElementById("ahorroTotal");
-  const elCuotas = document.getElementById("cuotasReducidas");
-
-  if (elOrig) elOrig.innerText = "$" + dinero(interesTotalOriginal);
-  if (elCon) elCon.innerText = "$" + dinero(interesTotalNuevo);
-  if (elAhorro) elAhorro.innerText = "$" + dinero(ahorro);
-
-  if (elCuotas) {
-    elCuotas.innerText =
-      cuotasReducidas + " cuotas menos (plazo: " + cuotasDespues + ")";
-  }
+  actualizarTexto("interesOriginal", "$" + dinero(interesTotalOriginal));
+  actualizarTexto("interesConAbono", "$" + dinero(interesTotalNuevo));
+  actualizarTexto("ahorroTotal", "$" + dinero(ahorro));
+  actualizarTexto(
+    "cuotasReducidas",
+    cuotasReducidas + " cuotas menos (plazo: " + cuotasDespues + ")"
+  );
 
   historialAbonos.push({
-    valor: abono,
+    valor: normalizarMoneda(abono),
     fecha: new Date().toLocaleString("es-CO"),
-    tipo: tipo,
+    tipo,
     ahorro: ahorroIndividual
   });
 
@@ -94,11 +53,22 @@ function recalcularYRenderizar(ctx) {
   renderHistorial?.();
 }
 
-function generarFecha(fechaBase, i, diaPago) {
+function generarFechaObjeto(fechaBase, i, diaPago) {
   const fecha = new Date(fechaBase);
-  fecha.setMonth(fecha.getMonth() + (i + 1));
-  fecha.setDate(diaPago);
-  return fecha.toLocaleDateString("es-CO");
+  fecha.setMonth(fecha.getMonth() + (i + 1), 1);
+
+  const ultimoDiaMes = new Date(
+    fecha.getFullYear(),
+    fecha.getMonth() + 1,
+    0
+  ).getDate();
+
+  fecha.setDate(Math.min(diaPago, ultimoDiaMes));
+  return fecha;
+}
+
+function generarFecha(fechaBase, i, diaPago) {
+  return generarFechaObjeto(fechaBase, i, diaPago).toLocaleDateString("es-CO");
 }
 
 function renderFilaPagada(tabla, i, fechaTexto) {
@@ -113,7 +83,7 @@ function renderFilaPagada(tabla, i, fechaTexto) {
       <td>$${dinero(capitalCuotas[i])}</td>
       <td>$0</td>
       <td>Pagado</td>
-      <td>✔</td>
+      <td>OK</td>
     </tr>
     `
   );
@@ -137,18 +107,29 @@ function renderFilaCancelada(tabla, i, fechaTexto) {
   );
 }
 
-function renderFilaPendiente(tabla, i, fechaTexto, capital, interesMes, saldo) {
+function renderFilaPendiente(
+  tabla,
+  i,
+  fechaTexto,
+  capital,
+  interesMes,
+  saldo,
+  estaVencida = false
+) {
+  const estado = estaVencida ? "Vencida" : "Pendiente";
+  const clase = estaVencida ? "fila-vencida" : "";
+
   tabla.insertAdjacentHTML(
     "beforeend",
     `
-    <tr id="fila${i + 1}">
+    <tr id="fila${i + 1}" class="${clase}">
       <td>${i + 1}</td>
       <td>${fechaTexto}</td>
-      <td>$${dinero(aNumero(capital) + aNumero(interesMes))}</td>
+      <td>$${dinero(capital + interesMes)}</td>
       <td>$${dinero(interesMes)}</td>
       <td>$${dinero(capital)}</td>
       <td>$${dinero(saldo)}</td>
-      <td>Pendiente</td>
+      <td id="estado${i + 1}">${estado}</td>
       <td>
         <button onclick="pagarCuota(${i + 1}, this)">Pagar</button>
       </td>
