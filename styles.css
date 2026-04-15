@@ -6,24 +6,22 @@
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
-  background: #020617;
-  color: #e4e4e4;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: #e2e8f0;
   padding: 20px;
 }
 
 /* CONTENEDOR */
 .container {
-  max-width: 700px;
+  max-width: 720px;
   margin: auto;
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
   border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 /* TITULO */
@@ -31,25 +29,27 @@ h1 {
   text-align: center;
   margin-bottom: 20px;
   font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 /* CARDS */
 .cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 .card {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
+  background: linear-gradient(145deg, #1e293b, #020617);
   border-radius: 16px;
-  padding: 15px;
-  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
-  transition: transform 0.2s ease;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.25s;
 }
 
 .card:hover {
-  transform: scale(1.02);
+  transform: translateY(-4px);
 }
 
 .card h3 {
@@ -58,23 +58,24 @@ h1 {
 }
 
 .card p {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: #38bdf8;
 }
 
 /* BARRA */
 .barra-container {
-  height: 10px;
-  background: #1e293b;
+  height: 12px;
+  background: #020617;
   border-radius: 20px;
-  overflow: hidden;
   margin: 15px 0;
+  overflow: hidden;
 }
 
 #barraProgreso {
   height: 100%;
   background: linear-gradient(90deg, #22c55e, #4ade80);
+  box-shadow: 0 0 10px #22c55e;
 }
 
 /* FORM */
@@ -82,24 +83,24 @@ h1 {
 .abono {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 15px;
 }
 
 input,
 select {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #333;
-  background: #1e293b;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  background: #020617;
   color: white;
+  transition: 0.2s;
 }
 
 input:focus,
 select:focus {
-  outline: none;
   border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 8px #38bdf8;
 }
 
 /* BOTONES */
@@ -111,210 +112,255 @@ select:focus {
 }
 
 button {
+  flex: 1;
   padding: 12px;
+  border-radius: 12px;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
   font-weight: bold;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-button:active {
-  transform: scale(0.96);
+button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
 }
 
 #btnCalcular {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
 #btnAbono {
-  background: #22c55e;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
 }
 
 #btnReiniciar {
-  background: #ef4444;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
 /* TABLA */
 .tabla-container {
-  margin-top: 15px;
+  margin-top: 20px;
   max-height: 420px;
   overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.tabla-wrapper {
-  width: 100%;
-  overflow: hidden;
 }
 
 #tablaPrincipal {
   width: 100%;
   border-collapse: collapse;
-  background: #1e293b;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   font-size: 12px;
 }
 
-/* ENCABEZADO */
+/* HEADER STICKY */
 #tablaPrincipal th {
-  background: #020617;
+  position: sticky;
+  top: 0;
+  background: rgba(2, 6, 23, 0.9);
+  backdrop-filter: blur(6px);
   color: #38bdf8;
-  padding: 6px 4px;
+  padding: 8px;
   font-size: 11px;
-}
-
-/* CELDAS */
-#tablaPrincipal td {
-  padding: 6px 4px;
-  text-align: center;
-  border-bottom: 1px solid #334155;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-bottom: 1px solid #1e293b;
 }
 
 /* FILAS */
-#tablaPrincipal tr:hover {
-  background: #273449;
+#tablaPrincipal td {
+  padding: 7px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-#tablaPrincipal tr:nth-child(even):not(.fila-pagada):not(.fila-cancelada):not(.fila-vencida) {
-  background: #172033;
+#tablaPrincipal tr {
+  transition: 0.2s;
+}
+
+#tablaPrincipal tr:hover {
+  background: rgba(56,189,248,0.08);
+}
+
+#tablaPrincipal tr:nth-child(even) {
+  background: rgba(255,255,255,0.02);
 }
 
 /* ESTADOS */
 .fila-pagada {
-  background: #064e3b !important;
   color: #22c55e;
 }
 
-.fila-cancelada {
-  background: #2a2a2a !important;
-  color: #777;
-  text-decoration: line-through;
+.fila-vencida {
+  color: #facc15;
 }
 
-.fila-vencida {
-  background: #78350f !important;
-  color: #facc15;
+.fila-cancelada {
+  color: #94a3b8;
+  text-decoration: line-through;
 }
 
 /* BOTONES TABLA */
 #tablaPrincipal button {
   background: #22c55e;
-  color: white;
-  padding: 4px 6px;
+  padding: 5px 7px;
   font-size: 11px;
   border-radius: 6px;
-  border: none;
 }
 
-#tablaPrincipal button:disabled {
-  background: #555;
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 
-/* COLUMNAS */
-#tablaPrincipal td:nth-child(1) { width: 5%; }
-#tablaPrincipal td:nth-child(2) { width: 14%; }
-#tablaPrincipal td:nth-child(3) { width: 14%; }
-#tablaPrincipal td:nth-child(4) { width: 13%; }
-#tablaPrincipal td:nth-child(5) { width: 13%; }
-#tablaPrincipal td:nth-child(6) { width: 15%; }
-#tablaPrincipal td:nth-child(7) { width: 13%; }
-#tablaPrincipal td:nth-child(8) { width: 13%; }
+/* =========================
+   📜 HISTORIAL PRO (MEJORADO)
+========================= */
 
-/* HISTORIAL */
 .historial {
-  margin-top: 20px;
-  background: #1e293b;
-  padding: 15px;
-  border-radius: 15px;
+  margin-top: 25px;
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #0f172a, #020617);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .historial h3 {
+  margin-bottom: 15px;
   color: #38bdf8;
-  margin-bottom: 10px;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
+/* ITEM HISTORIAL */
 .abono-item {
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-  border-radius: 10px;
-  background: #0f172a;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 16px;
+  margin-bottom: 12px;
+
+  border-radius: 14px;
+  background: linear-gradient(145deg, #1e293b, #020617);
+
+  border-left: 4px solid #22c55e;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+
+  transition: all 0.25s ease;
 }
 
 .abono-item:hover {
-  transform: scale(1.02);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.6);
 }
 
+/* VALOR */
 .abono-item strong {
-  font-size: 16px;
+  font-size: 18px;
   color: #22c55e;
+  letter-spacing: 0.5px;
 }
 
+/* TIPO */
 .abono-item span {
   font-size: 12px;
   color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+/* FECHA */
 .abono-item small {
   font-size: 11px;
   color: #64748b;
+  text-align: right;
 }
 
-/* COMPARADOR */
+/* EFECTO DIFERENTE SEGÚN TIPO */
+.abono-item[data-tipo="cuota"] {
+  border-left-color: #22c55e;
+}
+
+.abono-item[data-tipo="plazo"] {
+  border-left-color: #38bdf8;
+}
+
+.abono-item[data-tipo="liquidacion"] {
+  border-left-color: #f59e0b;
+}
+
+/* =========================
+   📊 COMPARADOR PRO (MEJORADO)
+========================= */
+
 .comparador {
-  margin-top: 25px;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  padding: 18px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  margin-top: 30px;
+  padding: 22px;
+  border-radius: 20px;
+
+  background: linear-gradient(145deg, #020617, #0f172a);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .comparador h3 {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   color: #38bdf8;
+  font-size: 17px;
+  letter-spacing: 0.5px;
 }
 
+/* GRID */
 .comparador-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 14px;
 }
 
+/* CARD */
 .comparador-card {
-  background: #020617;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 16px;
+  border-radius: 16px;
+
+  background: linear-gradient(145deg, #1e293b, #020617);
+  border: 1px solid rgba(255,255,255,0.05);
+
   text-align: center;
-  transition: transform 0.2s ease;
-  border: 1px solid #1e293b;
+  transition: all 0.25s ease;
+
+  position: relative;
+  overflow: hidden;
+}
+
+.comparador-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(56,189,248,0.2), transparent);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.comparador-card:hover::before {
+  opacity: 1;
 }
 
 .comparador-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6);
 }
 
+/* TEXTO */
 .comparador-card p {
   font-size: 12px;
   color: #94a3b8;
+  margin-bottom: 6px;
 }
 
 .comparador-card strong {
-  font-size: 18px;
+  font-size: 20px;
   color: #e2e8f0;
 }
 
+/* CARD DESTACADO (AHORRO) */
 .comparador-card.ahorro {
   background: linear-gradient(135deg, #064e3b, #022c22);
   border: 1px solid #22c55e;
@@ -322,4 +368,44 @@ button:active {
 
 .comparador-card.ahorro strong {
   color: #22c55e;
+}
+
+/* MISMO COMPORTAMIENTO PARA TODAS LAS TABLAS */
+.tabla-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* TABLAS UNIFICADAS */
+#tablaPrincipal,
+#tablaHistorial {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+/* ENCABEZADOS */
+#tablaPrincipal thead,
+#tablaHistorial thead {
+  background: #1e293b;
+}
+
+/* CELDAS */
+#tablaPrincipal th,
+#tablaPrincipal td,
+#tablaHistorial th,
+#tablaHistorial td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #334155;
+}
+
+/* AJUSTE VISUAL PARA HISTORIAL */
+.historial {
+  margin-top: 20px;
+}
+
+/* OPCIONAL: MISMO ALTO VISUAL */
+#tablaHistorial tbody tr {
+  height: 45px;
 }

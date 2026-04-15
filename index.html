@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -47,13 +48,23 @@
 <section class="tabla-container">
 <div class="tabla-wrapper">
 <table id="tablaPrincipal">
-<tbody id="tabla"></tbody>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Cuota</th>
+      <th>Interés</th>
+      <th>Capital</th>
+      <th>Saldo</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody id="tabla"></tbody>
 </table>
 </div>
 </section>
 
 <section class="comparador">
-<h3>Comparacion del prestamo</h3>
+<h3>Comparacion de Intereses</h3>
 
 <div class="comparador-grid">
   <div class="comparador-card">
@@ -67,7 +78,7 @@
   </div>
 
   <div class="comparador-card ahorro">
-    <p>Ahorro total</p>
+    <p>Ahorro total De Intereses</p>
     <strong id="ahorroTotal">$0</strong>
   </div>
 </div>
@@ -76,20 +87,39 @@
 
 <section class="historial">
 <h3>Historial de abonos</h3>
-<div id="listaAbonos"></div>
+
+<table id="tablaHistorial">
+  <thead>
+    <tr>
+      <th>Abono</th>
+      <th>Fecha</th>
+    </tr>
+  </thead>
+  <tbody id="listaAbonos"></tbody>
+</table>
+
 </section>
 
 </div>
 
 <script defer src="Calculadora.Js"></script>
+
 <script defer src="Calcular.js"></script>
+
 <script defer src="PagarCuota.js"></script>
+
 <script defer src="prepararYValidarAbono.js"></script>
+
 <script defer src="recalcularYRenderizar.js"></script>
+
 <script defer src="aplicarAbono.js"></script>
+
 <script defer src="recalcularCuota.js"></script>
+
 <script defer src="recalcularPlazo.js"></script>
+
 <script defer src="ReiniciarPrestamo.js"></script>
+
 <script defer src="Pdf.js"></script>
 
 <script>
