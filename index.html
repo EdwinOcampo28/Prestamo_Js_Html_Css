@@ -45,21 +45,40 @@
 <button type="button" id="btnPDF">Descargar PDF</button>
 </section>
 
+<!-- TABLA PRINCIPAL -->
 <section class="tabla-container">
 <div class="tabla-wrapper">
+
 <table id="tablaPrincipal">
-  <thead>
-    <tr>
-      <th>Fecha</th>
-      <th>Cuota</th>
-      <th>Interés</th>
-      <th>Capital</th>
-      <th>Saldo</th>
-      <th>Estado</th>
-    </tr>
-  </thead>
-  <tbody id="tabla"></tbody>
+<thead>
+<tr>
+<th>N°</th>
+<th>Fecha</th>
+<th>Cuota</th>
+<th>Interés</th>
+<th>Capital</th>
+<th>Saldo pendiente</th>
+<th>Estado</th>
+<th>Confirmación</th>
+</tr>
+</thead>
+
+<tbody id="tabla">
+<!-- ejemplo
+<tr>
+<td>1</td>
+<td>15/05/2026</td>
+<td>$120.000</td>
+<td>$40.000</td>
+<td>$80.000</td>
+<td>$2.120.000</td>
+<td>Pendiente</td>
+</tr>
+-->
+</tbody>
+
 </table>
+
 </div>
 </section>
 
@@ -89,12 +108,6 @@
 <h3>Historial de abonos</h3>
 
 <table id="tablaHistorial">
-  <thead>
-    <tr>
-      <th>Abono</th>
-      <th>Fecha</th>
-    </tr>
-  </thead>
   <tbody id="listaAbonos"></tbody>
 </table>
 
@@ -103,23 +116,15 @@
 </div>
 
 <script defer src="Calculadora.Js"></script>
-
 <script defer src="Calcular.js"></script>
-
 <script defer src="PagarCuota.js"></script>
-
 <script defer src="prepararYValidarAbono.js"></script>
-
 <script defer src="recalcularYRenderizar.js"></script>
-
 <script defer src="aplicarAbono.js"></script>
-
 <script defer src="recalcularCuota.js"></script>
-
 <script defer src="recalcularPlazo.js"></script>
-
+<script defer src="renderHistorial.js"></script>
 <script defer src="ReiniciarPrestamo.js"></script>
-
 <script defer src="Pdf.js"></script>
 
 <script>

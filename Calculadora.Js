@@ -336,36 +336,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderHistorial?.();
 });
 
-function renderHistorial() {
-  const cont = document.getElementById("listaAbonos");
-  if (!cont) return;
-
-  cont.innerHTML = "";
-
-  if (!historialAbonos.length) {
-    cont.innerHTML = "<p>No hay abonos registrados</p>";
-    return;
-  }
-
-  for (const a of historialAbonos) {
-    const tipo =
-      a.tipo === "plazo"
-        ? "Reducir plazo"
-        : a.tipo === "liquidacion_total" || a.tipo === "liquidación total"
-          ? "Liquidacion total"
-          : "Reducir cuota";
-
-    cont.innerHTML += `
-      <div class="abono-item">
-        <strong>$${dinero(a.valor)}</strong>
-        <span>${tipo}</span>
-        <span style="color:#22c55e;">Ahorro: $${dinero(a.ahorro || 0)}</span>
-        <small>${a.fecha || ""}</small>
-      </div>
-    `;
-  }
-}
-
 function actualizarGrafica() {
   if (typeof Chart === "undefined") return;
 
