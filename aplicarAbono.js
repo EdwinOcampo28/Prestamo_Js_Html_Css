@@ -61,3 +61,26 @@ function pagarSeparado() {
 
   recalcularYRenderizar(contexto);
 }
+
+function recalcularCuota({ saldo, interesMensual, indices } = {}) {
+  const indicesObjetivo =
+    Array.isArray(indices) && indices.length ? indices : obtenerIndicesCuotasActivas();
+
+  return recalcularCronogramaPendiente("cuota", {
+    saldo,
+    interesMensual,
+    indices: indicesObjetivo
+  });
+}
+
+function recalcularPlazo({ saldo, interesMensual, cuotaObjetivo, indices } = {}) {
+  const indicesObjetivo =
+    Array.isArray(indices) && indices.length ? indices : obtenerIndicesCuotasActivas();
+
+  return recalcularCronogramaPendiente("plazo", {
+    saldo,
+    interesMensual,
+    cuotaObjetivo,
+    indices: indicesObjetivo
+  });
+}
