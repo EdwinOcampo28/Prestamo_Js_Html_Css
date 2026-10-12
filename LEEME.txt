@@ -16,10 +16,12 @@ FUNCIONES
 - Solicitudes y aprobación/rechazo con tasa mensual.
 - Préstamos y cronograma de cuotas. El cliente registra sus propios pagos y abonos extraordinarios al capital; el administrador aprueba solicitudes y consulta los movimientos, pero no registra pagos por el cliente.
 - Historial de movimientos, comprobantes imprimibles/guardar como PDF, reportes, auditoría y exportación CSV.
-- Respaldo exportable en JSON desde el módulo de préstamos del administrador.
+- Módulo administrativo “Copias de seguridad”: exportación completa a JSON e importación/restauración con validación del archivo.
+- Accesos rápidos de “Copias de seguridad” y “Mi perfil” colocados juntos en la parte inferior del menú lateral, justo encima del usuario conectado.
+- Botón administrativo para eliminar todos los datos locales, con doble confirmación; borra también las cuentas y vuelve al asistente de creación del administrador.
 
 ALMACENAMIENTO
-Los datos se guardan en localStorage del navegador y permanecen asociados al perfil/origen de archivo del navegador. No muevas el archivo index.html a otra ruta si quieres conservar la misma ubicación de datos; el comportamiento de almacenamiento para archivos file:// depende del navegador. Descarga periódicamente un respaldo JSON. Esta versión no incluye una función de restauración del respaldo.
+Los datos se guardan en localStorage del navegador y permanecen asociados al perfil/origen de archivo del navegador. No muevas el archivo index.html a otra ruta si quieres conservar la misma ubicación de datos; el comportamiento de almacenamiento para archivos file:// depende del navegador. Descarga periódicamente un respaldo JSON desde “Copias de seguridad”. Para restaurar, inicia sesión como administrador, abre ese módulo, selecciona el JSON y confirma la sustitución de los datos. La importación reemplaza todos los datos actuales y no los combina; exporta primero una copia de seguridad actual.
 
 IMPORTANTE
 Es una aplicación de aprendizaje para datos ficticios. La autenticación y los roles son controles de interfaz local, no una frontera de seguridad: una persona con acceso al perfil del navegador o a las herramientas de desarrollo puede modificar datos o eludirlos. No guardes información real, contraseñas reutilizadas ni documentos reales.
@@ -37,3 +39,12 @@ ACTUALIZACIÓN — PAGOS DEL CLIENTE
 - El navegador valida también en la lógica local que el usuario sea el dueño del préstamo antes de registrar pagos o abonos.
 - El administrador no puede registrar pagos ni abonos desde su cuenta; conserva el acceso a la cartera, reportes y auditoría.
 - Los pagos se registran como movimientos locales simulados; no hay pasarela bancaria ni confirmación de transferencia.
+
+
+ACTUALIZACIÓN — RESPALDOS Y REINICIO TOTAL
+- Se agregó al menú de administrador el módulo “Copias de seguridad”.
+- La exportación incluye cuentas, solicitudes, préstamos, cuotas, movimientos, auditoría y contadores.
+- La importación valida el formato, las colecciones, identificadores, roles y relaciones antes de reemplazar los datos. Se requiere que el respaldo contenga un administrador activo.
+- La restauración sustituye los datos actuales; no los combina. Se recomienda descargar un respaldo antes de importar.
+- El botón “Eliminar todos los datos del sistema” pide confirmación y la frase exacta ELIMINAR TODO. Borra cuentas y todos los registros locales; después debes crear de nuevo el administrador.
+- Estas operaciones actúan sobre el almacenamiento local de este navegador y archivo/origen. No pueden borrar los datos de otro navegador o perfil.
