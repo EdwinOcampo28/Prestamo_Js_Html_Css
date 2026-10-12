@@ -10,6 +10,12 @@ function pagarCuota(numero, boton) {
     return;
   }
 
+  const siguienteIndice = obtenerIndicesCuotasActivas()[0];
+  if (indice !== siguienteIndice) {
+    alert("Para mantener correctos los intereses y el saldo, paga primero la cuota activa número " + (siguienteIndice + 1) + ".");
+    return;
+  }
+
   const capitalPendiente = Math.min(
     normalizarMoneda(capitalCuotas[indice]),
     normalizarMoneda(totalPrestamo)
@@ -39,9 +45,15 @@ function pagarCuota(numero, boton) {
     }
   }
 
+  totalDeuda = normalizarMoneda(totalPrestamo + sumarInteresPendiente());
   reconstruirTabla?.();
   actualizarEstado?.();
   guardarPrestamo?.();
+  if (typeof registrarMovimientoBackend === "function") {
+    registrarMovimientoBackend("pago_cuota", capitalPendiente + interesPendiente, {
+      numeroCuota: indice + 1, capital: capitalPendiente, interes: interesPendiente
+    });
+  }
 }
 
 function reconstruirTabla() {
@@ -78,4 +90,6 @@ function reconstruirTabla() {
   }
 
   actualizarGrafica?.();
+  actualizarProximoPago?.();
+  filtrarCuotas?.();
 }

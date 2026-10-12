@@ -40,8 +40,12 @@ function aplicarAbono(ctx = {}) {
       ahorro: ahorroIndividual
     });
 
+    totalDeuda = normalizarMoneda(totalPrestamo);
     reconstruirTabla?.();
     guardarPrestamo?.();
+    if (typeof registrarMovimientoBackend === "function") {
+      registrarMovimientoBackend("liquidacion_total", abono, { ahorro: ahorroIndividual });
+    }
     actualizarEstado?.();
     renderHistorial?.();
 

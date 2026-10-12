@@ -1,411 +1,136 @@
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+/* Simulador de préstamos · rediseño visual 2026 */
+:root{
+  color-scheme:dark;
+  --bg:#07111f; --surface:#101e30; --surface-2:#14263b; --line:rgba(167,193,220,.15);
+  --text:#edf5ff; --muted:#9db0c7; --blue:#55b7ff; --blue-deep:#1976d2;
+  --green:#4adea3; --amber:#ffc66d; --red:#ff7f87; --radius:18px;
 }
-
-body {
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color: #e2e8f0;
-  padding: 20px;
-}
-
-/* CONTENEDOR */
-.container {
-  max-width: 720px;
-  margin: auto;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 22px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-/* TITULO */
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* CARDS */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.card {
-  background: linear-gradient(145deg, #1e293b, #020617);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.05);
-  transition: 0.25s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.card h3 {
-  font-size: 12px;
-  color: #94a3b8;
-}
-
-.card p {
-  font-size: 20px;
-  font-weight: bold;
-  color: #38bdf8;
-}
-
-/* BARRA */
-.barra-container {
-  height: 12px;
-  background: #020617;
-  border-radius: 20px;
-  margin: 15px 0;
-  overflow: hidden;
-}
-
-#barraProgreso {
-  height: 100%;
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-  box-shadow: 0 0 10px #22c55e;
-}
-
-/* FORM */
-.formulario,
-.abono {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-input,
-select {
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #1e293b;
-  background: #020617;
-  color: white;
-  transition: 0.2s;
-}
-
-input:focus,
-select:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
-}
-
-/* BOTONES */
-.botones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-button {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-#btnCalcular {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-#btnAbono {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-}
-
-#btnReiniciar {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-}
-
-/* TABLA */
-.tabla-container {
-  margin-top: 20px;
-  max-height: 420px;
-  overflow-y: auto;
-}
-
-#tablaPrincipal {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-
-/* HEADER STICKY */
-#tablaPrincipal th {
-  position: sticky;
-  top: 0;
-  background: rgba(2, 6, 23, 0.9);
-  backdrop-filter: blur(6px);
-  color: #38bdf8;
-  padding: 8px;
-  font-size: 11px;
-  border-bottom: 1px solid #1e293b;
-}
-
-/* FILAS */
-#tablaPrincipal td {
-  padding: 7px;
-  text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-#tablaPrincipal tr {
-  transition: 0.2s;
-}
-
-#tablaPrincipal tr:hover {
-  background: rgba(56,189,248,0.08);
-}
-
-#tablaPrincipal tr:nth-child(even) {
-  background: rgba(255,255,255,0.02);
-}
-
-/* ESTADOS */
-.fila-pagada {
-  color: #22c55e;
-}
-
-.fila-vencida {
-  color: #facc15;
-}
-
-.fila-cancelada {
-  color: #94a3b8;
-  text-decoration: line-through;
-}
-
-/* BOTONES TABLA */
-#tablaPrincipal button {
-  background: #22c55e;
-  padding: 5px 7px;
-  font-size: 11px;
-  border-radius: 6px;
-}
-
-
-/* =========================
-   📜 HISTORIAL PRO (MEJORADO)
-========================= */
-
-.historial {
-  margin-top: 25px;
-  padding: 18px;
-  border-radius: 18px;
-  background: linear-gradient(145deg, #0f172a, #020617);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-.historial h3 {
-  margin-bottom: 15px;
-  color: #38bdf8;
-  font-size: 16px;
-  text-align: center;
-  letter-spacing: 0.5px;
-}
-
-/* ITEM HISTORIAL */
-.abono-item {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 10px;
-
-  padding: 14px 16px;
-  margin-bottom: 12px;
-
-  border-radius: 14px;
-  background: linear-gradient(145deg, #1e293b, #020617);
-
-  border-left: 4px solid #22c55e;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-
-  transition: all 0.25s ease;
-}
-
-.abono-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.6);
-}
-
-/* VALOR */
-.abono-item strong {
-  font-size: 18px;
-  color: #22c55e;
-  letter-spacing: 0.5px;
-}
-
-/* TIPO */
-.abono-item span {
-  font-size: 12px;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* FECHA */
-.abono-item small {
-  font-size: 11px;
-  color: #64748b;
-  text-align: right;
-}
-
-/* EFECTO DIFERENTE SEGÚN TIPO */
-.abono-item[data-tipo="cuota"] {
-  border-left-color: #22c55e;
-}
-
-.abono-item[data-tipo="plazo"] {
-  border-left-color: #38bdf8;
-}
-
-.abono-item[data-tipo="liquidacion"] {
-  border-left-color: #f59e0b;
-}
-
-/* =========================
-   📊 COMPARADOR PRO (MEJORADO)
-========================= */
-
-.comparador {
-  margin-top: 30px;
-  padding: 22px;
-  border-radius: 20px;
-
-  background: linear-gradient(145deg, #020617, #0f172a);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-.comparador h3 {
-  text-align: center;
-  margin-bottom: 18px;
-  color: #38bdf8;
-  font-size: 17px;
-  letter-spacing: 0.5px;
-}
-
-/* GRID */
-.comparador-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 14px;
-}
-
-/* CARD */
-.comparador-card {
-  padding: 16px;
-  border-radius: 16px;
-
-  background: linear-gradient(145deg, #1e293b, #020617);
-  border: 1px solid rgba(255,255,255,0.05);
-
-  text-align: center;
-  transition: all 0.25s ease;
-
-  position: relative;
-  overflow: hidden;
-}
-
-.comparador-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent, rgba(56,189,248,0.2), transparent);
-  opacity: 0;
-  transition: 0.3s;
-}
-
-.comparador-card:hover::before {
-  opacity: 1;
-}
-
-.comparador-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-}
-
-/* TEXTO */
-.comparador-card p {
-  font-size: 12px;
-  color: #94a3b8;
-  margin-bottom: 6px;
-}
-
-.comparador-card strong {
-  font-size: 20px;
-  color: #e2e8f0;
-}
-
-/* CARD DESTACADO (AHORRO) */
-.comparador-card.ahorro {
-  background: linear-gradient(135deg, #064e3b, #022c22);
-  border: 1px solid #22c55e;
-}
-
-.comparador-card.ahorro strong {
-  color: #22c55e;
-}
-
-/* MISMO COMPORTAMIENTO PARA TODAS LAS TABLAS */
-.tabla-wrapper {
-  width: 100%;
-  overflow-x: auto;
-}
-
-/* TABLAS UNIFICADAS */
-#tablaPrincipal,
-#tablaHistorial {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-/* ENCABEZADOS */
-#tablaPrincipal thead,
-#tablaHistorial thead {
-  background: #1e293b;
-}
-
-/* CELDAS */
-#tablaPrincipal th,
-#tablaPrincipal td,
-#tablaHistorial th,
-#tablaHistorial td {
-  padding: 10px;
-  text-align: center;
-  border-bottom: 1px solid #334155;
-}
-
-/* AJUSTE VISUAL PARA HISTORIAL */
-.historial {
-  margin-top: 20px;
-}
-
-/* OPCIONAL: MISMO ALTO VISUAL */
-#tablaHistorial tbody tr {
-  height: 45px;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh;padding:clamp(14px,3vw,34px);color:var(--text);background:radial-gradient(ellipse at 12% 0%,#163455 0,transparent 38%),radial-gradient(ellipse at 95% 30%,#102c37 0,transparent 32%),var(--bg);}
+.container{max-width:1240px;margin:0 auto;padding:clamp(18px,3vw,34px);border:1px solid var(--line);border-radius:28px;background:rgba(8,20,34,.88);box-shadow:0 28px 90px #0007;backdrop-filter:blur(18px)}
+h1{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-1.1px;line-height:1.15;margin-bottom:8px;text-align:left}
+.container>h1:before{content:"FINANZAS · CONTROL DE CUOTAS";display:block;font-size:11px;letter-spacing:2.1px;color:var(--blue);font-weight:800;margin-bottom:12px}
+.container>h1:after{content:"Administra tu préstamo, revisa el avance y controla cada abono desde un solo lugar.";display:block;font-size:14px;font-weight:400;letter-spacing:0;color:var(--muted);margin-top:10px;margin-bottom:25px;line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0 18px}
+.card{position:relative;overflow:hidden;min-height:112px;padding:19px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,rgba(24,46,70,.96),rgba(13,28,45,.96));box-shadow:0 10px 28px #0002;transition:transform .2s,border-color .2s}
+.card:after{content:"";position:absolute;width:90px;height:90px;right:-32px;top:-38px;border-radius:50%;background:rgba(85,183,255,.08)}
+.card:hover{transform:translateY(-3px);border-color:rgba(85,183,255,.42)}
+.card h3{position:relative;z-index:1;color:var(--muted);font-size:12px;font-weight:650;letter-spacing:.25px;margin-bottom:13px}
+.card p{position:relative;z-index:1;color:var(--blue);font-size:clamp(20px,2.4vw,27px);font-weight:800;letter-spacing:-.6px;overflow-wrap:anywhere}
+.card:nth-child(2) p,.card:nth-child(4) p{color:var(--green)}.card:nth-child(3) p,.card:nth-child(6) p{color:var(--amber)}
+.barra-container{height:10px;margin:0 0 28px;overflow:hidden;border-radius:20px;background:#1d3045;border:1px solid var(--line)}
+#barraProgreso{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#2499f5,#4adea3);box-shadow:0 0 18px #35c7b866;transition:width .4s ease}
+.formulario,.abono{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:0 0 15px;padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.formulario:before{content:"CONFIGURACIÓN DEL PRÉSTAMO";grid-column:1/-1;font-size:12px;letter-spacing:1.2px;font-weight:800;color:var(--muted);margin-bottom:2px}
+input,select{width:100%;min-width:0;padding:13px 14px;border:1px solid #2b425a;border-radius:11px;background:#091625;color:var(--text);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input::placeholder{color:#8195ac}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #55b7ff20}
+.abono{grid-template-columns:minmax(190px,1fr) minmax(0,1fr) auto;align-items:center;background:linear-gradient(120deg,#102a2b,#102033)}
+.abono:before{content:"ABONO EXTRAORDINARIO AL CAPITAL";grid-column:1/-1;font-size:12px;letter-spacing:1px;font-weight:800;color:var(--green)}
+.botones{display:flex;flex-wrap:wrap;gap:11px;margin:18px 0 28px}
+button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:12px 18px;border:1px solid transparent;border-radius:11px;color:#fff;font-size:13px;font-weight:750;letter-spacing:.1px;cursor:pointer;transition:transform .18s,filter .18s,box-shadow .18s}
+button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px 22px #0003}button:active{transform:translateY(0)}button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#btnCalcular{background:linear-gradient(135deg,#258fe8,#1766c0);box-shadow:0 5px 16px #1976d233}#btnReiniciar{background:#26374a;border-color:#3a4b60;color:#dbe7f5}#btnPDF{background:linear-gradient(135deg,#8b6ae8,#6744c7)}#btnAbono{background:linear-gradient(135deg,#19a875,#087d61);white-space:nowrap}
+.tabla-container{margin-top:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+.tabla-wrapper{width:100%;overflow:auto;max-height:460px}
+#tablaPrincipal,#tablaHistorial{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+#tablaPrincipal th{position:sticky;top:0;z-index:2;background:#1b3047;color:#a9dfff;padding:14px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.65px;white-space:nowrap;border-bottom:1px solid #34506a}
+#tablaPrincipal td,#tablaHistorial td{padding:12px;border-bottom:1px solid rgba(167,193,220,.1);text-align:center;white-space:nowrap}
+#tablaPrincipal tbody tr{background:rgba(18,36,55,.65);transition:background .15s}#tablaPrincipal tbody tr:nth-child(even){background:rgba(25,47,69,.5)}#tablaPrincipal tbody tr:hover{background:#23415d}
+#tablaPrincipal button{min-height:30px;padding:7px 10px;border-radius:8px;background:#14845f;font-size:11px}
+.fila-pagada{color:var(--green)}.fila-vencida{color:var(--amber)}.fila-cancelada{color:#8798ab;text-decoration:line-through}
+.comparador,.historial{margin-top:24px;padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,#112238,#0d1a2a);box-shadow:0 12px 30px #0002}
+.comparador h3,.historial h3{font-size:16px;font-weight:800;letter-spacing:-.2px;margin-bottom:18px;color:var(--text)}
+.comparador h3:before{content:"↗ ";color:var(--blue)}.historial h3:before{content:"◷ ";color:var(--green)}
+.comparador-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.comparador-card{position:relative;overflow:hidden;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0b1929;text-align:left;transition:transform .2s,border-color .2s}
+.comparador-card:hover{transform:translateY(-3px);border-color:#55b7ff66}.comparador-card p{font-size:12px;color:var(--muted);margin-bottom:10px}.comparador-card strong{font-size:clamp(18px,2.3vw,24px);color:var(--text);overflow-wrap:anywhere}
+.comparador-card.ahorro{background:linear-gradient(135deg,#103c35,#102c2c);border-color:#248a6a}.comparador-card.ahorro strong{color:var(--green)}
+.comparador-nota{margin-top:14px;color:var(--muted);font-size:12px;text-align:right}
+.historial{overflow:hidden}.historial table{width:100%;border-collapse:collapse}.abono-item{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;margin:9px 0;padding:14px 16px;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:12px;background:#12263a;transition:transform .18s}.abono-item:hover{transform:translateX(3px)}.abono-item strong{font-size:17px;color:var(--green)}.abono-item span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}.abono-item small{font-size:11px;color:#8195ac;text-align:right}.abono-item[data-tipo="plazo"]{border-left-color:var(--blue)}.abono-item[data-tipo="liquidacion"]{border-left-color:var(--amber)}
+#tablaHistorial thead{background:#1b3047}#tablaHistorial th{padding:12px;color:#a9dfff}
+@media(min-width:1100px){.cards{grid-template-columns:repeat(6,minmax(0,1fr))}.card{padding:17px 15px}.card p{font-size:22px}}
+@media(max-width:760px){.abono{grid-template-columns:1fr 1fr}.abono:before{grid-column:1/-1}#btnAbono{grid-column:1/-1}body{padding:10px}.container{padding:16px;border-radius:20px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:15px;min-height:100px}.formulario{grid-template-columns:repeat(2,minmax(0,1fr));padding:15px}.abono{padding:15px}.comparador,.historial{padding:16px}.comparador-grid{grid-template-columns:1fr}.comparador-card{padding:15px}.botones button{flex:1 1 calc(50% - 10px)}}
+@media(max-width:440px){.abono{grid-template-columns:1fr}#btnAbono{grid-column:1}h1{font-size:25px}.container>h1:after{font-size:13px}.abono{grid-template-columns:1fr}.abono:before{grid-column:1}.abono button{width:100%}.botones button{flex:1 1 100%}.card p{font-size:19px}.abono-item{grid-template-columns:1fr auto}.abono-item small{grid-column:1/-1;text-align:left}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Persistencia local y respaldos */
+.persistencia-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:18px 0;padding:16px 18px;border:1px solid rgba(56,189,248,.28);border-radius:16px;background:linear-gradient(135deg,rgba(15,23,42,.96),rgba(17,35,58,.94));box-shadow:0 10px 28px rgba(0,0,0,.16)}
+.persistencia-info{display:flex;flex-direction:column;gap:5px;min-width:0}.persistencia-info strong{color:var(--text,#e5eefb);font-size:14px}.persistencia-info span{color:#86efac;font-size:13px;font-weight:600}.persistencia-info span[data-estado="error"]{color:#fca5a5}.persistencia-info span[data-estado="aviso"]{color:#fcd34d}.persistencia-info span[data-estado="vacio"]{color:#cbd5e1}.persistencia-info small{color:#94a3b8;font-size:12px;line-height:1.45}.persistencia-acciones{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}.persistencia-acciones button{border:1px solid rgba(125,211,252,.35);border-radius:10px;padding:10px 13px;background:#13263d;color:#e0f2fe;font-weight:600;cursor:pointer;transition:transform .18s ease,background .18s ease}.persistencia-acciones button:hover{background:#1d4263;transform:translateY(-1px)}
+@media(max-width:700px){.persistencia-panel{align-items:stretch;flex-direction:column}.persistencia-acciones{display:grid;grid-template-columns:1fr 1fr}.persistencia-acciones button{width:100%;font-size:12px;padding:10px 7px}}
+
+/* Funcionalidades adicionales: próxima cuota, filtros y exportación CSV */
+.proximo-pago{display:flex;align-items:center;gap:16px;margin:0 0 22px;padding:20px 22px;border:1px solid rgba(85,183,255,.28);border-radius:18px;background:linear-gradient(115deg,rgba(18,49,75,.94),rgba(14,31,49,.96));box-shadow:0 12px 30px #0002}
+.proximo-pago-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:15px;background:#55b7ff1c;color:var(--blue);font-size:27px}
+.proximo-pago-info{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.proximo-pago .eyebrow{font-size:10px;font-weight:800;letter-spacing:1.4px;color:var(--blue)}
+.proximo-pago h2{font-size:17px;font-weight:800}
+.proximo-pago p{font-size:14px;color:var(--text)}
+.proximo-pago small{font-size:12px;color:var(--muted)}
+.proximo-pago small[data-estado="vencido"]{color:var(--red);font-weight:800}
+.proximo-pago small[data-estado="hoy"]{color:var(--amber);font-weight:800}
+.proximo-pago>strong{font-size:clamp(21px,3vw,30px);color:var(--green);font-weight:850;text-align:right;overflow-wrap:anywhere}
+.cronograma-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:24px 0 12px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(16,30,48,.8)}
+.cronograma-tools>div{display:grid;grid-template-columns:auto minmax(150px,220px);align-items:center;gap:6px 12px}
+.cronograma-tools label{font-size:12px;color:var(--muted);font-weight:750}
+.cronograma-tools select{padding:9px 11px}
+.cronograma-tools small{grid-column:1/-1;color:var(--muted);font-size:11px}
+#btnExportarCSV{background:#173e36;border-color:#26765e;color:#b8f7dc;white-space:nowrap}
+#tabla tr[hidden]{display:none!important}
+@media(max-width:650px){.proximo-pago{align-items:flex-start;padding:16px;gap:12px}.proximo-pago-icon{flex-basis:40px;width:40px;height:40px}.proximo-pago>strong{font-size:20px}.cronograma-tools{align-items:stretch;flex-direction:column}.cronograma-tools>div{grid-template-columns:1fr}.cronograma-tools select{width:100%}#btnExportarCSV{width:100%}}
+
+/* Gestión local de clientes y préstamos */
+.gestion-panel{margin:18px 0 22px;padding:20px;border:1px solid rgba(85,183,255,.24);border-radius:20px;background:linear-gradient(135deg,rgba(16,34,54,.97),rgba(10,25,41,.98));box-shadow:0 14px 34px #0002}
+.gestion-cabecera{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+.gestion-cabecera .eyebrow{display:block;margin-bottom:7px;color:var(--blue);font-size:10px;font-weight:850;letter-spacing:1.5px}
+.gestion-cabecera h2{font-size:20px;letter-spacing:-.35px;margin-bottom:6px}
+.gestion-cabecera p,.gestion-ayuda{font-size:12px;color:var(--muted);line-height:1.55}
+.backend-badge{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #2e536b;border-radius:999px;background:#0a1b2b;color:#b7d8ee;font-size:11px;font-weight:750}
+.backend-badge:before{content:"";width:7px;height:7px;border-radius:50%;background:#fbbf24}
+.backend-badge[data-estado="ok"]{color:#a7f3d0;border-color:#21634f}.backend-badge[data-estado="ok"]:before{background:#4adea3}
+.backend-badge[data-estado="error"]{color:#fecaca;border-color:#7f343b}.backend-badge[data-estado="error"]:before{background:#fb7185}
+.gestion-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px}
+.cliente-form,.prestamos-cliente{display:flex;flex-direction:column;gap:9px;min-width:0;padding:16px;border:1px solid var(--line);border-radius:15px;background:rgba(5,17,30,.42)}
+.cliente-form h3,.prestamos-cliente h3{font-size:14px;margin-bottom:4px;color:#e4f2ff}
+.cliente-form label,.prestamos-cliente label{font-size:11px;font-weight:750;color:var(--muted);margin-top:2px}
+.cliente-form input,.prestamos-cliente select{padding:10px 12px;font-size:13px}
+.cliente-datos-secundarios{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cliente-datos-secundarios>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+#btnGuardarCliente{margin-top:5px;background:linear-gradient(135deg,#1976d2,#1556a0)}
+.cliente-resumen{padding:11px 12px;border:1px solid rgba(85,183,255,.15);border-radius:10px;background:#0b1a2a;color:var(--muted);font-size:12px;line-height:1.5}
+.gestion-acciones{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:2px}
+.btn-secundario{background:#26374a;border-color:#3a4b60;color:#e2edf8}.btn-nuevo{background:linear-gradient(135deg,#16845e,#0b664e)}
+.gestion-ayuda{margin-top:4px}
+@media(max-width:760px){.gestion-panel{padding:15px}.gestion-grid{grid-template-columns:1fr}.gestion-cabecera{flex-direction:column}.backend-badge{white-space:normal}.cliente-datos-secundarios{grid-template-columns:1fr}.gestion-acciones{grid-template-columns:1fr 1fr}}
+.historial-vacio{padding:18px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);font-size:13px}
+.historial #listaAbonos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.historial .abono-item{grid-template-columns:minmax(0,1fr) auto;margin:0}
+.historial .abono-item>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.historial .abono-item span{white-space:normal}
+.historial .abono-item strong{overflow-wrap:anywhere}
+.historial .abono-item small{grid-column:1/-1;text-align:left}
+@media(max-width:600px){.historial #listaAbonos{grid-template-columns:1fr}}
+#btnRespaldoSQLite,#btnImportarRespaldoBase{border:1px solid rgba(74,222,163,.3);background:#12372f;color:#b9f7df}
+@media(max-width:700px){.persistencia-acciones{grid-template-columns:1fr 1fr}.persistencia-acciones #btnRespaldoSQLite,.persistencia-acciones #btnImportarRespaldoBase{grid-column:1/-1}}
+
+
+/* Acceso y perfil de administrador: barrera visual local */
+body:not(.auth-ok) .container{display:none}
+.auth-gate[hidden]{display:none}
+.auth-gate{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(ellipse at 18% 10%,#163455 0,transparent 42%),radial-gradient(ellipse at 90% 80%,#102c37 0,transparent 35%),var(--bg)}
+.auth-card{width:min(100%,470px);padding:clamp(24px,5vw,38px);border:1px solid rgba(85,183,255,.25);border-radius:24px;background:rgba(8,20,34,.94);box-shadow:0 28px 90px #0008}
+.auth-mark{display:grid;place-items:center;width:54px;height:54px;margin-bottom:22px;border-radius:17px;background:linear-gradient(135deg,#258fe8,#1766c0);font-size:24px;color:white;box-shadow:0 10px 28px #1976d244}
+.auth-card .eyebrow,.profile-card .eyebrow{display:block;color:var(--blue);font-size:11px;letter-spacing:1.8px;font-weight:800;margin-bottom:9px}
+.auth-card h1{font-size:clamp(25px,5vw,32px);margin:0 0 12px}.auth-card h1:before,.auth-card h1:after{display:none}
+.auth-card>p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:22px}
+.auth-card form,.profile-card form{display:flex;flex-direction:column;gap:9px}
+.auth-card label,.profile-card label{font-size:12px;color:#c9d8e9;font-weight:700;margin-top:5px}
+.auth-card input,.profile-card input{width:100%;min-height:46px}
+.auth-hint{font-size:12px;line-height:1.5;color:var(--muted);margin:4px 0}
+.auth-submit{width:100%;margin-top:6px;background:linear-gradient(135deg,#258fe8,#1766c0);min-height:48px}
+.auth-message{min-height:18px;color:var(--amber);font-size:12px;line-height:1.45}.auth-message[data-type="error"]{color:var(--red)}.auth-message[data-type="success"]{color:var(--green)}
+.auth-local-note{display:block;margin-top:20px;color:#8195ac;font-size:11px;line-height:1.5}
+.app-topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.app-topbar h1{flex:1}.app-topbar h1:before{content:"FINANZAS · CONTROL DE CUOTAS";display:block;font-size:11px;letter-spacing:2.1px;color:var(--blue);font-weight:800;margin-bottom:12px}.app-topbar h1:after{content:"Administra tu préstamo, revisa el avance y controla cada abono desde un solo lugar.";display:block;font-size:14px;font-weight:400;letter-spacing:0;color:var(--muted);margin-top:10px;margin-bottom:25px;line-height:1.6}.admin-tools{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.admin-profile-btn{display:flex;align-items:center;gap:10px;text-align:left;background:#13263d;border:1px solid var(--line);padding:8px 12px;min-height:54px}.admin-profile-btn>span:first-child{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#258fe8,#1766c0);font-weight:900}.admin-profile-btn strong,.admin-profile-btn small{display:block}.admin-profile-btn strong{font-size:12px}.admin-profile-btn small{font-size:10px;color:var(--muted);margin-top:3px}.btn-logout{background:#26374a;border-color:#3a4b60;color:#dbe7f5;padding:10px 12px}
+.profile-modal[hidden]{display:none}.profile-modal{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:18px}.profile-backdrop{position:absolute;inset:0;background:rgba(1,7,14,.78);backdrop-filter:blur(7px)}.profile-card{position:relative;z-index:1;width:min(100%,520px);max-height:92vh;overflow:auto;padding:24px;border:1px solid rgba(85,183,255,.25);border-radius:22px;background:#0b1929;box-shadow:0 30px 100px #0009}.profile-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}.profile-heading h2{font-size:22px}.profile-close{min-height:36px;width:36px;padding:0;background:#20354b;font-size:25px}.profile-divider{height:1px;background:var(--line);margin:10px 0}.profile-card h3{font-size:15px}.profile-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}.profile-actions .auth-submit{width:auto}.btn-secundario{background:#26374a;border-color:#3a4b60;color:#dbe7f5}
+@media(max-width:760px){.app-topbar{flex-direction:column}.admin-tools{width:100%;justify-content:space-between}.admin-profile-btn{flex:1}.profile-card{padding:19px}}

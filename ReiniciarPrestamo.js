@@ -1,6 +1,8 @@
 "use strict";
 
-function reiniciar() {
+function reiniciar(pedirConfirmacion = true) {
+  if (pedirConfirmacion && !confirm("Esto limpiará el préstamo de la pantalla y la copia local. Los clientes y préstamos guardados en este navegador no se borrarán. ¿Continuar?")) return;
+  if (typeof establecerPrestamoActual === "function") establecerPrestamoActual(null);
 
   const tabla = document.getElementById("tabla");
   if (tabla) tabla.innerHTML = "";
@@ -53,6 +55,10 @@ function reiniciar() {
   }
 
   localStorage.removeItem("prestamoSimulador");
+  localStorage.removeItem("prestamoSimulador_respaldo");
+  localStorage.removeItem("prestamoSimulador_formulario");
+  localStorage.removeItem("prestamoSimulador_prestamoActivoId");
+  actualizarIndicadorGuardado?.("Préstamo reiniciado y datos locales eliminados", "vacio");
 
   actualizarEstado?.();
   renderHistorial?.();

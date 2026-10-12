@@ -220,23 +220,36 @@ function actualizarTexto(id, valor) {
   if (el) el.innerText = valor;
 }
 
-function guardarPrestamo() {
-  const datos = {
-    totalPrestamo,
-    totalDeuda,
-    pagado,
-    cuotasTotales,
-    montoInicial,
-    interesAnualPrestamo,
-    diaPagoPrestamo,
-    fechaInicioPrestamo,
-    capitalPagado,
-    interesPagado,
-    cuotasPagadas,
-    capitalCuotas,
-    interesCuotas,
-    cuotasPagadasEstado,
-    historialAbonos,
+const CLAVE_PRESTAMO = "prestamoSimulador";
+const CLAVE_RESPALDO_PRESTAMO = "prestamoSimulador_respaldo";
+const VERSION_DATOS_PRESTAMO = 2;
+
+function leerFormularioPrestamo() {
+  return {
+    monto: document.getElementById("monto")?.value ?? "",
+    interes: document.getElementById("interes")?.value ?? "",
+    cuotas: document.getElementById("cuotas")?.value ?? "",
+    diaPago: document.getElementById("diaPago")?.value ?? "",
+    tipoAbono: document.getElementById("tipoAbono")?.value ?? "cuota"
+  };
+}
+
+function actualizarIndicadorGuardado(mensaje, estado = "ok") {
+  const el = document.getElementById("estadoGuardado");
+  if (!el) return;
+  el.textContent = mensaje;
+  el.dataset.estado = estado;
+}
+
+function crearSnapshotPrestamo() {
+  return {
+    versionDatos: VERSION_DATOS_PRESTAMO,
+    actualizadoEn: new Date().toISOString(),
+    formulario: leerFormularioPrestamo(),
+    totalPrestamo, totalDeuda, pagado, cuotasTotales, montoInicial,
+    interesAnualPrestamo, diaPagoPrestamo, fechaInicioPrestamo,
+    capitalPagado, interesPagado, cuotasPagadas, capitalCuotas,
+    interesCuotas, cuotasPagadasEstado, historialAbonos,
     interesTotalOriginal,
     comparador: {
       interesOriginal: document.getElementById("interesOriginal")?.innerText || "$0",
@@ -246,69 +259,152 @@ function guardarPrestamo() {
       interesAhorrado: document.getElementById("interesAhorrado")?.innerText || "$0"
     }
   };
-
-  localStorage.setItem("prestamoSimulador", JSON.stringify(datos));
 }
 
-function cargarPrestamo() {
-  const raw = localStorage.getItem("prestamoSimulador");
-  if (!raw) return;
-
-  const p = JSON.parse(raw);
-
-  totalPrestamo = p.totalPrestamo || 0;
-  totalDeuda = p.totalDeuda || 0;
-  pagado = p.pagado || 0;
-  cuotasTotales = p.cuotasTotales || 0;
-
-  montoInicial = p.montoInicial || 0;
-  interesAnualPrestamo = p.interesAnualPrestamo || 0;
-  diaPagoPrestamo = p.diaPagoPrestamo || 1;
-  fechaInicioPrestamo = p.fechaInicioPrestamo || "";
-
-  capitalPagado = p.capitalPagado || 0;
-  interesPagado = p.interesPagado || 0;
-  cuotasPagadas = p.cuotasPagadas || 0;
-
-  capitalCuotas = p.capitalCuotas || [];
-  interesCuotas = p.interesCuotas || [];
-  cuotasPagadasEstado = p.cuotasPagadasEstado || [];
-  historialAbonos = p.historialAbonos || [];
-
-  interesTotalOriginal = p.interesTotalOriginal || 0;
-
-  cuotasTotales = cuotasTotales || capitalCuotas.length;
-
-  if (!interesAnualPrestamo) {
-    interesAnualPrestamo = aNumero(document.getElementById("interes")?.value) / 100;
+function guardarPrestamo() {
+  try {
+    const anterior = localStorage.getItem(CLAVE_PRESTAMO);
+    if (anterior) localStorage.setItem(CLAVE_RESPALDO_PRESTAMO, anterior);
+    const snapshot = crearSnapshotPrestamo();
+    localStorage.setItem(CLAVE_PRESTAMO, JSON.stringify(snapshot));
+    actualizarIndicadorGuardado("✓ Guardado localmente · " + new Date().toLocaleTimeString("es-CO", {hour:"2-digit", minute:"2-digit"}));
+    if (typeof persistirPrestamoBackend === "function") persistirPrestamoBackend(snapshot);
+    return true;
+  } catch (error) {
+    console.error("No fue posible guardar el préstamo.", error);
+    actualizarIndicadorGuardado("No se pudo guardar. Exporta un respaldo.", "error");
+    return false;
   }
+}
 
-  if (!montoInicial) {
-    montoInicial = aNumero(document.getElementById("monto")?.value) || totalPrestamo;
+function datosPrestamoValidos(p) {
+  if (!p || typeof p !== "object" || Array.isArray(p)) return false;
+  const arrays = [p.capitalCuotas, p.interesCuotas, p.cuotasPagadasEstado, p.historialAbonos];
+  if (!arrays.every(Array.isArray)) return false;
+  if (p.capitalCuotas.length > 1200 || p.interesCuotas.length > 1200 || p.cuotasPagadasEstado.length > 1200) return false;
+  if (p.cuotasTotales != null && (!Number.isInteger(Number(p.cuotasTotales)) || Number(p.cuotasTotales) < 0 || Number(p.cuotasTotales) > 1200)) return false;
+  return true;
+}
+
+function aplicarDatosPrestamo(p) {
+  if (!datosPrestamoValidos(p)) throw new Error("El archivo de datos no tiene una estructura válida.");
+  totalPrestamo = aNumero(p.totalPrestamo);
+  totalDeuda = aNumero(p.totalDeuda);
+  pagado = aNumero(p.pagado);
+  cuotasTotales = Math.max(0, Math.floor(aNumero(p.cuotasTotales)));
+  montoInicial = aNumero(p.montoInicial);
+  interesAnualPrestamo = Math.max(0, aNumero(p.interesAnualPrestamo));
+  diaPagoPrestamo = Math.min(31, Math.max(1, Math.floor(aNumero(p.diaPagoPrestamo) || 1)));
+  fechaInicioPrestamo = typeof p.fechaInicioPrestamo === "string" ? p.fechaInicioPrestamo : "";
+  capitalPagado = aNumero(p.capitalPagado);
+  interesPagado = aNumero(p.interesPagado);
+  cuotasPagadas = Math.max(0, Math.floor(aNumero(p.cuotasPagadas)));
+  capitalCuotas = p.capitalCuotas.map(v => Math.max(0, aNumero(v)));
+  interesCuotas = p.interesCuotas.map(v => Math.max(0, aNumero(v)));
+  cuotasPagadasEstado = p.cuotasPagadasEstado.map(Boolean);
+  historialAbonos = p.historialAbonos.filter(a => a && typeof a === "object").map(a => ({
+    valor: Math.max(0, aNumero(a.valor)),
+    fecha: String(a.fecha || ""),
+    tipo: String(a.tipo || "cuota"),
+    ahorro: Math.max(0, aNumero(a.ahorro))
+  }));
+  interesTotalOriginal = Math.max(0, aNumero(p.interesTotalOriginal));
+  cuotasTotales = Math.max(cuotasTotales, capitalCuotas.length, interesCuotas.length, cuotasPagadasEstado.length);
+  while (capitalCuotas.length < cuotasTotales) capitalCuotas.push(0);
+  while (interesCuotas.length < cuotasTotales) interesCuotas.push(0);
+  while (cuotasPagadasEstado.length < cuotasTotales) cuotasPagadasEstado.push(false);
+
+  const f = p.formulario || {};
+  for (const [id, key] of [["monto","monto"],["interes","interes"],["cuotas","cuotas"],["diaPago","diaPago"],["tipoAbono","tipoAbono"]]) {
+    const el = document.getElementById(id);
+    if (el && f[key] != null && String(f[key]).length < 100) el.value = f[key];
   }
-
   restaurarFormularioPrestamo();
   reconstruirTabla?.();
   actualizarEstado?.();
-
   if (p.comparador) {
-    actualizarTexto("interesOriginal", p.comparador.interesOriginal);
-    actualizarTexto("interesConAbono", p.comparador.interesConAbono);
-    actualizarTexto("ahorroTotal", p.comparador.ahorroTotal);
-    actualizarTexto("cuotasReducidas", p.comparador.cuotasReducidas);
-    actualizarTexto("interesAhorrado", p.comparador.interesAhorrado || "$0");
+    for (const id of ["interesOriginal", "interesConAbono", "ahorroTotal", "cuotasReducidas", "interesAhorrado"]) {
+      if (typeof p.comparador[id] === "string") actualizarTexto(id, p.comparador[id]);
+    }
+  }
+  renderHistorial?.();
+}
+
+function cargarPrestamo() {
+  let raw = null;
+  try { raw = localStorage.getItem(CLAVE_PRESTAMO); }
+  catch (error) {
+    actualizarIndicadorGuardado("Almacenamiento del navegador no disponible", "error");
+    console.warn("No fue posible leer los datos guardados.", error);
+    return;
+  }
+  if (!raw) {
+    actualizarIndicadorGuardado("Sin préstamo guardado todavía", "vacio");
+    return;
+  }
+  try {
+    aplicarDatosPrestamo(JSON.parse(raw));
+    actualizarIndicadorGuardado("✓ Datos recuperados automáticamente");
+  } catch (error) {
+    console.error("No se pudo recuperar el préstamo principal; se intentará el respaldo.", error);
+    try {
+      const respaldo = localStorage.getItem(CLAVE_RESPALDO_PRESTAMO);
+      if (!respaldo) throw error;
+      aplicarDatosPrestamo(JSON.parse(respaldo));
+      actualizarIndicadorGuardado("⚠ Recuperado desde el respaldo local", "aviso");
+    } catch (errorRespaldo) {
+      actualizarIndicadorGuardado("No se pudieron recuperar los datos. Importa un respaldo.", "error");
+    }
   }
 }
 
+function exportarRespaldoPrestamo() {
+  try {
+    const datos = crearSnapshotPrestamo();
+    const blob = new Blob([JSON.stringify(datos, null, 2)], {type:"application/json;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = `respaldo_prestamo_${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+    URL.revokeObjectURL(url);
+    actualizarIndicadorGuardado("Respaldo descargado correctamente");
+  } catch (error) {
+    console.error(error);
+    alert("No se pudo crear el respaldo.");
+  }
+}
+
+function importarRespaldoPrestamo(archivo) {
+  if (!archivo) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    try {
+      const datos = JSON.parse(String(lector.result || ""));
+      if (!datosPrestamoValidos(datos)) throw new Error("Formato de respaldo inválido.");
+      if (!confirm("Importar este respaldo reemplazará los datos actuales de este navegador. ¿Deseas continuar?")) return;
+      aplicarDatosPrestamo(datos);
+      if (!guardarPrestamo()) throw new Error("No se pudieron guardar los datos importados.");
+      actualizarIndicadorGuardado("Respaldo importado y guardado");
+      alert("Respaldo importado correctamente.");
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo importar el archivo. Selecciona un respaldo JSON válido de este simulador.");
+    }
+  };
+  lector.onerror = () => alert("No se pudo leer el archivo seleccionado.");
+  lector.readAsText(archivo);
+}
+
 function calcularProgreso() {
-  const pag = capitalPagado + interesPagado;
-  const interesPendiente = sumarInteresPendiente();
-  const total = pag + totalPrestamo + interesPendiente;
-
-  if (!total) return 0;
-
-  const progreso = (pag / total) * 100;
-  return Math.min(100, Math.max(0, progreso));
+  // El denominador es el compromiso original. No debe cambiar cuando se hace un abono
+  // extraordinario, porque eso inflaría artificialmente el porcentaje de progreso.
+  const totalOriginal = normalizarMoneda(montoInicial + interesTotalOriginal);
+  if (totalOriginal <= 0) return 0;
+  const pagadoAcumulado = normalizarMoneda(capitalPagado + interesPagado);
+  return Math.min(100, Math.max(0, (pagadoAcumulado / totalOriginal) * 100));
 }
 
 function actualizarEstado() {

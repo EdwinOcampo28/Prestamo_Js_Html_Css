@@ -1,71 +1,41 @@
+"use strict";
+
 function renderHistorial() {
   const cont = document.getElementById("listaAbonos");
   if (!cont) return;
+  cont.replaceChildren();
 
-  cont.innerHTML = "";
-
-  const card = (titulo, valor, color = "#fff", span = false) => `
-    <div style="
-      background:#0f172a;
-      padding:12px;
-      border-radius:14px;
-      ${span ? "grid-column:1/3;" : ""}
-    ">
-      <div style="font-size:12px;color:#9ca3af;margin-bottom:6px;">
-        ${titulo}
-      </div>
-      <div style="font-size:16px;font-weight:bold;color:${color};">
-        ${valor}
-      </div>
-    </div>
-  `;
-
-  if (!historialAbonos.length) {
-    cont.innerHTML = `
-      <div style="
-        background:#111827;
-        color:#9ca3af;
-        padding:18px;
-        border-radius:18px;
-        text-align:center;
-        font-family:Arial,sans-serif;
-      ">
-        📭 No hay abonos registrados
-      </div>
-    `;
+  if (!Array.isArray(historialAbonos) || !historialAbonos.length) {
+    const empty = document.createElement("div");
+    empty.className = "historial-vacio";
+    empty.textContent = "📭 No hay abonos registrados";
+    cont.appendChild(empty);
     return;
   }
 
-  for (const a of historialAbonos) {
-    const tipo =
-      a.tipo === "plazo"
-        ? "⏳ Reducir plazo"
-        : a.tipo === "liquidacion_total" || a.tipo === "liquidación total"
-        ? "🏁 Liquidación total"
-        : "📉 Reducir cuota";
+  for (const abono of historialAbonos) {
+    const item = document.createElement("article");
+    item.className = "abono-item";
+    item.dataset.tipo = abono.tipo === "plazo" ? "plazo" : (abono.tipo === "liquidacion_total" ? "liquidacion" : "cuota");
 
-    cont.innerHTML += `
-      <div style="
-        background:linear-gradient(145deg,#111827,#1f2937);
-        border:1px solid #374151;
-        border-radius:18px;
-        padding:16px;
-        margin-bottom:14px;
-        color:#fff;
-        font-family:Arial,sans-serif;
-        box-shadow:0 8px 18px rgba(0,0,0,.30);
-      ">
-        <div style="
-          display:grid;
-          grid-template-columns:1fr 1fr;
-          gap:10px;
-        ">
-          ${card("Abono", "💰 $" + dinero(a.valor), "#22c55e")}
-          ${card("Fecha", "📅 " + (a.fecha || ""))}
-          ${card("Tipo", tipo)}
-          ${card("Ahorro generado", "💵 $" + dinero(a.ahorro || 0), "#86efac")}
-        </div>
-      </div>
-    `;
+    const tipo = abono.tipo === "plazo"
+      ? "Reducir plazo"
+      : abono.tipo === "liquidacion_total" || abono.tipo === "liquidación total"
+        ? "Liquidación total"
+        : "Reducir cuota";
+
+    const heading = document.createElement("div");
+    const label = document.createElement("span");
+    label.textContent = "ABONO · " + tipo;
+    const value = document.createElement("strong");
+    value.textContent = "$" + dinero(abono.valor);
+    heading.append(label, value);
+
+    const date = document.createElement("small");
+    date.textContent = String(abono.fecha || "Fecha no disponible");
+    const savings = document.createElement("small");
+    savings.textContent = "Ahorro: $" + dinero(abono.ahorro || 0);
+    item.append(heading, date, savings);
+    cont.appendChild(item);
   }
 }

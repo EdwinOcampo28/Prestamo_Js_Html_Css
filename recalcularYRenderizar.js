@@ -49,6 +49,9 @@ function recalcularYRenderizar(ctx) {
   alert("Abono aplicado correctamente");
 
   guardarPrestamo?.();
+  if (typeof registrarMovimientoBackend === "function") {
+    registrarMovimientoBackend("abono_capital", abono, { tipoAbono: tipo, ahorro: ahorroIndividual, cuotasReducidas });
+  }
   actualizarEstado?.();
   renderHistorial?.();
 }

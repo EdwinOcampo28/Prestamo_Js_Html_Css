@@ -1,18 +1,30 @@
 "use strict";
 
 function calcular() {
-  const monto = normalizarMoneda(document.getElementById("monto")?.value);
-  const interesAnualPorcentaje = aNumero(document.getElementById("interes")?.value);
-  const cuotas = parseInt(document.getElementById("cuotas")?.value, 10);
-  const diaPago = parseInt(document.getElementById("diaPago")?.value, 10);
+  const montoRaw = document.getElementById("monto")?.value ?? "";
+  const interesRaw = document.getElementById("interes")?.value ?? "";
+  const cuotasRaw = document.getElementById("cuotas")?.value ?? "";
+  const diaRaw = document.getElementById("diaPago")?.value ?? "";
+  const monto = normalizarMoneda(montoRaw);
+  const interesAnualPorcentaje = Number(interesRaw);
+  const cuotas = Number(cuotasRaw);
+  const diaPago = Number(diaRaw);
 
   if (
+    String(montoRaw).trim() === "" ||
+    String(interesRaw).trim() === "" ||
+    String(cuotasRaw).trim() === "" ||
+    String(diaRaw).trim() === "" ||
     !Number.isFinite(monto) ||
     !Number.isFinite(interesAnualPorcentaje) ||
     !Number.isFinite(cuotas) ||
     !Number.isFinite(diaPago) ||
     monto <= 0 ||
+    interesAnualPorcentaje < 0 ||
+    !Number.isInteger(cuotas) ||
     cuotas <= 0 ||
+    cuotas > 1200 ||
+    !Number.isInteger(diaPago) ||
     diaPago < 1 ||
     diaPago > 31
   ) {
@@ -31,7 +43,8 @@ function calcular() {
   montoInicial = monto;
   interesAnualPrestamo = interesAnualPorcentaje / 100;
   diaPagoPrestamo = diaPago;
-  fechaInicioPrestamo = new Date().toISOString();
+  const hoy = new Date();
+  fechaInicioPrestamo = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12, 0, 0).toISOString();
 
   capitalCuotas = new Array(cuotasTotales).fill(0);
   interesCuotas = new Array(cuotasTotales).fill(0);
