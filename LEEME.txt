@@ -1,0 +1,39 @@
+PRESTAMO+ WEB — VERSIÓN PARA ABRIR CON DOBLE CLIC
+================================================
+
+INICIO
+1. Extrae todos los archivos del ZIP en una carpeta normal.
+2. Abre index.html con doble clic (recomendado: Chrome o Microsoft Edge).
+3. En el primer inicio, crea la cuenta de administrador.
+4. Crea una cuenta de cliente ficticia, cierra sesión e inicia con el cliente para enviar una solicitud.
+5. Cierra sesión e inicia como administrador para aprobar o rechazar la solicitud.
+6. Cuando el préstamo sea aprobado, vuelve a iniciar como cliente y entra en “Mis préstamos” para registrar los pagos de tus cuotas y hacer abonos extraordinarios al capital.
+
+FUNCIONES
+- Aplicación exclusivamente web: HTML, CSS y JavaScript; no requiere Python, BAT, servidor ni conexión a Internet.
+- Diseño oscuro conservado.
+- Cuentas locales de administrador y cliente, perfil y cambio de contraseña.
+- Solicitudes y aprobación/rechazo con tasa mensual.
+- Préstamos y cronograma de cuotas. El cliente registra sus propios pagos y abonos extraordinarios al capital; el administrador aprueba solicitudes y consulta los movimientos, pero no registra pagos por el cliente.
+- Historial de movimientos, comprobantes imprimibles/guardar como PDF, reportes, auditoría y exportación CSV.
+- Respaldo exportable en JSON desde el módulo de préstamos del administrador.
+
+ALMACENAMIENTO
+Los datos se guardan en localStorage del navegador y permanecen asociados al perfil/origen de archivo del navegador. No muevas el archivo index.html a otra ruta si quieres conservar la misma ubicación de datos; el comportamiento de almacenamiento para archivos file:// depende del navegador. Descarga periódicamente un respaldo JSON. Esta versión no incluye una función de restauración del respaldo.
+
+IMPORTANTE
+Es una aplicación de aprendizaje para datos ficticios. La autenticación y los roles son controles de interfaz local, no una frontera de seguridad: una persona con acceso al perfil del navegador o a las herramientas de desarrollo puede modificar datos o eludirlos. No guardes información real, contraseñas reutilizadas ni documentos reales.
+
+Si no permite guardar datos, abre la carpeta extraída desde una ubicación local normal en Chrome o Edge y verifica que el navegador no esté bloqueando el almacenamiento local. Mantén juntos index.html, app.js, styles.css y original-theme.css.
+
+ACTUALIZACIÓN — APROBACIÓN Y CLIENTES
+- La aprobación desde la ventana de revisión ahora usa una acción explícita del botón y muestra el resultado o el error sin depender únicamente del evento de envío del formulario.
+- El administrador dispone de un botón Eliminar en cada fila de cliente.
+- Si el cliente no tiene solicitudes ni préstamos, se elimina la cuenta.
+- Si tiene solicitudes o préstamos asociados, la cuenta se desactiva para impedir el acceso y preservar el historial financiero. Sus datos históricos continúan visibles en las solicitudes y préstamos.
+
+ACTUALIZACIÓN — PAGOS DEL CLIENTE
+- Los botones “Registrar mi pago” y “Hacer abono a capital” aparecen únicamente al cliente dueño del préstamo.
+- El navegador valida también en la lógica local que el usuario sea el dueño del préstamo antes de registrar pagos o abonos.
+- El administrador no puede registrar pagos ni abonos desde su cuenta; conserva el acceso a la cartera, reportes y auditoría.
+- Los pagos se registran como movimientos locales simulados; no hay pasarela bancaria ni confirmación de transferencia.

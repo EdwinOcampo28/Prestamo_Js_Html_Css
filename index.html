@@ -1,324 +1,51 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#07111f">
-<title>Simulador de Préstamos | Control financiero</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1020"><title>Préstamos · Portal local</title>
 <link rel="stylesheet" href="styles.css">
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="original-theme.css">
 </head>
 <body>
-
-
-<section id="authGate" class="auth-gate" aria-labelledby="authTitle">
+<div id="toast" class="toast" role="status"></div>
+<section id="authScreen" class="auth-screen">
+  <div class="auth-visual"><div class="brand-mark">₱</div><p class="eyebrow">GESTIÓN FINANCIERA LOCAL</p><h1>Tu dinero,<br><span>en orden.</span></h1><p class="auth-copy">Solicitudes, cuotas, pagos y reportes en un solo lugar. Acceso privado para clientes y administración.</p><div class="auth-pills"><span>Guardado local</span><span>Acceso por roles</span><span>Historial financiero</span></div></div>
   <div class="auth-card">
-    <div class="auth-mark">◆</div>
-    <span class="eyebrow">CONTROL FINANCIERO LOCAL</span>
-    <h1 id="authTitle">Configura tu administrador</h1>
-    <p id="authDescription">Crea la cuenta de administrador para proteger el acceso a tu simulador en este navegador.</p>
-    <form id="formAuth" autocomplete="on">
-      <label id="authNameLabel" for="authName">Nombre del administrador</label>
-      <input id="authName" name="name" maxlength="80" autocomplete="name" placeholder="Tu nombre" required>
-      <label for="authUsername">Usuario</label>
-      <input id="authUsername" name="username" maxlength="40" autocomplete="username" placeholder="admin" required>
-      <label for="authPassword">Contraseña</label>
-      <input id="authPassword" name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="Mínimo 10 caracteres" required>
-      <div id="authConfirmWrap">
-        <label for="authConfirm">Confirmar contraseña</label>
-        <input id="authConfirm" name="confirm" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="Repite la contraseña" required>
-      </div>
-      <p class="auth-hint">Usa al menos 10 caracteres, incluyendo letras y números. La contraseña no se guarda como texto legible.</p>
-      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
-      <button id="btnAuthSubmit" type="submit" class="auth-submit">Crear administrador</button>
+    <div class="brand-small"><div class="brand-mark mini">₱</div><div><b>PRESTAMO<span>+</span></b><small>Portal de clientes</small></div></div>
+    <div id="authHeading"><p class="eyebrow">BIENVENIDO</p><h2>Iniciar sesión</h2><p class="muted">Ingresa con tu cuenta para continuar.</p></div>
+    <form id="loginForm" class="auth-form">
+      <label>Usuario<input name="usuario" autocomplete="username" required placeholder="Tu usuario"></label>
+      <label>Contraseña<input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
+      <button class="btn primary full" type="submit">Entrar al sistema <span>→</span></button>
     </form>
-    <small class="auth-local-note">Modo local: el acceso se controla en este navegador. No sustituye la seguridad de un servidor.</small>
-  </div>
-</section>
-
-<div class="container" id="appContainer">
-<div class="app-topbar">
-  <h1>Simulador de Prestamos</h1>
-  <div class="admin-tools">
-    <button type="button" id="btnAdminProfile" class="admin-profile-btn"><span id="adminAvatar">A</span><span><strong id="adminDisplayName">Administrador</strong><small>Perfil de administrador</small></span><span aria-hidden="true">⌄</span></button>
-    <button type="button" id="btnLogout" class="btn-logout">Cerrar sesión</button>
-  </div>
-</div>
-
-<section class="gestion-panel" aria-labelledby="tituloGestion">
-  <div class="gestion-cabecera">
-    <div>
-      <span class="eyebrow">MODO LOCAL · SIN SERVIDOR</span>
-      <h2 id="tituloGestion">Clientes y préstamos</h2>
-      <p>Registra cada persona y conserva varios préstamos independientes en este equipo.</p>
-    </div>
-    <span id="estadoBackend" class="backend-badge" data-estado="cargando">Preparando almacenamiento local…</span>
-  </div>
-  <div class="gestion-grid">
-    <form id="formCliente" class="cliente-form">
-      <h3>Registrar cliente</h3>
-      <label for="clienteNombre">Nombre completo *</label>
-      <input id="clienteNombre" name="nombre" maxlength="120" autocomplete="name" required placeholder="Nombre del cliente">
-      <label for="clienteCedula">Documento / cédula *</label>
-      <input id="clienteCedula" name="cedula" maxlength="40" required placeholder="Número de documento">
-      <div class="cliente-datos-secundarios">
-        <div><label for="clienteTelefono">Teléfono</label><input id="clienteTelefono" name="telefono" maxlength="40" autocomplete="tel" placeholder="Teléfono"></div>
-        <div><label for="clienteCorreo">Correo</label><input id="clienteCorreo" name="correo" maxlength="160" type="email" autocomplete="email" placeholder="correo@ejemplo.com"></div>
-      </div>
-      <label for="clienteDireccion">Dirección</label>
-      <input id="clienteDireccion" name="direccion" maxlength="250" autocomplete="street-address" placeholder="Dirección (opcional)">
-      <button type="submit" id="btnGuardarCliente">＋ Guardar cliente</button>
+    <form id="registerForm" class="auth-form hidden">
+      <label>Nombre completo<input name="nombre" required minlength="2" placeholder="Nombre y apellidos"></label>
+      <div class="form-grid"><label>Usuario<input name="usuario" required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.-]{3,40}" title="3–40 caracteres: letras sin tilde, números, punto, guion o guion bajo; sin espacios" autocomplete="username" placeholder="Ej. cliente_01"></label><label>Documento<input name="documento" placeholder="Cédula"></label></div>
+      <div class="form-grid"><label>Teléfono<input name="telefono" placeholder="300 000 0000"></label><label>Correo<input name="correo" type="email" placeholder="correo@ejemplo.com"></label></div>
+      <label>Dirección<input name="direccion" placeholder="Dirección (opcional)"></label>
+      <label>Contraseña<input name="password" type="password" minlength="10" maxlength="128" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{10,128}" title="Mínimo 10 caracteres, con al menos una letra y un número" autocomplete="new-password" required placeholder="Mínimo 10 caracteres, letras y números"><small class="field-help">Usa al menos 10 caracteres, con una letra y un número.</small></label>
+      <button class="btn primary full" type="submit">Crear cuenta de cliente <span>→</span></button>
     </form>
-    <div class="prestamos-cliente">
-      <h3>Seleccionar cliente y préstamo</h3>
-      <label for="clienteActual">Cliente activo</label>
-      <select id="clienteActual"><option value="">Cargando clientes…</option></select>
-      <div class="cliente-resumen" id="resumenCliente">Selecciona o registra un cliente para comenzar.</div>
-      <label for="prestamoActual">Préstamos de este cliente</label>
-      <select id="prestamoActual"><option value="">No hay préstamos cargados</option></select>
-      <div class="gestion-acciones">
-        <button type="button" id="btnCargarPrestamo" class="btn-secundario">Abrir préstamo</button>
-        <button type="button" id="btnNuevoPrestamo" class="btn-nuevo">＋ Nuevo préstamo</button>
-      </div>
-      <p class="gestion-ayuda">Al calcular un préstamo con un cliente seleccionado, se guarda un registro independiente en este navegador. Los pagos y abonos quedan asociados a ese préstamo.</p>
-    </div>
-  </div>
-</section>
-
-<section class="cards">
-<div class="card"><h3>Saldo pendiente</h3><p id="saldoPendiente">$0</p></div>
-<div class="card"><h3>Capital pagado</h3><p id="capitalPagado">$0</p></div>
-<div class="card"><h3>Intereses pagados</h3><p id="interesPagado">$0</p></div>
-<div class="card"><h3>Total pagado</h3><p id="totalPagado">$0</p></div>
-<div class="card"><h3>Progreso</h3><p id="progresoPrestamo">0%</p></div>
-<div class="card"><h3>Intereses ahorrados</h3><p id="interesAhorrado">$0</p></div>
-</section>
-
-<section class="persistencia-panel" aria-live="polite">
-  <div class="persistencia-info">
-    <strong>Persistencia de datos</strong>
-    <span id="estadoGuardado" data-estado="vacio">Preparando almacenamiento local…</span>
-    <small>Los datos se guardan en este navegador y se recuperan al volver a abrir la página en este mismo equipo.</small>
-  </div>
-  <div class="persistencia-acciones">
-    <button type="button" id="btnExportarRespaldo">⬇ Exportar respaldo</button>
-    <button type="button" id="btnImportarRespaldo">⬆ Importar respaldo</button>
-    <button type="button" id="btnRespaldoSQLite">▣ Exportar respaldo completo</button>
-    <button type="button" id="btnImportarRespaldoBase">⬆ Importar respaldo completo</button>
-    <input type="file" id="archivoRespaldoBase" accept="application/json,.json" hidden>
-    <input type="file" id="archivoRespaldo" accept="application/json,.json" hidden>
-  </div>
-</section>
-
-
-<section class="proximo-pago" aria-live="polite">
-  <div class="proximo-pago-icon" aria-hidden="true">◷</div>
-  <div class="proximo-pago-info">
-    <span class="eyebrow">SEGUIMIENTO DE CUOTAS</span>
-    <h2>Próximo pago</h2>
-    <p id="proximoPagoFecha">Calcula un préstamo para ver la fecha</p>
-    <small id="proximoPagoEstado" data-estado="ok">Sin información de vencimiento</small>
-  </div>
-  <strong id="proximoPagoValor">$0</strong>
-</section>
-
-<div class="barra-container">
-  <div id="barraProgreso"></div>
-</div>
-
-<section class="formulario">
-<input type="number" id="monto" value="2200000" min="1" aria-label="Monto del préstamo" placeholder="Monto del préstamo">
-<input type="number" id="interes" value="24" min="0" step="0.01" aria-label="Tasa de interés anual (%)" placeholder="Interés anual (%)">
-<input type="number" id="cuotas" value="29" min="1" aria-label="Número de cuotas" placeholder="Número de cuotas">
-<input type="number" id="diaPago" value="15" min="1" max="31" aria-label="Día de pago" placeholder="Día de pago">
-</section>
-
-<section class="abono">
-<select id="tipoAbono" aria-label="Tipo de abono">
-  <option value="cuota">Reducir valor de la cuota</option>
-  <option value="plazo">Reducir plazo del préstamo</option>
-</select>
-<input type="number" id="abonoCapital" placeholder="Valor a abonar al capital" aria-label="Valor a abonar al capital" min="1">
-<button type="button" id="btnAbono">Aplicar abono</button>
-</section>
-
-<section class="botones">
-<button type="button" id="btnCalcular">✦ Calcular préstamo</button>
-<button type="button" id="btnReiniciar">↺ Reiniciar</button>
-<button type="button" id="btnPDF">⇩ Descargar PDF</button>
-</section>
-
-<!-- TABLA PRINCIPAL -->
-<section class="cronograma-tools" aria-label="Herramientas del cronograma">
-  <div>
-    <label for="filtroCuotas">Mostrar cuotas</label>
-    <select id="filtroCuotas">
-      <option value="todas">Todas las cuotas</option>
-      <option value="pendiente">Pendientes</option>
-      <option value="vencida">Vencidas</option>
-      <option value="pagado">Pagadas</option>
-      <option value="cancelada">Canceladas</option>
-    </select>
-    <small id="resultadoFiltroCuotas" aria-live="polite">Calcula un préstamo para filtrar cuotas.</small>
-  </div>
-  <button type="button" id="btnExportarCSV">⇩ Exportar cronograma a CSV</button>
-</section>
-<section class="tabla-container">
-<div class="tabla-wrapper">
-
-<table id="tablaPrincipal">
-<thead>
-<tr>
-<th>N°</th>
-<th>Fecha</th>
-<th>Cuota</th>
-<th>Interés</th>
-<th>Capital</th>
-<th>Saldo pendiente</th>
-<th>Estado</th>
-<th>Confirmación</th>
-</tr>
-</thead>
-
-<tbody id="tabla">
-<!-- ejemplo
-<tr>
-<td>1</td>
-<td>15/05/2026</td>
-<td>$120.000</td>
-<td>$40.000</td>
-<td>$80.000</td>
-<td>$2.120.000</td>
-<td>Pendiente</td>
-</tr>
--->
-</tbody>
-
-</table>
-
-</div>
-</section>
-
-<section class="comparador">
-<h3>Comparacion de Intereses</h3>
-
-<div class="comparador-grid">
-  <div class="comparador-card">
-    <p>Interes total</p>
-    <strong id="interesOriginal">$0</strong>
-  </div>
-
-  <div class="comparador-card">
-    <p>Interes con abono</p>
-    <strong id="interesConAbono">$0</strong>
-  </div>
-
-  <div class="comparador-card ahorro">
-    <p>Ahorro total De Intereses</p>
-    <strong id="ahorroTotal">$0</strong>
-  </div>
-</div>
-<p id="cuotasReducidas" class="comparador-nota">0 cuotas menos</p>
-
-</section>
-
-<section class="historial">
-<h3>Historial de abonos</h3>
-
-<table id="tablaHistorial">
-  <tbody id="listaAbonos"></tbody>
-</table>
-
-</section>
-
-</div>
-
-
-<div id="adminProfileModal" class="profile-modal" hidden>
-  <div class="profile-backdrop" data-close-profile></div>
-  <section class="profile-card" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
-    <div class="profile-heading"><div><span class="eyebrow">CUENTA PROTEGIDA</span><h2 id="profileTitle">Mi perfil de administrador</h2></div><button type="button" id="btnCloseProfile" class="profile-close" aria-label="Cerrar perfil">×</button></div>
-    <form id="formAdminProfile">
-      <label for="profileName">Nombre visible</label><input id="profileName" maxlength="80" required>
-      <label for="profileUsername">Nombre de usuario</label><input id="profileUsername" maxlength="40" required autocomplete="username">
-      <div class="profile-divider"></div>
-      <h3>Cambiar contraseña</h3><p class="auth-hint">Deja estos campos vacíos si no deseas cambiarla.</p>
-      <label for="profileCurrentPassword">Contraseña actual</label><input id="profileCurrentPassword" type="password" autocomplete="current-password">
-      <label for="profileNewPassword">Nueva contraseña</label><input id="profileNewPassword" type="password" minlength="10" maxlength="128" autocomplete="new-password">
-      <label for="profileConfirmPassword">Confirmar nueva contraseña</label><input id="profileConfirmPassword" type="password" minlength="10" maxlength="128" autocomplete="new-password">
-      <p id="profileMessage" class="auth-message" role="status" aria-live="polite"></p>
-      <div class="profile-actions"><button type="button" id="btnCancelProfile" class="btn-secundario">Cancelar</button><button type="submit" class="auth-submit">Guardar cambios</button></div>
+    <form id="setupForm" class="auth-form hidden">
+      <label>Nombre del administrador<input name="nombre" required minlength="2"></label><label>Usuario<input name="usuario" required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.-]{3,40}" title="3–40 caracteres, sin espacios"></label><label>Contraseña<input name="password" type="password" minlength="10" maxlength="128" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{10,128}" title="Mínimo 10 caracteres, con una letra y un número" required placeholder="10 caracteres, letras y números"><small class="field-help">Mínimo 10 caracteres, incluyendo una letra y un número.</small></label>
+      <button class="btn primary full" type="submit">Crear administrador inicial</button>
     </form>
-  </section>
+    <div class="auth-bottom"><span id="authToggleText">¿Aún no tienes cuenta?</span> <button id="authToggle" class="link-btn" type="button">Crear cuenta</button></div>
+    <p class="security-note"><span class="dot"></span> Los datos se guardan en este navegador. Usa únicamente información ficticia.</p>
+  </div>
+</section>
+<div id="appShell" class="app-shell hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-small side-brand"><div class="brand-mark mini">₱</div><div><b>PRESTAMO<span>+</span></b><small>Control financiero</small></div></div>
+    <div class="side-label">MENÚ PRINCIPAL</div><nav id="nav" class="nav"></nav>
+    <div class="sidebar-bottom"><div class="online"><span class="dot"></span> Datos guardados en este navegador</div><div class="side-user"><div id="userAvatar" class="avatar">U</div><div class="user-mini"><b id="sideUserName">Usuario</b><small id="sideUserRole">Cliente</small></div><button id="logoutBtn" class="icon-btn" title="Cerrar sesión">↪</button></div></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><button id="mobileMenu" class="icon-btn mobile-only" aria-label="Abrir menú">☰</button><div><p class="eyebrow" id="topEyebrow">PANEL GENERAL</p><h1 id="pageTitle">Resumen</h1></div><div class="top-actions"><span class="local-badge"><span class="dot"></span> MODO LOCAL</span><button class="user-chip" id="profileShortcut"><span id="topAvatar" class="avatar small">U</span><span><b id="topUserName">Usuario</b><small id="topUserRole">Cliente</small></span><span>⌄</span></button></div></header>
+    <div id="pageContent" class="page-content"></div>
+    <footer class="footer">PRESTAMO+ <span>•</span> Sistema local de gestión financiera</footer>
+  </main>
 </div>
-
-<script defer src="auth.js"></script>
-<script defer src="Calculadora.Js"></script>
-<script defer src="Calcular.js"></script>
-<script defer src="PagarCuota.js"></script>
-<script defer src="prepararYValidarAbono.js"></script>
-<script defer src="recalcularYRenderizar.js"></script>
-<script defer src="aplicarAbono.js"></script>
-<script defer src="renderHistorial.js"></script>
-<script defer src="ReiniciarPrestamo.js"></script>
-<script defer src="Pdf.js"></script>
-<script defer src="FuncionesExtra.js"></script>
-<script defer src="gestionDatos.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const btnCalcular = document.getElementById("btnCalcular");
-  const btnReiniciar = document.getElementById("btnReiniciar");
-  const btnPDF = document.getElementById("btnPDF");
-  const btnAbono = document.getElementById("btnAbono");
-  const btnExportar = document.getElementById("btnExportarRespaldo");
-  const btnImportar = document.getElementById("btnImportarRespaldo");
-  const archivoRespaldo = document.getElementById("archivoRespaldo");
-
-  btnCalcular?.addEventListener("click", calcular);
-  btnReiniciar?.addEventListener("click", reiniciar);
-  btnPDF?.addEventListener("click", generarPDF);
-  btnAbono?.addEventListener("click", pagarSeparado);
-  // Un solo listener evita que Enter aplique el mismo abono dos veces.
-  const campoAbono = document.getElementById("abonoCapital");
-  campoAbono?.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && !event.isComposing) {
-      event.preventDefault();
-      if (btnAbono && !btnAbono.disabled) pagarSeparado();
-    }
-  });
-  btnExportar?.addEventListener("click", exportarRespaldoPrestamo);
-  btnImportar?.addEventListener("click", () => archivoRespaldo?.click());
-  archivoRespaldo?.addEventListener("change", () => {
-    importarRespaldoPrestamo(archivoRespaldo.files?.[0]);
-    archivoRespaldo.value = "";
-  });
-
-  // Guardar también los últimos valores del formulario aunque aún no se haya calculado.
-  ["monto", "interes", "cuotas", "diaPago", "tipoAbono"].forEach(id => {
-    document.getElementById(id)?.addEventListener("change", () => {
-      try {
-        localStorage.setItem("prestamoSimulador_formulario", JSON.stringify(leerFormularioPrestamo()));
-        actualizarIndicadorGuardado("Formulario guardado localmente");
-      } catch (error) {
-        actualizarIndicadorGuardado("No se pudo guardar el formulario", "error");
-      }
-    });
-  });
-  try {
-    const formularioGuardado = localStorage.getItem("prestamoSimulador_formulario");
-    if (formularioGuardado) {
-      const f = JSON.parse(formularioGuardado);
-      for (const [id,key] of [["monto","monto"],["interes","interes"],["cuotas","cuotas"],["diaPago","diaPago"],["tipoAbono","tipoAbono"]]) {
-        const el = document.getElementById(id);
-        if (el && f[key] != null) el.value = f[key];
-      }
-    }
-  } catch (error) { console.warn("No se pudo recuperar el formulario guardado.", error); }
-});
-</script>
-
-</body>
-</html>
+<div id="modalRoot"></div>
+<script src="app.js" defer></script>
+</body></html>
