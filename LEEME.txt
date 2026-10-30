@@ -19,3 +19,7 @@ La primera apertura importa los usuarios, préstamos, cuotas, solicitudes y audi
 
 SEGURIDAD Y ALCANCE
 Esta edición está diseñada para uso local en un solo navegador/perfil. La autenticación y los permisos se ejecutan en el propio navegador; no equivale a un servidor con sesiones HttpOnly y no debe publicarse en internet ni usarse como sistema multiusuario en red. Protege el equipo y realiza respaldos.
+
+
+RECUPERAR CONTRASEÑA DEL ADMINISTRADOR
+En la pantalla de inicio, pulsa '¿Olvidaste la contraseña del administrador?'. Escribe el usuario administrador (por ejemplo, Edwin), define una nueva contraseña de mínimo 10 caracteres con letras y números y confírmala. Después inicia sesión normalmente. Esta recuperación es local: cualquier persona con acceso al navegador y a los archivos del equipo podría restablecer el acceso, por lo que debes proteger el equipo.

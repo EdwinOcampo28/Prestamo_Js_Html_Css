@@ -21,6 +21,15 @@
       <label>Contraseña<input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
       <button class="btn primary full" type="submit">Entrar al sistema <span>→</span></button>
     </form>
+    <div class="auth-recovery-link"><button id="showRecovery" class="link-btn" type="button">¿Olvidaste la contraseña del administrador?</button></div>
+    <form id="recoverForm" class="auth-form hidden">
+      <p class="muted">Recuperación local del administrador. Solo alguien con acceso a este equipo y a esta carpeta debe utilizarla.</p>
+      <label>Usuario administrador<input name="usuario" required autocomplete="username" placeholder="Edwin"></label>
+      <label>Nueva contraseña<input name="nueva" type="password" minlength="10" required autocomplete="new-password" placeholder="Mínimo 10 caracteres, letras y números"></label>
+      <label>Confirmar contraseña<input name="confirmar" type="password" minlength="10" required autocomplete="new-password"></label>
+      <button class="btn primary full" type="submit">Restablecer contraseña</button>
+      <button id="cancelRecovery" class="link-btn" type="button">Volver al inicio de sesión</button>
+    </form>
     <form id="registerForm" class="auth-form hidden">
       <label>Nombre completo<input name="nombre" required minlength="2" placeholder="Nombre y apellidos"></label>
       <div class="form-grid"><label>Usuario<input name="usuario" required minlength="3" autocomplete="username"></label><label>Documento<input name="documento" placeholder="Cédula"></label></div>

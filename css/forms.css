@@ -23,3 +23,5 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .form-actions{display:flex;gap:9px;justify-content:flex-end;padding-top:5px}
 
 .backup-card .field input[type=file]{width:100%;max-width:100%;padding:10px}
+
+.auth-recovery-link{display:flex;justify-content:center;margin:10px 0 2px}.auth-recovery-link .link-btn{font-size:.86rem}.auth-form #cancelRecovery{margin:4px auto 0;display:block}

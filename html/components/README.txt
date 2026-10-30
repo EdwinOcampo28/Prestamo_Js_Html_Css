@@ -1,0 +1,1 @@
+Los componentes visuales del portal se renderizan desde los módulos JavaScript de js/ para mantener compatibilidad con la apertura directa mediante file://. El punto de entrada HTML único es index.html en la raíz.
