@@ -1,0 +1,25 @@
+button,input,select,textarea{font:inherit}
+
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+.auth-form{display:grid;gap:16px}
+
+.auth-form label,.field{display:grid;gap:8px;color:#cbd7e9;font-size:12px;font-weight:650}
+
+.auth-form input,.field input,.field select,.field textarea,.auth-form select{width:100%;min-width:0;background:#0b1425;color:var(--text);border:1px solid #2b3b56;border-radius:10px;padding:13px 14px;outline:none}
+
+.auth-form input:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:#568eff;box-shadow:0 0 0 3px #4f8cff20}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+
+.field input,.field select,.field textarea{font-size:12px}
+
+.field textarea{min-height:90px;resize:vertical}
+
+.field small{color:#7488a6;font-weight:400;font-size:10px;line-height:1.5}
+
+.form-actions{display:flex;gap:9px;justify-content:flex-end;padding-top:5px}
+
+.backup-card .field input[type=file]{width:100%;max-width:100%;padding:10px}

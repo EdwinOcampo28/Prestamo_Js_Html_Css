@@ -2,16 +2,19 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0a1020"><title>Préstamos · Portal local</title>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="original-theme.css">
+<meta name="theme-color" content="#0a1020"><title>PRESTAMO WEB</title>
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/components.css">
+<link rel="stylesheet" href="./css/forms.css">
+<link rel="stylesheet" href="./css/responsive.css">
 </head>
 <body>
 <div id="toast" class="toast" role="status"></div>
 <section id="authScreen" class="auth-screen">
-  <div class="auth-visual"><div class="brand-mark">₱</div><p class="eyebrow">GESTIÓN FINANCIERA LOCAL</p><h1>Tu dinero,<br><span>en orden.</span></h1><p class="auth-copy">Solicitudes, cuotas, pagos y reportes en un solo lugar. Acceso privado para clientes y administración.</p><div class="auth-pills"><span>Guardado local</span><span>Acceso por roles</span><span>Historial financiero</span></div></div>
+  <div class="auth-visual"><div class="brand-mark">₱</div><p class="eyebrow">GESTIÓN FINANCIERA LOCAL</p><h1>Tu dinero,<br><span>en orden.</span></h1><p class="auth-copy">Solicitudes, cuotas, pagos y reportes en un solo lugar. Acceso privado para clientes y administración.</p><div class="auth-pills"><span>Base de datos del navegador</span><span>Acceso por roles</span><span>Historial financiero</span></div></div>
   <div class="auth-card">
-    <div class="brand-small"><div class="brand-mark mini">₱</div><div><b>PRESTAMO<span>+</span></b><small>Portal de clientes</small></div></div>
+    <div class="brand-small"><div class="brand-mark mini">₱</div><div><b>PRESTAMO <span>WEB</span></b><small>Portal de clientes</small></div></div>
     <div id="authHeading"><p class="eyebrow">BIENVENIDO</p><h2>Iniciar sesión</h2><p class="muted">Ingresa con tu cuenta para continuar.</p></div>
     <form id="loginForm" class="auth-form">
       <label>Usuario<input name="usuario" autocomplete="username" required placeholder="Tu usuario"></label>
@@ -20,32 +23,41 @@
     </form>
     <form id="registerForm" class="auth-form hidden">
       <label>Nombre completo<input name="nombre" required minlength="2" placeholder="Nombre y apellidos"></label>
-      <div class="form-grid"><label>Usuario<input name="usuario" required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.-]{3,40}" title="3–40 caracteres: letras sin tilde, números, punto, guion o guion bajo; sin espacios" autocomplete="username" placeholder="Ej. cliente_01"></label><label>Documento<input name="documento" placeholder="Cédula"></label></div>
+      <div class="form-grid"><label>Usuario<input name="usuario" required minlength="3" autocomplete="username"></label><label>Documento<input name="documento" placeholder="Cédula"></label></div>
       <div class="form-grid"><label>Teléfono<input name="telefono" placeholder="300 000 0000"></label><label>Correo<input name="correo" type="email" placeholder="correo@ejemplo.com"></label></div>
       <label>Dirección<input name="direccion" placeholder="Dirección (opcional)"></label>
-      <label>Contraseña<input name="password" type="password" minlength="10" maxlength="128" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{10,128}" title="Mínimo 10 caracteres, con al menos una letra y un número" autocomplete="new-password" required placeholder="Mínimo 10 caracteres, letras y números"><small class="field-help">Usa al menos 10 caracteres, con una letra y un número.</small></label>
+      <label>Contraseña<input name="password" type="password" minlength="10" autocomplete="new-password" required placeholder="Mínimo 10 caracteres, letras y números"></label>
       <button class="btn primary full" type="submit">Crear cuenta de cliente <span>→</span></button>
     </form>
     <form id="setupForm" class="auth-form hidden">
-      <label>Nombre del administrador<input name="nombre" required minlength="2"></label><label>Usuario<input name="usuario" required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.-]{3,40}" title="3–40 caracteres, sin espacios"></label><label>Contraseña<input name="password" type="password" minlength="10" maxlength="128" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{10,128}" title="Mínimo 10 caracteres, con una letra y un número" required placeholder="10 caracteres, letras y números"><small class="field-help">Mínimo 10 caracteres, incluyendo una letra y un número.</small></label>
+      <label>Nombre del administrador<input name="nombre" required minlength="2"></label><label>Usuario<input name="usuario" required minlength="3"></label><label>Contraseña<input name="password" type="password" minlength="10" required placeholder="10 caracteres, letras y números"></label>
       <button class="btn primary full" type="submit">Crear administrador inicial</button>
     </form>
     <div class="auth-bottom"><span id="authToggleText">¿Aún no tienes cuenta?</span> <button id="authToggle" class="link-btn" type="button">Crear cuenta</button></div>
-    <p class="security-note"><span class="dot"></span> Los datos se guardan en este navegador. Usa únicamente información ficticia.</p>
+    <p class="security-note"><span class="dot"></span> Los datos se guardan en este navegador.</p>
   </div>
 </section>
 <div id="appShell" class="app-shell hidden">
   <aside class="sidebar" id="sidebar">
-    <div class="brand-small side-brand"><div class="brand-mark mini">₱</div><div><b>PRESTAMO<span>+</span></b><small>Control financiero</small></div></div>
+    <div class="brand-small side-brand"><div class="brand-mark mini">₱</div><div><b>PRESTAMO <span>WEB</span></b><small>Control financiero</small></div></div>
     <div class="side-label">MENÚ PRINCIPAL</div><nav id="nav" class="nav"></nav>
-    <div class="sidebar-bottom"><div class="online"><span class="dot"></span> Datos guardados en este navegador</div><div id="sidebarQuickActions" class="sidebar-quick-actions"></div><div class="side-user"><div id="userAvatar" class="avatar">U</div><div class="user-mini"><b id="sideUserName">Usuario</b><small id="sideUserRole">Cliente</small></div><button id="logoutBtn" class="icon-btn" title="Cerrar sesión">↪</button></div></div>
+    <div class="sidebar-bottom"><div class="online"><span class="dot"></span> Base de datos conectada</div><div class="side-user"><div id="userAvatar" class="avatar">U</div><div class="user-mini"><b id="sideUserName">Usuario</b><small id="sideUserRole">Cliente</small></div><button id="logoutBtn" class="icon-btn" title="Cerrar sesión">↪</button></div></div>
   </aside>
   <main class="main-area">
-    <header class="topbar"><button id="mobileMenu" class="icon-btn mobile-only" aria-label="Abrir menú">☰</button><div><p class="eyebrow" id="topEyebrow">PANEL GENERAL</p><h1 id="pageTitle">Resumen</h1></div><div class="top-actions"><span class="local-badge"><span class="dot"></span> MODO LOCAL</span><div class="user-chip"><span id="topAvatar" class="avatar small">U</span><span><b id="topUserName">Usuario</b><small id="topUserRole">Cliente</small></span></div></div></header>
+    <header class="topbar"><button id="mobileMenu" class="icon-btn mobile-only" aria-label="Abrir menú">☰</button><div><p class="eyebrow" id="topEyebrow">PANEL GENERAL</p><h1 id="pageTitle">Resumen</h1></div><div class="top-actions"><span class="local-badge"><span class="dot"></span> MODO LOCAL</span><button class="user-chip" id="profileShortcut"><span id="topAvatar" class="avatar small">U</span><span><b id="topUserName">Usuario</b><small id="topUserRole">Cliente</small></span><span>⌄</span></button></div></header>
     <div id="pageContent" class="page-content"></div>
-    <footer class="footer">PRESTAMO+ <span>•</span> Sistema local de gestión financiera</footer>
+    <footer class="footer">PRESTAMO WEB <span>•</span> Sistema local de gestión financiera</footer>
   </main>
 </div>
 <div id="modalRoot"></div>
-<script src="app.js" defer></script>
+<script src="./js/initial-data.js"></script>
+<script src="./js/database.js"></script>
+<script src="./js/api.js"></script>
+<script src="./js/core.js" defer></script>
+<script src="./js/notifications.js" defer></script>
+<script src="./js/dashboard.js" defer></script>
+<script src="./js/records.js" defer></script>
+<script src="./js/profile-loans.js" defer></script>
+<script src="./js/actions.js" defer></script>
+<script src="./js/events.js" defer></script>
 </body></html>
