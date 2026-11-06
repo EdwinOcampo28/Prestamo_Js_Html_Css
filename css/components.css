@@ -158,3 +158,660 @@
 .backup-danger .panel-head{padding:14px 18px 10px}
 
 .backup-danger .panel-body{padding:12px 18px 16px}
+
+
+/* PRESTAMO+ · componentes compactos premium */
+.backup-unified{margin-bottom:14px}
+.backup-actions-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.backup-action-card{display:grid;grid-template-columns:38px minmax(0,1fr);gap:8px 12px;align-items:center;padding:14px;background:#101d31;border:1px solid #293d5b;border-radius:13px;min-width:0}
+.backup-action-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:#1b3457;border:1px solid #31517c;color:#9bc4ff;font-size:20px;font-weight:800}
+.backup-action-copy{min-width:0}
+.backup-action-copy h4{font-size:12px;margin:0 0 4px;color:#edf4ff}
+.backup-action-copy p{font-size:10px;line-height:1.5;color:#91a5c2;margin:0}
+.backup-action-card>.btn,.backup-action-card>.field{grid-column:2}
+.backup-action-card>.btn{justify-self:start;padding:8px 12px}
+.compact-file{font-size:10px}
+.compact-file input{padding:8px;font-size:10px}
+.backup-footnote{margin:12px 2px 0}
+.backup-danger-compact{padding:14px 16px;border-color:#673247!important;background:linear-gradient(145deg,#211724,#151827)}
+.backup-danger-copy{display:flex;align-items:center;gap:11px}
+.backup-danger-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#482334;color:#ff9baa;font-weight:900;flex:0 0 30px}
+.backup-danger-copy h3{margin:0 0 4px;color:#ffb0bb;font-size:12px}
+.backup-danger-copy p{margin:0;color:#aeb9ca;font-size:10px;line-height:1.45}
+.backup-danger-form{display:flex;align-items:end;gap:10px;margin-top:12px}
+.backup-danger-form .field{flex:1;margin:0}
+.backup-danger-form .btn{flex:0 0 auto;padding:9px 13px}
+.profile-grid-premium{gap:13px}
+.profile-card{border-radius:14px}
+.profile-card .profile-hero{padding:16px 18px;border-bottom:1px solid #263852;display:flex;align-items:center;gap:13px}
+.profile-card .form-body{padding:15px 18px}
+.profile-card .field{margin-bottom:11px}
+.profile-security .panel-head{padding:14px 17px}
+.profile-security .form-body{padding:14px 17px}
+.profile-security .panel-body{padding:0 17px 15px}
+.profile-security .callout{font-size:10px;padding:10px 12px}
+.simulator-panel .panel-body{padding:18px}
+.simulator-layout{display:grid;grid-template-columns:minmax(250px,.85fr) minmax(0,1.15fr);gap:18px;align-items:start}
+.simulator-fields{display:grid;gap:12px}
+.simulator-fields .field{margin:0}
+.simulator-note{padding:11px 12px;border:1px solid #2b4262;background:#14243b;border-radius:10px;color:#9fb4d2;font-size:10px;line-height:1.55}
+.simulator-results{display:grid;gap:12px}
+.simulator-main-result{padding:20px;border-radius:14px;background:linear-gradient(135deg,#17365c,#14243e);border:1px solid #345987}
+.simulator-main-result small{display:block;color:#a8c4e9;font-size:10px;margin-bottom:8px}
+.simulator-main-result strong{display:block;color:#fff;font-size:clamp(24px,3vw,34px);letter-spacing:-.8px}
+.simulator-result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.simulator-result-grid .mini-stat{padding:12px}
+.simulator-result-grid .mini-stat b{font-size:14px}
+
+
+/* Perfil PRESTAMO WEB · identidad financiera */
+.profile-cover{position:relative;min-height:142px;overflow:hidden;display:flex;align-items:center;padding:22px 26px;margin-bottom:15px;border:1px solid #2b4568;border-radius:17px;background:linear-gradient(110deg,#132b49 0%,#101d32 58%,#10192b 100%)}
+.profile-cover:before{content:"";position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(12,22,39,.04),rgba(12,22,39,.15)),url("../assets/perfil-financiero.svg");background-repeat:no-repeat;background-position:right center;background-size:auto 100%;opacity:.9;pointer-events:none}
+.profile-cover:after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#73b5ff,#3473cf)}
+.profile-cover-content{position:relative;z-index:1}
+.profile-brand-kicker{font-size:9px;letter-spacing:2px;font-weight:800;color:#8dbaff}
+.profile-cover-content h2{font-size:23px;letter-spacing:-.5px;margin:7px 0 4px;color:#f2f7ff}
+.profile-cover-content p{font-size:11px;color:#a7bad5;margin:0}
+.profile-cover-seal{position:absolute;right:28px;top:50%;transform:translateY(-50%);width:55px;height:55px;border-radius:50%;display:grid;place-items:center;border:1px solid #6ca7e866;background:#18365a88;color:#9bc5ff;font-size:26px;font-weight:900;box-shadow:0 0 0 7px #7db7ff0d,0 0 28px #3473cf25}
+.profile-role-mark{margin-left:auto;padding:6px 9px;border:1px solid #36577e;border-radius:7px;background:#162b47;color:#9fc5f7;font-size:8px;font-weight:900;letter-spacing:1px}
+.profile-backups{margin-top:14px}
+.profile-backups .panel-head{padding:13px 17px}
+.profile-backups .panel-body{padding:13px 16px}
+.profile-backup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.profile-backup-option{min-width:0;display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:7px 10px;padding:12px;background:#101d31;border:1px solid #2a3d59;border-radius:12px}
+.profile-backup-symbol{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#1b3457;border:1px solid #31517c;color:#9bc4ff;font-size:17px;font-weight:900}
+.profile-backup-option>div{min-width:0}
+.profile-backup-option b{display:block;color:#edf4ff;font-size:11px}
+.profile-backup-option small{display:block;color:#91a5c2;font-size:9px;line-height:1.45;margin-top:3px}
+.profile-backup-option>.btn,.profile-backup-option>.field{grid-column:2}
+.profile-backup-option>.btn{justify-self:start;padding:7px 10px;font-size:10px}
+.profile-file-field{font-size:9px;margin:0}
+.profile-file-field input{padding:7px;font-size:9px}
+.profile-backups .small-note{margin:10px 1px 0;font-size:9px}
+.profile-reset{margin-top:11px;padding:12px 15px;border-color:#633348!important;background:linear-gradient(120deg,#211824,#151827)}
+.profile-reset-copy{display:flex;align-items:center;gap:10px}
+.profile-reset-icon{width:27px;height:27px;display:grid;place-items:center;flex:0 0 27px;border-radius:8px;background:#482334;color:#ff9baa;font-weight:900}
+.profile-reset-copy b{display:block;color:#ffb2bd;font-size:11px}
+.profile-reset-copy small{display:block;color:#aeb9ca;font-size:9px;line-height:1.4;margin-top:3px}
+.profile-reset-form{display:flex;align-items:end;gap:9px;margin-top:10px}
+.profile-reset-form .field{flex:1;margin:0;font-size:9px}
+.profile-reset-form .btn{padding:8px 11px;font-size:10px}
+
+
+/* Perfil: nombre esencial, seguridad de cuenta y respaldos en una sola tarjeta */
+.profile-security-status{display:flex;align-items:center;gap:9px;margin:0 17px;padding:11px 12px;border:1px solid #294665;border-radius:10px;background:#12243a}
+.security-status-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#55d6a0;box-shadow:0 0 0 4px #55d6a01c}
+.profile-security-status b{display:block;color:#edf5ff;font-size:10px}
+.profile-security-status small{display:block;color:#9db1cc;font-size:9px;margin-top:3px}
+.profile-security-user{margin-left:auto;color:#8fbaff;font-size:9px;font-weight:700}
+.profile-security .form-body{padding-top:12px}
+.profile-backup-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.profile-backup-option{grid-template-columns:27px minmax(0,1fr);gap:7px;padding:10px;align-content:start}
+.profile-backup-symbol{width:26px;height:26px;font-size:14px}
+.profile-backup-option b{font-size:10px}
+.profile-backup-option small{font-size:8px;line-height:1.4}
+.profile-backup-option>.btn,.profile-backup-option>.field{grid-column:1 / -1}
+.profile-backup-option>.btn{justify-self:stretch;text-align:center;padding:7px 8px;font-size:9px}
+.profile-file-field{margin:0}
+.profile-file-field input{width:100%;min-width:0;padding:6px;font-size:8px}
+.profile-backup-danger{border-color:#623447;background:linear-gradient(145deg,#211824,#151827)}
+.profile-backup-danger .profile-backup-symbol{background:#482334;border-color:#754052;color:#ffadba}
+.profile-backup-danger b{color:#ffb8c2}
+.profile-reset-form{grid-column:1 / -1;display:grid;gap:6px;margin:0}
+.profile-reset-form .field{margin:0;font-size:8px}
+.profile-reset-form .field input{padding:7px;font-size:9px}
+.profile-reset-form .btn{width:100%;padding:7px 8px;font-size:9px}
+
+
+/* Ajuste de distribución: perfil y seguridad en una tarjeta; exportar e importar agrupados */
+.profile-main-card{display:grid;grid-template-columns:minmax(0,1fr);gap:0;overflow:hidden}
+.profile-main-card>.profile-hero{padding:17px 18px 12px;border-bottom:1px solid #263b57}
+.profile-name-form{padding:12px 18px 15px}
+.profile-security-inline{border-top:1px solid #263b57;padding:0 18px 15px}
+.profile-security-inline .panel-head{padding:14px 0 10px}
+.profile-security-inline .profile-security-status{margin:0 0 12px}
+.profile-password-form{padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.profile-password-form .form-actions{grid-column:1/-1;margin-top:0}
+.profile-password-form .field{margin:0}
+.profile-backup-grid{grid-template-columns:minmax(0,1.5fr) minmax(230px,.8fr);align-items:stretch}
+.profile-backup-combined{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.profile-backup-action{display:grid;grid-template-columns:27px minmax(0,1fr);gap:7px;align-content:start;padding:10px;border:1px solid #29415f;border-radius:10px;background:#0d1a2d}
+.profile-backup-action>.btn,.profile-backup-action>form{grid-column:1/-1}
+.profile-backup-action b{display:block;color:#edf5ff;font-size:10px}
+.profile-backup-action small{display:block;color:#9db1cc;font-size:8px;line-height:1.4;margin-top:3px}
+.profile-restore-form{display:grid;gap:6px;margin:0}
+.profile-restore-form .field{margin:0;font-size:8px}
+.profile-restore-form input{width:100%;min-width:0;padding:6px;font-size:8px}
+.profile-restore-form .btn{width:100%;padding:7px 8px;font-size:9px}
+.profile-backup-combined>.profile-backup-action>.btn{width:100%;padding:7px 8px;font-size:9px}
+@media(max-width:760px){
+ .profile-password-form{grid-template-columns:minmax(0,1fr)}
+ .profile-backup-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:520px){
+ .profile-backup-combined{grid-template-columns:minmax(0,1fr)}
+}
+
+
+/* Perfil compacto: dos columnas dentro de una única tarjeta compartida */
+.profile-account-card{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:0;overflow:hidden;border-radius:14px}
+.profile-account-info{min-width:0;border-right:1px solid #263b57}
+.profile-account-info .profile-hero{padding:16px 18px 13px;border-bottom:1px solid #263b57;display:flex;align-items:center;gap:13px}
+.profile-name-form{padding:12px 18px 14px}
+.profile-name-form .field{margin:0}
+.profile-name-form .form-actions{margin-top:10px}
+.profile-account-security{min-width:0;padding:0 17px 14px}
+.profile-account-security .panel-head{padding:14px 0 10px}
+.profile-account-security .profile-security-status{margin:0 0 11px;padding:9px 10px}
+.profile-password-form{padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+.profile-password-form .field{margin:0}
+.profile-password-form .field input{padding:9px 10px}
+.profile-password-form .form-actions{margin-top:1px}
+.profile-backup-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:stretch}
+.profile-backup-option{display:grid;grid-template-columns:27px minmax(0,1fr);gap:7px;align-content:start;padding:9px;border:1px solid #29415f;border-radius:10px;background:#0d1a2d;min-width:0}
+.profile-backup-option b{font-size:10px}
+.profile-backup-option small{font-size:8px;line-height:1.35}
+.profile-backup-option>.btn,.profile-backup-option>.field,.profile-backup-option>form{grid-column:1/-1}
+.profile-backup-option>.btn{width:100%;padding:7px 8px;font-size:9px}
+.profile-file-field{margin:0;font-size:8px}
+.profile-file-field input{width:100%;min-width:0;padding:6px;font-size:8px}
+.profile-backup-danger{border-color:#623447;background:linear-gradient(145deg,#211824,#151827)}
+.profile-backup-danger .profile-backup-symbol{background:#482334;border-color:#754052;color:#ffadba}
+.profile-backup-danger b{color:#ffb8c2}
+.profile-reset-form{grid-column:1/-1;display:grid;gap:6px;margin:0}
+.profile-reset-form .field{margin:0;font-size:8px}
+.profile-reset-form .field input{padding:7px;font-size:9px}
+.profile-reset-form .btn{width:100%;padding:7px 8px;font-size:9px}
+@media(max-width:760px){
+ .profile-account-card{grid-template-columns:minmax(0,1fr)}
+ .profile-account-info{border-right:0;border-bottom:1px solid #263b57}
+ .profile-backup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+ .profile-backup-grid{grid-template-columns:minmax(0,1fr)}
+}
+
+
+/* Distribución solicitada: seguridad dentro de la tarjeta de perfil;
+   el centro de copias ocupa la antigua columna de seguridad. */
+.profile-workspace{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(280px,.92fr);gap:13px;align-items:start}
+.profile-workspace>.panel{min-width:0}
+.profile-account-card{display:block;overflow:hidden;border-radius:14px}
+.profile-account-info{border:0}
+.profile-account-info .profile-hero{padding:16px 18px 13px;border-bottom:1px solid #263b57}
+.profile-name-form{padding:12px 18px 14px}
+.profile-name-form .field{margin:0}
+.profile-name-form .form-actions{margin-top:10px}
+.profile-account-security{border-top:1px solid #263b57;padding:0 17px 15px;min-width:0}
+.profile-account-security .panel-head{padding:14px 0 10px}
+.profile-account-security .profile-security-status{margin:0 0 12px;padding:10px 11px}
+.profile-password-form{padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.profile-password-form .field{margin:0}
+.profile-password-form .field input{padding:10px 11px}
+.profile-password-form .form-actions{margin-top:1px}
+.profile-backups .panel-body{padding:12px}
+.profile-backup-stack{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+.profile-backup-stack>.profile-backup-option{display:grid;grid-template-columns:27px minmax(0,1fr);gap:7px;align-content:start;padding:10px;border:1px solid #29415f;border-radius:10px;background:#0d1a2d;min-width:0}
+.profile-backup-stack .profile-backup-option b{font-size:10px}
+.profile-backup-stack .profile-backup-option small{font-size:8px;line-height:1.35}
+.profile-backup-stack .profile-backup-option>.btn,.profile-backup-stack .profile-backup-option>.field,.profile-backup-stack .profile-backup-option>form{grid-column:1/-1}
+.profile-backup-stack .profile-backup-option>.btn{width:100%;padding:8px;font-size:9px}
+.profile-backup-stack .profile-file-field{margin:0;font-size:8px}
+.profile-backup-stack .profile-file-field input{width:100%;min-width:0;padding:7px;font-size:8px}
+.profile-backup-stack .profile-backup-danger{border-color:#623447;background:linear-gradient(145deg,#211824,#151827)}
+.profile-backup-stack .profile-backup-danger .profile-backup-symbol{background:#482334;border-color:#754052;color:#ffadba}
+.profile-backup-stack .profile-backup-danger b{color:#ffb8c2}
+.profile-backup-stack .profile-reset-form{grid-column:1/-1;display:grid;gap:6px;margin:0}
+.profile-backup-stack .profile-reset-form .field{margin:0;font-size:8px}
+.profile-backup-stack .profile-reset-form .field input{padding:7px;font-size:9px}
+.profile-backup-stack .profile-reset-form .btn{width:100%;padding:8px;font-size:9px}
+@media(max-width:760px){
+ .profile-workspace{grid-template-columns:minmax(0,1fr)}
+}
+
+
+/* Formulario único de perfil y seguridad, con acción conjunta */
+.profile-workspace{width:100%;max-width:1120px;margin:0 auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.profile-account-card{min-width:0}
+.profile-unified-form{display:block}
+.profile-name-section{padding:12px 18px 5px}
+.profile-name-section .field{margin:0}
+.profile-account-security{border-top:1px solid #263b57;padding:0 17px 12px}
+.profile-account-security .panel-head{padding:12px 0 9px}
+.profile-account-security .profile-security-status{margin:0 0 9px;padding:8px 10px}
+.profile-password-form{padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.profile-password-form .field{margin:0}
+.profile-password-form .field input{padding:8px 10px}
+.profile-password-form .field small{font-size:8px}
+.profile-unified-actions{padding:0 17px 14px;display:flex;justify-content:flex-end}
+.profile-unified-actions .btn{min-width:145px}
+@media(max-width:760px){
+ .profile-workspace{grid-template-columns:minmax(0,1fr);max-width:560px}
+}
+
+
+/* Perfil y centro de copias: columnas iguales, más estrechas y equilibradas */
+.profile-workspace{width:100%;max-width:960px;margin:0 auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;align-items:start}
+.profile-workspace>.panel{width:100%;min-width:0;max-width:none}
+.profile-account-card,.profile-backups{box-sizing:border-box}
+.profile-name-section{display:grid;gap:9px;padding:10px 16px 4px}
+.profile-name-section .field{margin:0}
+.profile-name-section .field small{display:block;font-size:8px;line-height:1.35;margin-top:4px}
+.profile-unified-actions{padding:0 16px 12px}
+.profile-account-info .profile-hero{padding:13px 16px 11px}
+.profile-account-security{padding:0 15px 12px}
+.profile-account-security .panel-head{padding:11px 0 8px}
+.profile-account-security .profile-security-status{margin-bottom:8px}
+.profile-password-form .field input{padding:8px 9px}
+.profile-backups .panel-head{padding:12px 14px}
+.profile-backups .panel-body{padding:10px}
+.profile-backup-stack{gap:8px}
+.profile-backup-stack>.profile-backup-option{padding:8px;gap:6px}
+@media(max-width:760px){
+ .profile-workspace{max-width:560px;grid-template-columns:minmax(0,1fr)}
+}
+
+
+/* Campos y acciones más compactos; tarjetas gemelas en alto y ancho */
+.profile-workspace{
+  max-width:960px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;
+  gap:12px;
+}
+.profile-workspace>.panel{
+  height:100%;
+  min-height:0;
+}
+.profile-account-card,
+.profile-backups{
+  min-height:100%;
+}
+.profile-name-section .field input,
+.profile-password-form .field input{
+  width:100%;
+  max-width:340px;
+}
+.profile-name-section .field input,
+.profile-password-form .field input{
+  box-sizing:border-box;
+}
+.profile-unified-actions{
+  justify-content:flex-start;
+}
+.profile-unified-actions .btn{
+  width:auto;
+  min-width:138px;
+  max-width:165px;
+  padding:9px 16px;
+}
+.profile-backup-stack .profile-backup-option>.btn{
+  width:auto;
+  min-width:132px;
+  max-width:180px;
+  justify-self:start;
+  padding:8px 13px;
+}
+.profile-backup-stack .profile-file-field input{
+  width:100%;
+  max-width:300px;
+}
+.profile-backup-stack .profile-reset-form .field input{
+  width:100%;
+  max-width:260px;
+}
+.profile-backup-stack .profile-reset-form .btn{
+  width:auto;
+  min-width:132px;
+  max-width:180px;
+  justify-self:start;
+}
+.profile-backup-stack .profile-backup-option{
+  grid-template-columns:27px minmax(0,1fr);
+}
+@media(max-width:760px){
+  .profile-workspace{grid-template-columns:minmax(0,1fr);align-items:stretch}
+  .profile-workspace>.panel{height:auto}
+}
+
+
+/* Ajuste final de límites: conjunto más estrecho, tarjetas gemelas y acción al pie */
+.profile-workspace{
+  width:100%;
+  max-width:840px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
+}
+.profile-workspace>.panel{
+  width:100%;
+  min-width:0;
+  margin:0;
+  box-sizing:border-box;
+  align-self:stretch;
+}
+.profile-account-card,
+.profile-backups{
+  height:100%;
+  min-height:0;
+}
+.profile-account-card{
+  display:flex;
+  flex-direction:column;
+}
+.profile-account-card>.profile-unified-form{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+}
+.profile-account-card .profile-unified-actions{
+  margin-top:auto;
+  padding:8px 16px 12px;
+  justify-content:flex-start;
+}
+.profile-account-card .profile-unified-actions .btn{
+  margin:0;
+  width:auto;
+  min-width:138px;
+  max-width:165px;
+}
+.profile-backups{
+  display:flex;
+  flex-direction:column;
+}
+.profile-backups>.panel-body{
+  flex:1;
+}
+@media(max-width:760px){
+  .profile-workspace{
+    max-width:520px;
+    grid-template-columns:minmax(0,1fr);
+  }
+  .profile-workspace>.panel{
+    height:auto;
+  }
+}
+
+
+/* Botón integrado junto al campo de nueva contraseña para compactar el perfil */
+.profile-password-submit-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:9px;
+}
+.profile-password-submit-row .field{margin:0;min-width:0}
+.profile-password-submit-row .field input{max-width:100%}
+.profile-password-submit-row .btn{
+  width:auto;
+  min-width:132px;
+  max-width:150px;
+  padding:9px 12px;
+  margin:0 0 1px;
+  white-space:nowrap;
+}
+.profile-account-card>.profile-unified-form{flex:1}
+.profile-workspace{align-items:stretch}
+.profile-workspace>.panel{align-self:stretch}
+@media(max-width:480px){
+ .profile-password-submit-row{grid-template-columns:minmax(0,1fr)}
+ .profile-password-submit-row .btn{justify-self:start}
+}
+
+
+/* Tres columnas en una misma línea: contraseña actual, nueva y acción */
+.profile-password-inline{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+  align-items:end;
+  gap:9px;
+}
+.profile-password-inline .field{
+  margin:0;
+  min-width:0;
+}
+.profile-password-inline .field input{
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+  padding:8px 9px;
+}
+.profile-password-inline .field small{
+  display:block;
+  font-size:8px;
+  line-height:1.25;
+  margin-top:4px;
+}
+.profile-password-inline>.btn{
+  width:auto;
+  min-width:126px;
+  max-width:145px;
+  padding:9px 10px;
+  margin:0 0 1px;
+  white-space:nowrap;
+}
+.profile-password-submit-row{display:contents}
+@media(max-width:480px){
+  .profile-password-inline{grid-template-columns:minmax(0,1fr)!important}
+  .profile-password-inline>.btn{justify-self:start}
+}
+
+
+/* Orden horizontal explícito y estable de los tres controles */
+.profile-password-inline{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto !important;
+  grid-template-areas:"actual nueva actualizar";
+  align-items:end;
+}
+.profile-password-inline>.field:nth-child(1){grid-area:actual}
+.profile-password-inline>.field:nth-child(2){grid-area:nueva}
+.profile-password-inline>.btn{grid-area:actualizar;align-self:end}
+.profile-password-inline>.field input{min-width:0}
+@media(max-width:480px){
+  .profile-password-inline{
+    grid-template-columns:minmax(0,1fr) !important;
+    grid-template-areas:"actual" "nueva" "actualizar";
+  }
+}
+
+
+/* Corrección de alineación: cada etiqueta conserva su input debajo,
+   y los tres elementos ocupan columnas consecutivas en una sola fila. */
+.profile-password-inline{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(126px,.82fr) !important;
+  grid-template-areas:none !important;
+  grid-auto-flow:row;
+  align-items:end !important;
+  gap:9px !important;
+}
+.profile-password-inline>.field:nth-child(1),
+.profile-password-inline>.field:nth-child(2){
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:flex-end;
+  gap:7px !important;
+  grid-area:auto !important;
+  grid-row:1;
+  min-width:0;
+  width:100%;
+  margin:0 !important;
+}
+.profile-password-inline>.field:nth-child(1){grid-column:1}
+.profile-password-inline>.field:nth-child(2){grid-column:2}
+.profile-password-inline>.field input{
+  display:block;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0;
+  height:36px;
+  box-sizing:border-box;
+  margin:0;
+}
+.profile-password-inline>.btn{
+  grid-column:3;
+  grid-row:1;
+  align-self:end !important;
+  justify-self:stretch;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  height:36px;
+  box-sizing:border-box;
+  margin:0 0 1px !important;
+  padding:0 8px !important;
+  white-space:nowrap;
+}
+.profile-password-inline>.field small{
+  min-height:20px;
+  display:block;
+  margin-top:2px;
+}
+@media(max-width:480px){
+ .profile-password-inline{grid-template-columns:minmax(0,1fr) !important;gap:10px !important}
+ .profile-password-inline>.field:nth-child(1),
+ .profile-password-inline>.field:nth-child(2),
+ .profile-password-inline>.btn{grid-column:1;grid-row:auto}
+ .profile-password-inline>.btn{justify-self:start;width:auto !important;min-width:140px !important}
+}
+
+
+/* Perfil: nombre y usuario en paralelo */
+.profile-name-section{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:start;
+  gap:10px;
+}
+.profile-name-section>.field{
+  min-width:0;
+  margin:0;
+}
+.profile-name-section>.field input{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  box-sizing:border-box;
+}
+.profile-name-section>.field small{
+  display:block;
+  min-height:22px;
+  margin-top:4px;
+  font-size:8px;
+  line-height:1.35;
+}
+.profile-password-inline{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(126px,.82fr) !important;
+  align-items:end !important;
+}
+.profile-password-inline>.field:nth-child(1),
+.profile-password-inline>.field:nth-child(2){
+  align-self:end;
+}
+.profile-password-inline>.btn{
+  align-self:end !important;
+  margin-bottom:1px !important;
+}
+
+/* Zona de peligro: confirmación a la izquierda y acción a la derecha,
+   centrada verticalmente con el campo y ligeramente elevada. */
+.profile-backup-stack .profile-reset-form{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  margin-top:7px;
+}
+.profile-backup-stack .profile-reset-form .field{
+  grid-column:1;
+  margin:0;
+  min-width:0;
+}
+.profile-backup-stack .profile-reset-form .field input{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  box-sizing:border-box;
+}
+.profile-backup-stack .profile-reset-form .btn{
+  grid-column:2;
+  grid-row:1;
+  align-self:center;
+  justify-self:end;
+  width:auto;
+  min-width:118px;
+  max-width:145px;
+  margin:0 0 5px;
+  white-space:nowrap;
+}
+@media(max-width:480px){
+ .profile-name-section{grid-template-columns:minmax(0,1fr)}
+ .profile-name-section>.field small{min-height:0}
+ .profile-backup-stack .profile-reset-form{grid-template-columns:minmax(0,1fr)}
+ .profile-backup-stack .profile-reset-form .btn{grid-column:1;grid-row:auto;justify-self:start;margin:0}
+}
+
+/* Perfil actualizado: distribución coherente para administración y clientes */
+#pageContent{container-type:inline-size}
+.profile-workspace{width:100%;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.profile-workspace-client{grid-template-columns:minmax(0,760px);justify-content:center}
+.profile-workspace>.panel{min-width:0;height:100%;box-sizing:border-box}
+.profile-account-card{display:flex;flex-direction:column;overflow:hidden;border-radius:14px;container-type:inline-size}
+.profile-account-info{display:flex;flex:1;flex-direction:column;min-width:0;border:0}
+.profile-account-info .profile-hero{padding:15px 17px 12px;border-bottom:1px solid #263b57;display:flex;align-items:center;gap:12px}
+.profile-account-info .profile-hero .avatar{flex:0 0 48px;width:48px;height:48px}
+.profile-unified-form{display:flex;flex:1;flex-direction:column;min-width:0}
+.profile-name-section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:13px 17px 12px}
+.profile-name-section>.field{min-width:0;margin:0}
+.profile-name-section>.field input{width:100%;min-width:0;box-sizing:border-box}
+.profile-name-section>.field small{display:block;min-height:22px;margin-top:4px;font-size:8px;line-height:1.35}
+.profile-account-security{min-width:0;margin-top:auto;padding:0 17px 15px;border-top:1px solid #263b57}
+.profile-account-security .panel-head{padding:13px 0 10px}
+.profile-account-security .profile-security-status{margin:0 0 12px;padding:9px 10px}
+.profile-password-inline{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(118px,.82fr)!important;gap:9px!important;align-items:start!important;padding:0}
+.profile-password-inline>.field{display:grid!important;align-content:start;gap:6px!important;min-width:0;margin:0!important}
+.profile-password-inline>.field input{width:100%!important;height:38px;min-width:0;max-width:none!important;box-sizing:border-box;padding:8px 9px}
+.profile-password-inline>.field small{display:block;min-height:25px;margin:2px 0 0;font-size:8px;line-height:1.35}
+.profile-password-inline>.btn{grid-column:3;align-self:start!important;justify-self:stretch;width:100%!important;min-width:0!important;height:38px;margin:21px 0 0!important;padding:0 8px!important;box-sizing:border-box;white-space:normal;font-size:10px;line-height:1.2}
+.profile-backups{display:flex;flex-direction:column;min-width:0;height:100%;margin:0}
+.profile-backups>.panel-head{flex:0 0 auto;padding:14px 16px}
+.profile-backups>.panel-body{display:flex;flex:1;flex-direction:column;padding:13px 15px}
+.profile-backup-stack{display:grid;gap:9px}
+.profile-backup-stack>.profile-backup-option{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:7px 9px;min-width:0;padding:10px;border:1px solid #29415f;border-radius:10px;background:#0d1a2d;box-sizing:border-box}
+.profile-backup-stack .profile-backup-symbol{width:27px;height:27px;display:grid;place-items:center;flex:0 0 27px;border-radius:8px}
+.profile-backup-stack .profile-backup-option>div{min-width:0}
+.profile-backup-stack .profile-backup-option b{font-size:10px}
+.profile-backup-stack .profile-backup-option small{font-size:8px;line-height:1.4}
+.profile-backup-stack .profile-backup-option>.btn,.profile-backup-stack .profile-backup-option>.field{grid-column:1/-1;min-width:0}
+.profile-backup-stack .profile-backup-option>.btn{width:100%;min-height:36px;padding:8px 10px;font-size:9px;text-align:center}
+.profile-backup-stack .profile-file-field{margin:0;font-size:8px}
+.profile-backup-stack .profile-file-field input{width:100%;min-width:0;padding:7px;font-size:8px;box-sizing:border-box}
+.profile-backup-stack .profile-reset-form{display:grid;grid-column:1/-1;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:9px;margin:0}
+.profile-backup-stack .profile-reset-form .field{grid-column:1;min-width:0;margin:0;font-size:8px}
+.profile-backup-stack .profile-reset-form .field input{width:100%;min-width:0;padding:8px;font-size:9px;box-sizing:border-box}
+.profile-backup-stack .profile-reset-form .btn{grid-column:2;grid-row:1;align-self:end;width:auto;min-width:112px;min-height:36px;margin:0;padding:7px 10px;font-size:9px;white-space:normal}
+.profile-backups .small-note{margin:11px 1px 0;font-size:9px;line-height:1.45}
+@container (max-width: 430px){
+ .profile-password-inline{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .profile-password-inline>.btn{grid-column:1/-1;justify-self:start;width:auto!important;min-width:145px!important;margin:0!important}
+}
+@container (max-width: 360px){
+ .profile-name-section{grid-template-columns:minmax(0,1fr)}
+ .profile-name-section>.field small{min-height:0}
+ .profile-password-inline{grid-template-columns:minmax(0,1fr)!important}
+ .profile-password-inline>.btn{grid-column:1}
+}
+@container (max-width: 680px){
+ .profile-workspace-admin{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:760px){
+ .profile-workspace{grid-template-columns:minmax(0,1fr);max-width:620px}
+ .profile-workspace-client{max-width:620px}
+ .profile-account-security{padding-right:14px;padding-left:14px}
+ .profile-backup-stack .profile-reset-form{grid-template-columns:minmax(0,1fr)}
+ .profile-backup-stack .profile-reset-form .btn{grid-column:1;grid-row:auto;justify-self:start;min-width:145px}
+}

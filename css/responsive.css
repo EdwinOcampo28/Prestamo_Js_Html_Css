@@ -9,3 +9,19 @@
 @media(max-width:600px){.notification-item{padding:14px;gap:10px;flex-wrap:wrap}.notification-copy{flex-basis:calc(100% - 52px)}.notification-delete{margin-left:48px}.section-title:has([data-action="delete-all-notifications"]){align-items:flex-start;flex-direction:column}}
 
 @media(max-width:760px){.backup-grid{grid-template-columns:1fr}.backup-reset-row{grid-template-columns:1fr}.backup-reset-action{padding-bottom:0}}
+
+@media(max-width:760px){.backup-actions-grid,.simulator-layout{grid-template-columns:1fr}.backup-danger-form{align-items:stretch;flex-direction:column}.backup-danger-form .btn{width:100%}.profile-grid-premium{grid-template-columns:1fr}}
+
+@media(max-width:760px){.profile-backup-grid{grid-template-columns:1fr}.profile-reset-form{align-items:stretch;flex-direction:column}.profile-reset-form .btn{width:100%}.profile-cover{min-height:125px;padding:18px}.profile-cover-seal{right:16px;width:44px;height:44px}.profile-role-mark{display:none}}
+
+
+@media (max-width: 900px){
+  .profile-backup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width: 620px){
+  .profile-backup-grid{grid-template-columns:minmax(0,1fr)}
+  .profile-security-status{margin:0 12px}
+  .profile-security-user{font-size:8px}
+}
+
+@media(max-width:760px){.profile-workspace{grid-template-columns:1fr}.profile-account-security{padding-left:14px;padding-right:14px}}
